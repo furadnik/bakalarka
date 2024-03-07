@@ -1,0 +1,195 @@
+\chapter{Preliminaries}
+
+\section{Set functions}
+
+% co je set funkce
+Set functions are very general objects studied extensively in countless fields, including
+matroid theory, game theory utility functions and countless others. % TODO: citace a konkrétní příklady
+
+
+% definice set funkce
+\begin{defi}[Set function]
+	Let $ N $ be a finite set.
+	A \emph{set function} on the set $ N $ is any function $ f: \pot N \to \R $.
+\end{defi}
+
+Though the definition of a set function consideres a general finite set $ N $, in this thesis,
+we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
+This simplification is common in the literature,  % TODO: citace
+as it allows us to be more concrete when discussing set functions, while
+the results we show can be easily generalized to the case of a general finite set $ N $.
+
+% k čemu jsou
+For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represet a \emph{utility} an agent receives from obtaining a subset of the goods.
+
+% monotonicita
+When studying set functions modelling real-world problems, we can often assume that the set function has certain properties.
+One of the most natural and commonly observed of such properties is \emph{monotonicity}.
+
+\begin{defi}[Monotonicity]
+	A set function $ f: \pot N \to \R $ is \emph{monotonically non-decreasing} if \[
+		\left( \forall S \subseteq T \subseteq N \right)\quad \fce{f}{S} \leq \fce{f}{T},
+	\]
+	and \emph{monotonically non-increasing} if \[
+		\left( \forall S \subseteq T \subseteq N \right)\quad \fce{f}{S} \geq \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+In our example of a set function representing utility, assuming the utility of each good by itself is non-negative, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of an agent.
+% TODO: ne vždycky
+
+% superadditivita
+Another very common and natural property of many set functions is \emph{superadditivity}.
+
+% TODO: jak to udělat s tím že máme i subadditivitu?
+\begin{defi}[Superadditivity]
+	A set function $ f: \pot N \to \R $ is \emph{superadditive} if \[
+		\left( \forall S, T \subseteq N; S \cap T = \emptyset \right)\quad \fce{f}{S \cup T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+Getting back to our example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
+In other words, a set is at least as valuable as the sum of its parts.
+
+% supermodularita
+\begin{defi}[Supermodularity]
+	A set function $ f: \pot N \to \R $ is \emph{supermodular} if \[
+		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+% TODO: proč je supermodularita sexy
+% TODO: hrozně sexy struktura
+
+% submodularita
+\begin{defi}[Submodularity]
+	A set function $ f: \pot N \to \R $ is \emph{submodular} if \[
+		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \leq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+% TODO: vztah se supermodularitou
+% TODO: proč submodularita je taky sexy
+% TODO: greedy algoritmy a matroidy
+% TODO: třídy funkcí
+
+\section{Cooperative game theory}
+
+% TODO: co je to kooperativní teorie her
+Cooperative game theory is a field of mathematics that studies situations in which agents can form cooperating groups, called \emph{coalitions}.
+These coalitions receive a \emph{payoff} from the game, which is then somehow divided among the agents in the coalition.
+The goal of cooperative game theory is to study the \emph{stability} of the formed coalitions, and the \emph{distribution} of the payoff among the agents.
+
+% definice kooperativní hry
+\begin{defi}[Cooperative game]
+	A \emph{cooperative game} is a pair $ \left( N,v \right) $, where $ N $ is a finite set of \emph{players} and $ v: \pot N \to \R $ is the \emph{characteristic function} of the game.
+	Further, we require that $ \fce{v}{\emptyset} = 0 $.
+\end{defi}
+
+When discussing coalitions, we usually use the terms \emph{grand coalition} for the coalition of all players $ N $, and \emph{singletons} for coalitions containing a single player.
+
+% TODO: vztah se set functs
+From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
+
+% supermodularita => superadditivita
+\begin{prop}[ ]
+	Let $ \left( N,v \right) $ be a cooperative game.
+	If the characteristic function $ v $ is supermodular, then it is superadditive.
+\end{prop}
+
+% TODO: nebudeme chtít tohle mít pro všechny set funkce? chceme to řešit v preliminaries nebo radši až potom v definici lower/upper?
+\begin{proof}
+	Suppose $ S,T \subseteq N $, such that $ S \cap T = \emptyset $.
+	We will use the definition of supermodularity, along with the fact that $ \fce{v}{\emptyset} = 0 $.
+	We get \[
+		\fce{v}{S} + \fce{v}{T} \leq \fce{v}{S \cup T} + \fce{v}{S \cap T} = \fce{v}{S \cup T} + \fce{v}{\emptyset} = \fce{v}{S \cup T},
+	\]
+	which is exactly the definition of superadditivity.
+\end{proof}
+
+% TODO: classes of games
+
+% payoff vector
+In cooperative game theory, we usually assume that the grand coalition has formed, i.e. all the players are cooperating, then we discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players, and then investigate whether the formed coalition is stable, or not.
+The payoff of players is described by a payoff vector.
+
+\begin{defi}[Payoff vector]
+	Let $ \left( N,v \right) $ be a cooperative game.
+	A \emph{payoff vector} is $ x \in \R^n $.
+	The payoff vector is \emph{efficient} if \[
+		\sum_{i = 1}^{n} x_i = \fce{v}{N}.
+	\]
+\end{defi}
+
+For simplicity, we usually shorten the notation of sum over the values of the payoff vector.
+For a general coalition $ S \subseteq N $, we denote \[
+	\fce{x}{S} \deq \sum_{i \in S}^{} x_i.
+\]
+% efficiency
+In this thesis, we will only consider efficient payoff vectors, as we want to distribute the entire value of the grand coalitions.
+Other notions of distribution where the payoff vector needn't be efficient is sometimes studied, but we will not discuss them here. % TODO: citace
+
+% solution concept
+We are interested in studying payoff vectors with certain properties, such as fairness, stability, etc.
+For this, we define solution concepts as the sets of payoff vectors with given properties.
+Formally
+
+\begin{defi}[Solution concept]
+	A \emph{solution concept} is a function $ f: \games n \to \pot{\R^n} $.
+\end{defi}
+
+Some solution concepts, so-called \emph{multi-point solution concepts}, give sets of payoff vectors of varying size, depending on the game.
+However, some important solution concepts are so-called \emph{single-point}, that is, they map each game to exactly one vector.
+In those cases, we simplify the notation to leave out the set, yielding a solution concept with the signature $ f: \games n \to \R^n $.
+
+The first important solution concept we will mention here is the \emph{core}.
+The core the payoff vectors, which encourage stability of the grand coalition.
+In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, the players don't have incentive to leave the grand coalition.
+
+\begin{defi}[Core]
+	The \emph{core} is a multi-point solution concept defined as \[
+		\core v \deq \left\{ x \in \R^n \suchthat \fce{x}{N} =\fce{v}{N} \land \left( \forall S \subseteq N \right)\! \left( \fce{x}{S} \geq \fce{v}{S} \right) \right\}.
+	\]
+\end{defi}
+
+If the core of a game is empty, it tells us that no matter how we distribute the value of $ \fce{v}{N} $, there will always be a set of players that would be better off leaving the grand coalition, so it is unstable, and thus (assuming perfect rationality of the players), it won't form.
+
+% shapley
+However, the core doesn't consider the fairness of the distribution.
+For that, we would like another solution concept, that would divide the value of the grand coalition proportionally to the contributions of each player.
+By contributions, we mean the extra value the coalition generates, when a player joins. Formally, for $ i \in N $ and $ S \subseteq N \setminus \left\{ i \right\} $, the contribution of $ i $ to $ S $ is $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $.
+
+\begin{defi}[Shapley value]
+	The \emph{Shapley value} is a single-point solution concept defined as \[
+		\shapley v_i \deq \sum_{S \subseteq N \setminus \left\{ i \right\}}^{} \frac{s! \left( n - s - 1 \right)!}{n!} \left( \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} \right),
+	\]
+	where $ s \deq \absolute{S} $.
+\end{defi}
+
+So, is the Shapley value fair?
+That obviously depends on your definition of fairness, which can be very subjective.
+However, the Shapley value is generally accepted as fair, as it satisfies many natural qualities that a reasonable fair solution concept should satisfy.
+
+% TODO: citace
+\begin{thm}[Characterization of the Shapley value]
+	The Shapley value $ \Shapley $ is the unique function satisfying the following properties: \begin{enumerate}[ ]
+		\item efficience, $ \sum_{i \in N}^{} \fce{f_i}{v} = \fce{v}{N} $,
+		\item symmetry, \[
+				\left( \forall i,j \in N \right)\! \left( \left( \forall S \subseteq N \setminus \left\{ i,j \right\} \right)\! \left( \fce{v}{S \cup i} = \fce{v}{S \cup j} \right) \implies \fce{f_i}{v} = \fce{f_j}{v} \right),
+			\]
+		\item null player, $ \left( \forall i \in N \right)\! \left( \left( \forall S \subseteq N \setminus i \right)\! \left( \fce{v}{S} = \fce{v}{S \cup i} \right) \implies \fce{f_i}{v} = 0 \right)   $,
+		\item additivity, $ \left( \forall v,w \in \games n \right)\! \left( \fce{f}{v + w} = \fce{f}{v} + \fce{f}{w} \right) $.
+	\end{enumerate}
+\end{thm}
+
+\section{Online Learning}
+
+\subsection{Regret Minimization}
+
+\subsection{Reinforcement Learning}
+
+% TODO: reiforcement learning vs ML
+
+% TODO: proč RL
+
+% TODO: PPO algoritmus
