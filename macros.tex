@@ -6,6 +6,7 @@
 % These macros employ a little dirty trick to convince LaTeX to typeset
 % chapter headings sanely, without lots of empty space above them.
 % Feel free to ignore.
+\usepackage{enumitem}
 \makeatletter
 \def\@makechapterhead#1{
   {\parindent \z@ \raggedright \normalfont
@@ -87,7 +88,10 @@
 \newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
 \newcommand{\mc}[1]{\multicolumn{1}{c}{#1}}
 
+\def\suchthat{\,|\,}
 \def\pot#1{\fce{\mathcal{P}}{#1}}
+\def\deq{\mathbin{:=}}
+\def\absolute#1{\left\lvert #1 \right\rvert }
 
 % functions with auto parenths
 \def\bfce#1#2{#1\!\bigl(#2\bigr)}
@@ -95,3 +99,8 @@
 \def\fceb#1#2{#1\!\left[ #2 \right]}
 \def\fcec#1#2{#1\{#2\}}
 \def\fces#1#2{#1\!\left< #2 \right>}
+
+\def\games#1{\Gamma^{#1}}
+\def\core{\fce{\mathcal{C}}}
+\def\Shapley{\phi}
+\def\shapley{\fce{\Shapley}}
