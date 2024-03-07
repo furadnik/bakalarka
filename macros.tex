@@ -37,9 +37,10 @@
 \newtheorem{thm}{Theorem}
 \newtheorem{lemma}[thm]{Lemma}
 \newtheorem{claim}[thm]{Claim}
+\newtheorem{prop}[thm]{Proposition}
 
 \theoremstyle{plain}
-\newtheorem{defn}{Definition}
+\newtheorem{defi}{Definition}
 
 \theoremstyle{remark}
 \newtheorem*{cor}{Corollary}
@@ -85,3 +86,12 @@
 %%% Various table goodies
 \newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
 \newcommand{\mc}[1]{\multicolumn{1}{c}{#1}}
+
+\def\pot#1{\fce{\mathcal{P}}{#1}}
+
+% functions with auto parenths
+\def\bfce#1#2{#1\!\bigl(#2\bigr)}
+\def\fce#1#2{#1\!\left(#2\right)}
+\def\fceb#1#2{#1\!\left[ #2 \right]}
+\def\fcec#1#2{#1\{#2\}}
+\def\fces#1#2{#1\!\left< #2 \right>}

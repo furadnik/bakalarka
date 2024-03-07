@@ -1,0 +1,114 @@
+\chapter{Preliminaries}
+
+\section{Set functions}
+
+% co je set funkce
+Set functions are very general objects studied extensively in countless fields, including
+matroid theory, game theory utility functions and countless others. % TODO: citace a konkrétní příklady
+
+
+% definice set funkce
+\begin{defi}[Set function]
+	Let $ N $ be a finite set.
+	A \emph{set function} on the set $ N $ is any function $ f: \pot N \to \R $.
+\end{defi}
+
+Though the definition of a set function consideres a general finite set $ N $, in this thesis,
+we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
+This simplification is common in the literature,  % TODO: citace
+as it allows us to be more concrete when discussing set functions, while
+the results we show can be easily generalized to the case of a general finite set $ N $.
+
+% k čemu jsou
+For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represet a \emph{utility} an agent receives from obtaining a subset of the goods.
+
+% monotonicita
+When studying set functions modelling real-world problems, we can often assume that the set function has certain properties.
+One of the most natural and commonly observed of such properties is \emph{monotonicity}.
+
+\begin{defi}[Monotonicity]
+	A set function $ f: \pot N \to \R $ is \emph{monotonically non-decreasing} if \[
+		\left( \forall S \subseteq T \subseteq N \right)\quad \fce{f}{S} \leq \fce{f}{T},
+	\]
+	and \emph{monotonically non-increasing} if \[
+		\left( \forall S \subseteq T \subseteq N \right)\quad \fce{f}{S} \geq \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+In our example of a set function representing utility, assuming the utility of each good by itself is non-negative, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of an agent.
+% TODO: ne vždycky
+
+% superadditivita
+Another very common and natural property of many set functions is \emph{superadditivity}.
+
+% TODO: jak to udělat s tím že máme i subadditivitu?
+\begin{defi}[Superadditivity]
+	A set function $ f: \pot N \to \R $ is \emph{superadditive} if \[
+		\left( \forall S, T \subseteq N; S \cap T = \emptyset \right)\quad \fce{f}{S \cup T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+Getting back to our example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
+In other words, a set is at least as valuable as the sum of its parts.
+
+% supermodularita
+\begin{defi}[Supermodularity]
+	A set function $ f: \pot N \to \R $ is \emph{supermodular} if \[
+		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+% TODO: proč je supermodularita sexy
+% TODO: hrozně sexy struktura
+
+% submodularita
+\begin{defi}[Submodularity]
+	A set function $ f: \pot N \to \R $ is \emph{submodular} if \[
+		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \leq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+% TODO: vztah se supermodularitou
+% TODO: proč submodularita je taky sexy
+% TODO: greedy algoritmy a matroidy
+
+\section{Cooperative game theory}
+
+% TODO: co je to kooperativní teorie her
+Cooperative game theory is a field of mathematics that studies situations in which agents can form cooperating groups, called \emph{coalitions}.
+These coalitions receive a \emph{payoff} from the game, which is then somehow divided among the agents in the coalition.
+The goal of cooperative game theory is to study the \emph{stability} of the formed coalitions, and the \emph{distribution} of the payoff among the agents.
+
+% definice kooperativní hry
+\begin{defi}[Cooperative game]
+	A \emph{cooperative game} is a pair $ \left( N,v \right) $, where $ N $ is a finite set of \emph{players} and $ v: \pot N \to \R $ is the \emph{characteristic function} of the game.
+	Further, we require that $ \fce{v}{\emptyset} = 0 $.
+\end{defi}
+
+% TODO: vztah se set functs
+From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
+
+% supermodularita => superadditivita
+\begin{prop}[ ]
+	Let $ \left( N,v \right) $ be a cooperative game.
+	If the characteristic function $ v $ is supermodular, then it is superadditive.
+\end{prop}
+
+% TODO: nebudeme chtít tohle mít pro všechny set funkce? chceme to řešit v preliminaries nebo radši až potom v definici lower/upper?
+\begin{proof}
+	Suppose $ S,T \subseteq N $, such that $ S \cap T = \emptyset $.
+	We will use the definition of supermodularity, along with the fact that $ \fce{v}{\emptyset} = 0 $.
+	We get \[
+		\fce{v}{S} + \fce{v}{T} \leq \fce{v}{S \cup T} + \fce{v}{S \cap T} = \fce{v}{S \cup T} + \fce{v}{\emptyset} = \fce{v}{S \cup T},
+	\]
+	which is exactly the definition of superadditivity.
+\end{proof}
+
+% TODO: payoff vector
+% TODO: efficiency
+% TODO: solution concept
+% TODO: shapley
+
+\section{Reinforcement learning}
+
+% TODO: struktura
