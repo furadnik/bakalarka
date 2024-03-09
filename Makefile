@@ -13,3 +13,10 @@ abstract.pdf: abstract.tex abstract.xmpdata
 clean:
 	rm -f *.log *.dvi *.aux *.toc *.lof *.lot *.out *.bbl *.blg *.xmpi
 	rm -f thesis.pdf abstract.pdf
+
+overleaf:
+	git fetch overleaf
+	git merge overleaf/master -m 'review: overleaf'
+	git push overleaf
+
+.PHONY: overleaf clean all
