@@ -15,7 +15,7 @@ matroid theory, game theory utility functions and countless others. % TODO: cita
 
 Though the definition of a set function consideres a general finite set $ N $, in this thesis,
 we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
-This simplification is common in the literature,  % TODO: citace
+This simplification is common in the literature,  % TODO: citace; jinak, proste jsou izomorfni
 as it allows us to be more concrete when discussing set functions, while
 the results we show can be easily generalized to the case of a general finite set $ N $.
 
@@ -42,7 +42,7 @@ In our example of a set function representing utility, assuming the utility of e
 % superadditivita
 Another very common and natural property of many set functions is \emph{superadditivity}.
 
-% TODO: jak to udělat s tím že máme i subadditivitu?
+% TODO: jak to udělat s tím že máme i subadditivitu? -- nejdriv super, pak note: sub
 \begin{defi}[Superadditivity]
 	A set function $ f: \pot N \to \R $ is \emph{superadditive} if \[
 		\left( \forall S, T \subseteq N; S \cap T = \emptyset \right)\quad \fce{f}{S \cup T} \geq \fce{f}{S} + \fce{f}{T}.
@@ -73,6 +73,7 @@ In other words, a set is at least as valuable as the sum of its parts.
 % TODO: greedy algoritmy a matroidy
 % TODO: třídy funkcí
 
+% TODO: capitalization?
 \section{Cooperative game theory}
 
 % TODO: co je to kooperativní teorie her
@@ -92,6 +93,7 @@ When discussing coalitions, we usually use the terms \emph{grand coalition} for 
 From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
 
 % supermodularita => superadditivita
+% TODO: kopirovat do setfunkci
 \begin{prop}[ ]
 	Let $ \left( N,v \right) $ be a cooperative game.
 	If the characteristic function $ v $ is supermodular, then it is superadditive.
@@ -123,7 +125,7 @@ The payoff of players is described by a payoff vector.
 
 For simplicity, we usually shorten the notation of sum over the values of the payoff vector.
 For a general coalition $ S \subseteq N $, we denote \[
-	\fce{x}{S} \deq \sum_{i \in S}^{} x_i.
+	\fce{x}{S} \deq \sum_{i \in S}^{} x_i. % TODO: tohle lip: pouzivame rozsireni setfunkci bla bla; also, dat vic na zacatek?
 \]
 % efficiency
 In this thesis, we will only consider efficient payoff vectors, as we want to distribute the entire value of the grand coalitions.
@@ -138,6 +140,7 @@ Formally
 	A \emph{solution concept} is a function $ f: \games n \to \pot{\R^n} $.
 \end{defi}
 
+% TODO: masirovat
 Some solution concepts, so-called \emph{multi-point solution concepts}, give sets of payoff vectors of varying size, depending on the game.
 However, some important solution concepts are so-called \emph{single-point}, that is, they map each game to exactly one vector.
 In those cases, we simplify the notation to leave out the set, yielding a solution concept with the signature $ f: \games n \to \R^n $.
@@ -171,7 +174,7 @@ That obviously depends on your definition of fairness, which can be very subject
 However, the Shapley value is generally accepted as fair, as it satisfies many natural qualities that a reasonable fair solution concept should satisfy.
 
 % TODO: citace
-\begin{thm}[Characterization of the Shapley value]
+\begin{prop}[Characterization of the Shapley value]
 	The Shapley value $ \Shapley $ is the unique function satisfying the following properties: \begin{enumerate}[ ]
 		\item efficience, $ \sum_{i \in N}^{} \fce{f_i}{v} = \fce{v}{N} $,
 		\item symmetry, \[
@@ -180,7 +183,8 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 		\item null player, $ \left( \forall i \in N \right)\! \left( \left( \forall S \subseteq N \setminus i \right)\! \left( \fce{v}{S} = \fce{v}{S \cup i} \right) \implies \fce{f_i}{v} = 0 \right)   $,
 		\item additivity, $ \left( \forall v,w \in \games n \right)\! \left( \fce{f}{v + w} = \fce{f}{v} + \fce{f}{w} \right) $.
 	\end{enumerate}
-\end{thm}
+\end{prop}
+% TODO: další vlastnosti SV?
 
 \section{Reinforcement learning}
 
