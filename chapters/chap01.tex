@@ -199,6 +199,7 @@ Online learning is a very general model, which can be used to model many differe
 In this thesis, we will focus on the online learning of a single agent.
 \david{Za mě online learning je podmnožina machine learning, kde data dostáváš v diskétních časech a děláš nějaké akce. Pro nás relevantní je, že pozorovaná data můžou záviset na akcích co jsi dělal v minulosti.}
 \filip{No v tom případě pak ale regret tak jak ho používáme my není online ne? Proto definuju OL jako že postupně hraju hru a zlepšuju se}
+\david{regret rozhodně je online v tom smyslu co jsem napsal. Asi nevidím, kde je problém.}
 
 
 % TODO: muze byt obecne, my si vybirame strategii
@@ -206,21 +207,24 @@ In this thesis, we will focus on the online learning of a single agent.
 % agent+environment
 Now, let us define the model a bit more formally.
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
-We will start with a model, where, though the game is played repeatedly, one run of the game only consists of a single move (in words of game theory, the game \emph{isn't} sequential\david{simultaneous-move game}\filip{co tuhle závorku vyhodit celou? :D}).
+We will start with a model, where, though the game is played repeatedly, one run of the game only consists of a single move (in words of game theory, the game \emph{isn't} sequential\david{simultaneous-move game}\filip{co tuhle závorku vyhodit celou? :D}\david{sure}).
 We will extend this model, so one run of the game will consist of multiple moves, later when discussing regret and reiforcement learning.
 \david{Z tohohle odstavce jsem zmatenej. Moc nevim co se tu říká a proč je to relevantní. Vždyť my vůbec neřešíme nějakou hru více hráčů, prostě bych to všechno bral jako interakci s black-boxem.}
 \filip{Snažím se říct, že nejdřív budu uvažovat situace kdy vybírám jednu akci, a pak kdy vybírám sekvenci akcí. Jestli jde o to "game", tak to je asi fakt že by bylo lepší říkat tomu nějak jinak, jen moc nevím jak, `game` takový pěkný krátký slovo :D}
+\david{Proto bych to celé zabalil do toho abstraktního `environmentu'. Fakt bych sem pastnul ten stráčův oblíbený obrázek na RL :D}
 
 % TODO: daviduv oblibeny obrazek
 \begin{defi}[Online learning]\label{def:online-learning}
 	The agent has a set of \emph{actions} $ A = \left\{ 1, \dots, a \right\} $.
 	% TODO: popsat "dist" značení
-	He chooses a distribution $ \pi \in \dist A $\david{Psal bych $\Delta^{|A|}$}\filip{Změněno, ale nechal bych to bez abs hodnoty, podle mě to líp vystihuje to že pak tam indexujeme s akcema, byť je pravda že pro nás jsou to všechno jen čísla...}, which specifies with which probability he will play each action.
+	He chooses a distribution $ \pi \in \dist A $\david{Psal bych $\Delta^{|A|}$}\filip{Změněno, ale nechal bych to bez abs hodnoty, podle mě to líp vystihuje to že pak tam indexujeme s akcema, byť je pravda že pro nás jsou to všechno jen čísla...}\david{podle mě $\Delta^d$ je $d$-dimenzionální simplex. Když ale $d$ není číslo, tak je to divný.}\filip{Já to vnímám tak jako se to používá např. u matic, kde když máš něco jako matici sousedů grafu (jo já vim), tak se dělá $A \in \R^{V \times V}$, a indexuje se vrcholama}\david{Hele ok, to je asi fakt. Dokud to je konzistentní a jasný, tak to je rozhodně ok.}, which specifies with which probability he will play each action.
 	He then receives a \emph{loss} $ \ell \in \R^a $, which specifies the loss of the agent for each action.
 \end{defi}
+% TODO: čas (epochy)
 \david{Tahle definici mi přijde nic neříká. Není tam nic o tom, že se to děje v krocích třeba. A jsem celkem smutnej z lossů - v RL se bude mluvit o rewardech, tak proč to hned nesjednotit?}
 \filip{V krocích to zatím být nemá, chtěl jsem nejdřív zadefinovat ten jednokrokovej model (viz odstavec nad tím).}
 \filip{Skoro bych se přikláněl k tomu, že jestli chceme mít losses a rewards sjednocený, tak používat losses i v RL (protože pak budeme mít gap, což je taky loss).}
+\david{Já teda s lossama vidim velký špatný, ale tak klidně :D Ale můj problém je v tom případě, že tahle definice není online learningu. Obecně mi nevadí to nějak rozdělit, ale online learning bych prostě definoval jako opakovanou interakci s nějakým environmentem, kterému posíláš distribuce a on ti vrací lossy (sigh) a možná něco navíc (states v RL).}\filip{V tom máš pravdu. probereme na meetingu :P}
 
 Of course, when applying this model in the real world, the agent must choose one specific action, and receive the corresponding loss.
 However, we are interested in what happens \emph{on average} over all the actions chosen according to $ \pi $.
@@ -282,6 +286,7 @@ Suppose that the agent chooses action $ 1 $ with probability $ 1 $, and an algor
 Then the experienced loss of the agent is $ 1 $, while the experienced loss of $ \alg $, as seen from the definition of regret, is $ 0 $, even though, had we followed $ \alg $, we would have experienced loss $ 1 $, too.
 \david{Tomu konci nerozumím. Loss akce 2 je 0 ne? Takže regret k té akci je 1.}
 \filip{Přesně tak. Já tam akorát mluvím o loss. Chci tam vysvětlit že když počítám $\cxl^T_{\alg} $, tak to není to samý jako co by dostal ten algoritmus kdyby reálně hrál.}
+\david{Aha, už chápu. To je určitě fajn point vypíchnout, ale trochu se to ztrácí v téhle formulaci.}
 
 % swap regret, internal, external?
 Let us now mention different types of regret, meaning different comparison sets $ \algs $, along with their properties.
