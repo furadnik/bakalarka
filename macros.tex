@@ -1,3 +1,5 @@
+\usepackage{csquotes}
+\usepackage{babel}
 %%% This file contains definitions of various useful macros and environments %%%
 %%% Please add more macros here instead of cluttering other files with them. %%%
 
@@ -73,7 +75,7 @@
 
 %%% Useful operators for statistics and probability
 \DeclareMathOperator{\pr}{\textsf{P}}
-\DeclareMathOperator{\E}{\textsf{E}\,}
+\DeclareMathOperator*{\E}{\mathbb{E}}
 \DeclareMathOperator{\var}{\textrm{var}}
 \DeclareMathOperator{\sd}{\textrm{sd}}
 
@@ -107,7 +109,7 @@
 \def\games#1{\Gamma^{#1}}
 \def\core{\fce{\mathcal{C}}}
 \def\Shapley{\phi}
-\def\shapley{\fce{\Shapley}}
+\newcommand\shapley[1][]{\fce{\Shapley_{#1}}}
 \def\dist#1{\Delta^{#1}}
 \def\exl{\hat{\ell}}
 \def\cl{L}
@@ -115,7 +117,29 @@
 \def\algs{\mathcal{A}}
 \def\alg{\textsf{A}}
 \def\k{\mathcal{K}}
+\def\s{\mathcal{S}}
 \def\C{\mathcal{C}}
 
+% lower and upper functions
+\newcommand{\lf}[2][\k]{\underline{#2}_{#1}}
+\newcommand{\uf}[2][\k]{\overline{#2}_{#1}}
+
 % classes
-\def\cAdditive{\mathcal{A}^n}
+\def\funcs{\mathbb{F}}
+\def\cAdditive{\mathbb{A}^n}
+\def\cSuperadditive{\mathbb{S}^n}
+\def\cSupermodular{\mathbb{C}^n}
+
+% norms
+\def\lp#1{\ell_{#1}}
+\def\lpinf{\lp \infty}
+\def\lpt{\lp 2}
+\def\lpo{\lp 1}
+
+% divergence
+\newcommand{\divg}[2][f]{\fce{\Delta_{#1}^{#2}}}
+
+\def\fdist{\mathcal{F}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+

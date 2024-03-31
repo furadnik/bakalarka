@@ -1,4 +1,4 @@
-\chapter{Principal's Problem}
+\chapter{Problem Definition}
 
 We will now define the model we will be using.
 Suppose we have a real-world situation, which can be modelled using a set function over some set $ N $.
@@ -49,10 +49,135 @@ As we will mostly focus on superadditive extensions, we will first define so-cal
 
 \begin{defi}[Minimal information]
   An incomplete set function $ \left( f,\k \right) $ \emph{has minimal information}, if $ \k_0 \subseteq \k $, where \[
-    \k_0 = \left\{ \emptyset, N \right\} \cup \left\{ \left\{ i \right\} \suchthat i \in N \right\}.
+    \k_0 \deq \left\{ \emptyset, N \right\} \cup \left\{ \left\{ i \right\} \suchthat i \in N \right\}.
   \]
 \end{defi}
 
-% TODO: od teď v(0) = 0 & proč to nevadí
+% od teď v(0) = 0 & proč to nevadí
+From this point on, we will limit ourselves to incomplete set functions with minimal information, where further $ \fce{f}{0} = 0 $.
+This restricts the incomplete set functions we are working with, but only by a small margin, as we require only a \emph{linear} number of values to be known, compared to the exponential number of values which are still potentially unknown.
+On the other hand, this restriction enables us to \emph{bound} the unknown values of $ f $, assuming that $ f $ is superadditive.
 
-% TODO: upper a lower bound
+% upper a lower bound
+\begin{defi}[Lower/upper function]
+  Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then the \emph{lower function} $ \lf f $ is defined as \[
+    \fce{\lf f}{S} \deq \max_{\substack{S_1, \dots, S_k \in \k \\ \bigcup_i S_i = S \\ S_i \cap S_j = \emptyset}} \sum_{i=1}^k \fce{f}{S_i},
+  \]
+  and the \emph{upper function} $ \uf f $ is defined as \[
+    \fce{\uf f}{S} \deq \min_{\substack{T \in \k \\ T \subseteq S}} \fce{f}{T} - \fce{\lf f}{S \setminus T}.
+  \]
+\end{defi}
+
+\begin{prop}[ ]
+  Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then \[
+    \left( \forall S \subseteq N \right)\quad \fce{\lf f}{S} \leq \fce{f}{S} \leq \fce{\uf f}{S}.
+  \]
+\end{prop}
+% TODO: proof of this?
+
+Further, as the following proposition shows, these bounds are tight.
+
+\begin{prop}[ ]
+  Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then for $ S \in \pot N \setminus \k $, there exist $ g,h \in \fce \cSuperadditive{f, \k} $, such that \[
+    \fce{g}{S} = \fce{\lf f}{S}, \qquad \fce{h}{S} = \fce{\uf f}{S}.
+  \]
+\end{prop}
+
+Note that the upper and lower functions themselves needn't be members of $ \fce \cSuperadditive{f, \k} $.
+% TODO: koop hry jak??
+
+\section{Divergence}
+
+% TODO: citace našeho workshop článku
+We would now like to measure the ambiguity of the incomplete set function.
+We will do that by measuring the size of the set of $ \cSuperadditive $-extensions of $ \left( f, \k \right) $.
+More precisely, we will measure the distance between the upper and lower functions.
+
+\begin{defi}[Divergence]
+  Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
+  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as \[
+    \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
+  \]
+\end{defi}
+
+Note that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
+This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
+However, when working with the divergence, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence.
+To remedy this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
+
+The properties of the divergence differ based on the choice of the function $ \ell $.
+For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote by $ \lp k $), then the divergence will be \[
+  \divg {\lp k} \k \deq \sum_{S \in \pot N}^{} \left( \fce{\uf f}{S} - \fce{\lf f}{S} \right)^k.
+\]
+This is exactly the $ L_k $-lenght of the longest diagonal in the hyperrectangle defined by the values of the upper and lower functions,
+when viewed as $ 2^n $-dimensional vectors.
+
+\subsection{Utopian Gap}
+
+The divergence is a generalization of the so-called \emph{utopian gap} we have introduced in \cite{uradnik2024reducing}.
+It has an interpretation in cooperative game theory, where the upper and lower functions are bounds on the characteristic function $ v $ of a cooperative game.
+There, we want to split the value of $ \fce{v}{N} $ fairly among the players, using the Shapley value.
+However, the Shapley value requires all the values of $ v $ to be known, which is not the case.
+
+One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $.
+However, then each player has an incentive to choose the function which gives him the highest payoff, and without knowing the true value of $ v $,
+there is no way to tell which choice is the most reasonable.
+Hence the utopian gap defined to measure the difference between the players' choices, and the real value of $ v $.
+
+\begin{defi}[Utopian gap]
+  Let $ \left( N, \k, v \right) $ be an incomplete cooperative game.
+  The \emph{utopian gap} of a cooperative game $ v $ is \[
+    \dist v \deq \sum_{i \in N} \shapley[i] {v_i} - \fce{v}{N},
+  \]
+  where $ v_i $ is the \emph{utopian game} of player $ i $, defined as \[
+    \fce{v_i}{S} \deq \begin{cases}
+      \fce{\uf v}{S} & \text{if } i \in S, \\
+      \fce{\lf v}{S} & \text{if } i \notin S.
+    \end{cases}
+  \]
+\end{defi}
+
+% TODO: properties of UG?
+
+\section{Principal's Problems}
+
+We will now introduce the main framework we will be working with, both in the theoretical and the experimental parts of this thesis.
+The setup is as follows: we have a real-world situation modelled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq N $ values.
+There is a principal, who wants to know the values of $ f $ as best as possible.
+However, she only has the budget to reveal $ \tau $ values.
+She wants to choose $ \tau $ subsets from $ \pot N \setminus \k $ of which to reveal their values (adding them to $ \k $), such that the bounds on the unknown values as tight as possible, as measured by the divergence with a chosen function $ \ell $.
+
+From this basic setup, we have two possible approaches to minimizing the divergence.
+First, we can try to establish, which $ \tau $ subsets lead to the smallest divergence in expectation.
+This leads to the definition of the \emph{offline principal's problem}.
+
+\begin{defi}[Offline principal's problem]
+  Let $ \fdist $ be a given distribution of superadditive set functions, and $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
+  Let $ \k_0 \subseteq \k \subseteq \pot N $ be known values of the set function.
+  The \emph{offline principal's problem} is to find a set $ \s \subseteq \pot N \setminus \k $, such that \[
+    \s = \argmin_{\substack{\abs{\s} = \tau \\ \s \subseteq \pot N \setminus \k }} \E_{f \sim \fdist} \left[ \divg \ell {\k_- \cup \s} \right].
+  \]
+\end{defi}
+
+This is a approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
+However, there is an approach which leads to a potentially lower value of the divergence.
+The flaw of the offline problem is that the optimal $ \s $ might depend on the specific instance $ f $ taken from $ \fdist $.
+Now, granted, the principal doesn't know all the values of $ f $.
+However, she \emph{does} know $ \k $, and she has budget to reveal $ \tau $ extra values.
+So it might be beneficial to look at the values from $ \k $, and even possibly spend some of the budget on exploring other values of $ f $,
+and then use the remainder of the budget to reveal the values which are most beneficial in the specific instance $ f $, beating the offline approach.
+We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
+
+% TODO: example: factory?
+
+% TODO: formal def
+The formal definition of the online principal's problem is a bit more involved.
+
+\begin{defi}[Online principal's problem]
+  :(
+\end{defi}
+\filip{definice kterou používáme v \cite{uradnik2024reducing} se mi nelíbí, ale nedaří se mi vymyslet lepší}
