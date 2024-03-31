@@ -1,7 +1,7 @@
 \chapter{Problem Definition}
 
-We will now define the model we will be using.
-Suppose we have a real-world situation, which can be modelled using a set function over some set $ N $.
+We will now define the model we will be using.\david{working in}
+Suppose we have a real-world situation\david{lol}, which can be modelled using a set function over some set $ N $.
 The most natural example of this is cooperative game theory, where we have a set of players $ N $, who are, say, starting a company together.
 Now the players want to split the earnings in a fair way, using the Shapley value.
 However, as there are many of them, the characteristic function $ v $ is huge, requiring the knowledge of values for every coalition $ S \subseteq N $.
@@ -10,7 +10,7 @@ Without the knowledge of all the values in $ v $, they will not be able to compu
 This gives rise to \emph{ambiguity} in the distribution of earnings -- a player may claim he's more valuable to the grand coalition than he actually is, requiring a bigger share of the profit.
 % TODO: fix cite -- special characters
 In \cite{uradnik2024reducing}, we have proposed a framework where the players select a portion of coalitions for which to reveal the values, such that the ambiguity is minimized.
-In this thesis, I am extending our work, both in theoretical and practical aspects, most notably by introducing the more general set functions and regret minimization.
+In this thesis, I\david{nevim jaká je konvence, ale všude jinde píšeš we. Ale je zas fakt, že tohle by měla být jen tvoje práce. Nevim, asi bych dal we a doufal, že je to implicitní.} am extending our work, both in theoretical and practical aspects, most notably by introducing the more general set functions and regret minimization.
 
 \section{Incomplete Set Functions}
 
@@ -33,7 +33,7 @@ This may seem unnatural at first, but it will help us in subsequent definitions.
   The class of all $ \C $-extensions of $ \left( f,\k \right) $ is denoted by $ \fce{\C}{f, \k} $.
 \end{defi}
 
-By assuming that $ f \in \C $, the $ \C $-extensions are a class containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
+By assuming that $ f \in \C $, the $ \C $-extensions are a class\david{class?} containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
 The set $ \fce{\C}{f, \k} $ is non-empty, as $ f $ is always a $ \C $-extension of itself, by the assumption of $ f \in \C $.
 Further, if $ \k = \pot N $, then $ \fce{\C}{f, \k} $ is of size 1 -- only containing $ f $ itself.
 Note that the set of $ \C $-extensions can have size 1 even for $ \k \neq \pot N $, as the following example shows.
@@ -55,7 +55,7 @@ As we will mostly focus on superadditive extensions, we will first define so-cal
 
 % od teď v(0) = 0 & proč to nevadí
 From this point on, we will limit ourselves to incomplete set functions with minimal information, where further $ \fce{f}{0} = 0 $.
-This restricts the incomplete set functions we are working with, but only by a small margin, as we require only a \emph{linear} number of values to be known, compared to the exponential number of values which are still potentially unknown.
+This restricts the incomplete set functions we are working with, but only by a small margin, as we require only a \emph{linear} number of values to be known, compared to the exponential number of\david{all values tečka}values which are still potentially unknown.
 On the other hand, this restriction enables us to \emph{bound} the unknown values of $ f $, assuming that $ f $ is superadditive.
 
 % upper a lower bound
@@ -85,6 +85,7 @@ Further, as the following proposition shows, these bounds are tight.
     \fce{g}{S} = \fce{\lf f}{S}, \qquad \fce{h}{S} = \fce{\uf f}{S}.
   \]
 \end{prop}
+\david{důkazy obojího}
 
 Note that the upper and lower functions themselves needn't be members of $ \fce \cSuperadditive{f, \k} $.
 % TODO: koop hry jak??
@@ -93,20 +94,20 @@ Note that the upper and lower functions themselves needn't be members of $ \fce 
 
 % TODO: citace našeho workshop článku
 We would now like to measure the ambiguity of the incomplete set function.
-We will do that by measuring the size of the set of $ \cSuperadditive $-extensions of $ \left( f, \k \right) $.
-More precisely, we will measure the distance between the upper and lower functions.
+We will do that by measuring the size of the set of $ \cSuperadditive $-extensions of $ \left( f, \k \right) $.\david{Možná říct, že buď máme jeden bod nebo kontinuum, ale různé dimenze. Takže nejde použít něco jako objem, ale musíme dělat tenhle divnej trik s normou / Shapleyho hodnotou?}
+More precisely, we will measure\david{mockrát measure :)} the distance between the upper and lower functions.
 
 \begin{defi}[Divergence]
   Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
   Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
-  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as \[
+  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as\david{chybí sloveso} \[
     \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
   \]
 \end{defi}
 
 Note that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
 This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
-However, when working with the divergence, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence.
+However, when working with the divergence, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence\david{Tahle věta mě zmátla, vypadá to, že chceš podvádě a pak ani nepodvádíš.}.
 To remedy this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
 
 The properties of the divergence differ based on the choice of the function $ \ell $.
@@ -121,9 +122,9 @@ when viewed as $ 2^n $-dimensional vectors.
 The divergence is a generalization of the so-called \emph{utopian gap} we have introduced in \cite{uradnik2024reducing}.
 It has an interpretation in cooperative game theory, where the upper and lower functions are bounds on the characteristic function $ v $ of a cooperative game.
 There, we want to split the value of $ \fce{v}{N} $ fairly among the players, using the Shapley value.
-However, the Shapley value requires all the values of $ v $ to be known, which is not the case.
+However, the Shapley value requires all the values of $ v $ to be known, \david{tečka}which is not the case.
 
-One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $.
+One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $.\david{Suppose it is known that $v$ is supermodular.}
 However, then each player has an incentive to choose the function which gives him the highest payoff, and without knowing the true value of $ v $,
 there is no way to tell which choice is the most reasonable.
 Hence the utopian gap defined to measure the difference between the players' choices, and the real value of $ v $.
@@ -147,7 +148,7 @@ Hence the utopian gap defined to measure the difference between the players' cho
 
 We will now introduce the main framework we will be working with, both in the theoretical and the experimental parts of this thesis.
 The setup is as follows: we have a real-world situation modelled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq N $ values.
-There is a principal, who wants to know the values of $ f $ as best as possible.
+There is a principal, who wants to know the values of $ f $ as best\david{precisely} as possible.
 However, she only has the budget to reveal $ \tau $ values.
 She wants to choose $ \tau $ subsets from $ \pot N \setminus \k $ of which to reveal their values (adding them to $ \k $), such that the bounds on the unknown values as tight as possible, as measured by the divergence with a chosen function $ \ell $.
 
@@ -163,11 +164,11 @@ This leads to the definition of the \emph{offline principal's problem}.
   \]
 \end{defi}
 
-This is a approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
+This is a approach which, if it were solved exactly, would give a \textquote{recipe}\david{tenhle comand mi nefunguje jde dělat `recipe'} for the principal to follow, regardless of the already revealed values of $ f $.
 However, there is an approach which leads to a potentially lower value of the divergence.
-The flaw of the offline problem is that the optimal $ \s $ might depend on the specific instance $ f $ taken from $ \fdist $.
+The flaw of the offline problem is that the optimal $ \s $ might depend on the specific instance $ f $ taken from $ \fdist $.\david{Observe that the principal doesn't use the values on the coalitions she encounters during the revelation process. These can be used to restrict the distribution $\fdist$, improving performance.}
 Now, granted, the principal doesn't know all the values of $ f $.
-However, she \emph{does} know $ \k $, and she has budget to reveal $ \tau $ extra values.
+However, she \emph{does} know $ \k $\david{tohle zní divně, jako by offline přistup nepoužíval tyhle hodnoty.}, and she has budget to reveal $ \tau $ extra values.
 So it might be beneficial to look at the values from $ \k $, and even possibly spend some of the budget on exploring other values of $ f $,
 and then use the remainder of the budget to reveal the values which are most beneficial in the specific instance $ f $, beating the offline approach.
 We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
