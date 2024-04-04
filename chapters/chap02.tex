@@ -189,7 +189,7 @@ To quantify the performance of the policy, let us define a \emph{policy valuatio
 
 \begin{defi}[Online policy valuation]
   Let $ \pi: \pot {N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
-  Let$ \left( f, \k \right) $ be an incomplete set function with minimal information, and let $ \tau \in \N $, such that $ \tau \leq \absolute{N \setminus \k} $.
+  Let$ \left( f, \k \right) $ be an incomplete set function with minimal information, and let $ \tau \in \N $, such that $ \tau \leq \absolute{\pot N \setminus \k} $.
   The \emph{policy valuation} of $ \pi $ is defined recursively as \[
     \val \tau \ell f \k \pi \deq \begin{cases}
       \E_{S \sim \pi(f\left< \k \right>, \tau)} \left[ \val {\tau - 1} \ell f {\k \cup S} \pi \right] & \text{if } \tau > 0, \\
