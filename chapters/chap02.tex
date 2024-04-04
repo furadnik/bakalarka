@@ -106,14 +106,14 @@ More precisely, we will measure\david{mockrát measure :)} the distance between 
   \]
 \end{defi}
 
-Note that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
+Notice that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
 This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
 However, when working with the divergence, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence\david{Tahle věta mě zmátla, vypadá to, že chceš podvádě a pak ani nepodvádíš.}.
 To remedy this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
 
 The properties of the divergence differ based on the choice of the function $ \ell $.
 For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote by $ \lp k $), then the divergence will be \[
-  \divg {\lp k} \k \deq \sum_{S \in \pot N}^{} \left( \fce{\uf f}{S} - \fce{\lf f}{S} \right)^k.
+\divg {\lp k} \k \deq \sqrt[k]{\sum_{S \in \pot N}^{} \absolute{ \fce{\uf f}{S} - \fce{\lf f}{S}}^k}.
 \]
 This is exactly the $ L_k $-lenght of the longest diagonal in the hyperrectangle defined by the values of the upper and lower functions,
 when viewed as $ 2^n $-dimensional vectors.
@@ -174,17 +174,41 @@ Now, granted, the principal doesn't know all the values of $ f $.
 However, in addition to knowing $ \k $, and she has budget to reveal $ \tau $ extra values.
 \david{tohle zní divně, jako by offline přistup nepoužíval tyhle hodnoty.}
 \filip{přeformulováno. also, tak jak jsem to napsal teď, tak to je vlastně pravda, což nevím jestli chceme. kdyby v $ \fdist $ byly funkce které mají různé hodnoty na $ \k $, tak ten offline problém by tuhle informaci stejně nepoužil.}
-It might be beneficial to look at the values from $ \k $, and even possibly spend some of the budget on exploring other values of $ f $,
+It might be benefitial to look at the values from $ \k $, and even possibly spend some of the budget on exploring other values of $ f $,
 and then use the remainder of the budget to reveal the values which are most beneficial in the specific instance $ f $.
 We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
 In contrast, the offline problem seeks a 
 
-% TODO: example: factory?
+% TODO: example: factory? all zeros a additive
 
 % TODO: formal def
 The formal definition of the online principal's problem is a bit more involved.
+Unlike the offline problem, here the solution will be a \emph{policy} $ \pi $, according to which the principal will choose the next values to reveal, based on the values she has already seen.
+This policy will have as its input the known values $ \k $, the revealed values of $ f $, and the remaining number of steps $ \tau $.
+To quantify the performance of the policy, let us define a \emph{policy valuation function} as follows.
+
+\begin{defi}[Online policy valuation]
+  Let $ \pi: \pot {N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
+  Let$ \left( f, \k \right) $ be an incomplete set function with minimal information, and let $ \tau \in \N $, such that $ \tau \leq \absolute{N \setminus \k} $.
+  The \emph{policy valuation} of $ \pi $ is defined recursively as \[
+    \val \tau \ell f \k \pi \deq \begin{cases}
+      \E_{S \sim \pi(f\left< \k \right>, \tau)} \left[ \val {\tau - 1} \ell f {\k \cup S} \pi \right] & \text{if } \tau > 0, \\
+      \divg \ell \k & \text{if } \tau = 0,
+    \end{cases}
+  \]
+  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $.
+\end{defi}
+
+\filip{Jak moc je tohle nechutný?}
 
 \begin{defi}[Online principal's problem]
-  :(
+  Let $ \fdist $ be a given distribution of superadditive set functions, and $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
+  Let $ \k_0 \subseteq \k \subseteq \pot N $ be known values of the set function.
+  The \emph{online principal's problem} is to find a policy $ \pi: \pot {N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $,
+  which receives \begin{enumerate}[ ]
+    \item the known values $ \k $, along with the revealed values $ \fce{f}{S} $ for $ S \in \k $, and
+    \item $ \tau $, the remaining number of steps,
+  \end{enumerate}
+  and outputs a probability distribution over the subsets of $ \pot N \setminus \k $, such that 
+  the valuation $ \val \tau \ell f \k \pi $ is minimal.
 \end{defi}
-\filip{definice kterou používáme v \cite{uradnik2024reducing} se mi nelíbí, ale nedaří se mi vymyslet lepší}
