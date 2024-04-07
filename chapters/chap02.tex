@@ -198,8 +198,9 @@ To quantify the performance of the policy, let us define a \emph{policy valuatio
 \filip{Jak moc je tohle nechutný?}
 \filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
 \filip{Also, neměli bychom nějak víc tady popsat co je $ \ell $?}
+% TODO: policy cost
 \begin{defi}[Online policy valuation]
-  Let $ \pi: \pot {N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
+  Let $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
   Let $ \left( f, \k \right) $ be an incomplete set function with minimal information, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function,
   and let $ \tau \in \N $ be the remaining budget, such that $ \tau \leq \absolute{\pot N \setminus \k} $.
   The \emph{policy valuation} of $ \pi $ is defined recursively as \[
@@ -222,7 +223,7 @@ Having $ \tau $ as a part of the state is crutial for the policy, as (intuitivel
   Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
   Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $.
   Finally, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
-  The \emph{online principal's problem} is to find a policy $ \pi: \pot {N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $,
+  The \emph{online principal's problem} is to find a policy $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $,
   which receives \begin{enumerate}[ ]
     \item the known values $ \k $, along with the revealed values $ \fce{f}{S} $ for $ S \in \k $, and
     \item $ \tau $, the remaining number of steps,
