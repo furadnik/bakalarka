@@ -1,4 +1,7 @@
-all: thesis.pdf abstract.pdf
+all: main.pdf thesis.pdf abstract.pdf
+
+main.pdf: thesis.pdf
+	cp thesis.pdf main.pdf
 
 # LaTeX must be run multiple times to get references right
 thesis.pdf: thesis.tex $(wildcard *.tex) $(wildcard */*.tex) bibliography.bib thesis.xmpdata
