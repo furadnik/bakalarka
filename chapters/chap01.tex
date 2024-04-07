@@ -195,95 +195,202 @@ Machine learning refers to a field of Computer Science, where we study algorithm
 % TODO: example
 % TODO: každej to definuje jinaak
 Online learning is a subfield of machine learning, where the agent interacts with an \emph{environment}, which acts as a black-box, and receives feedback on its chosen actions.
+The agent gradually learns from the received feedback.
 Online learning is a very general model, which can be used to model many different problems, including multi-agent systems.
-In this thesis, we will focus on the online learning of a single agent.
-\david{Za mě online learning je podmnožina machine learning, kde data dostáváš v diskétních časech a děláš nějaké akce. Pro nás relevantní je, že pozorovaná data můžou záviset na akcích co jsi dělal v minulosti.}
-\filip{No v tom případě pak ale regret tak jak ho používáme my není online ne? Proto definuju OL jako že postupně hraju hru a zlepšuju se}
-\david{regret rozhodně je online v tom smyslu co jsem napsal. Asi nevidím, kde je problém.}
-
-% TODO: muze byt obecne, my si vybirame strategii
+However, in this thesis, we will focus on the online learning of a single agent.
 
 % agent+environment
-Now, let us define the model a bit more formally.
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
-We will start with a model, where, though the game is played repeatedly, one run of the game only consists of a single move.
-We will extend this model, so one run of the game will consist of multiple moves, later when discussing regret and reiforcement learning.
-\david{Z tohohle odstavce jsem zmatenej. Moc nevim co se tu říká a proč je to relevantní. Vždyť my vůbec neřešíme nějakou hru více hráčů, prostě bych to všechno bral jako interakci s black-boxem.}
-\filip{Snažím se říct, že nejdřív budu uvažovat situace kdy vybírám jednu akci, a pak kdy vybírám sekvenci akcí. Jestli jde o to "game", tak to je asi fakt že by bylo lepší říkat tomu nějak jinak, jen moc nevím jak, `game` takový pěkný krátký slovo :D}
-\david{Proto bych to celé zabalil do toho abstraktního `environmentu'. Fakt bych sem pastnul ten stráčův oblíbený obrázek na RL :D}
+Now, let us define the model formally.
+The agent interacts with the environment via two functions, which act more-less like a blackbox.
+First, there is the \emph{transition function}, denoted by $ \tran $, which tells the agent the new state he's in, after an action is played.
+Second, there is the \emph{loss function}, denoted by $ \ls $.
+Through this function, the agent receives the feedback.
+The goal of the agent is to minimize the cumulative loss received over the course of the game.
 
 % TODO: daviduv oblibeny obrazek
-\begin{defi}[Online learning]\label{def:online-learning}
-	The agent has a set of \emph{actions} $ A = \left\{ 1, \dots, a \right\} $.
-	% TODO: popsat "dist" značení
-	He chooses a distribution $ \pi \in \dist A $, which specifies with which probability he will play each action.
-	He then receives a \emph{loss} $ \ell \in \R^A $, which specifies the loss of the agent for each action.
-\end{defi}
-% TODO: čas (epochy)
-\filip{Skoro bych se přikláněl k tomu, že jestli chceme mít losses a rewards sjednocený, tak používat losses i v RL (protože pak budeme mít gap, což je taky loss).}
-\david{Já teda s lossama vidim velký špatný, ale tak klidně :D Ale můj problém je v tom případě, že tahle definice není online learningu. Obecně mi nevadí to nějak rozdělit, ale online learning bych prostě definoval jako opakovanou interakci s nějakým environmentem, kterému posíláš distribuce a on ti vrací lossy (sigh) a možná něco navíc (states v RL).}\filip{V tom máš pravdu. probereme na meetingu :P}
-
-Of course, when applying this model in the real world, the agent must choose one specific action, and receive the corresponding loss.
-However, we are interested in what happens \emph{on average} over all the actions chosen according to $ \pi $.
-This motivates the following definition.
-
-\begin{defi}[Experienced loss]
-	Suppose the agent chose a distribution $ \pi \in \dist A $ and received $ \ell \in \R^a $.
-	Then the \emph{experienced loss} is $ \exl \deq \sum_{i=1}^a \ell_i \pi_i $.
+% TODO: nechceme tomuhle prostě říkat MDP?
+\begin{defi}[Online learning environment]\label{def:online-learning}
+	An \emph{online learning environment} is a tuple $ \left( \actions, \states, s_0, \tran, \ls \right) $, where \begin{enumerate}[ ]
+		\item $ \actions $ is a non-empty set of \emph{actions},
+		\item $ \states $ is a non-empty set of \emph{states},
+		\item $ s_0 \in \states $ is the \emph{initial state},
+		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
+		\item $ \ls: \states \times \actions \to \dist \R $ is the \emph{loss function}.
+	\end{enumerate}
 \end{defi}
 
-Note that when using the model, we will run this model repeatedly, for $ T \in \N $ steps, and the agent's action distribution $ \pi $ will change to reflect the losses received in earlier runs.
-When discussing losses from the $ t $-th run, we will denote them $ \ell^t $ ($ \exl^t $ etc.).
-Further, let us formalize the loss received by the agent up to the $ t $-th run as follows.
+As far as the agent is concerned, the transition and loss functions are blackboxes.
+He can observe only the outcomes, and from them, approximate the best actions to take next.
+
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a loss $ \ls^t = \fce{\ls}{s_t, a_t} $, and moves to a new state $ s_{t+1} \sim \fce{\tran}{s_t, a_t} $.
+Notice that we haven't specified for how long the game is played.
+This depends on the concrete situation -- sometimes, the game ends after a fixed number of steps, sometimes it ends when the agent reaches a certain state, etc.
+In most situations, we assume that the game will be played for infinitely many steps.
+If it isn't, we just define the next losses to be zero.
+
+% policy
+To formalize the act of choosing actions by the agent, we will define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take.
+
+\begin{defi}[Policy]
+	A \emph{policy} of an agent in an environment $ \left( \actions, \states, s_0, \tran, \ls \right) $ is a function $ \pi: \states \to \dist \actions $.
+\end{defi}
+
+As the agent plays, he tries to learn the best policy to minimize the cumulative loss he receives, defined as follows.
 
 \begin{defi}[Cumulative loss]
-	Suppose the agent received losses $ \ell^1, \dots, \ell^t $.
-	Then the \emph{cumulative loss} is $ \cl^T \deq \sum_{t=1}^{T} \ell^t $.
-	% TODO: vektory jako boldface
-	Further, the \emph{cumulative experienced loss} is $ \cxl^T \deq \sum_{t=1}^{T} \exl^t $.
+	Suppose the agent plays according to policy $ \pi $ for $ T $ timesteps.
+	Then the \emph{cumulative loss} is \[
+		\cl^T \deq \E_\pi \left[ \sum_{t=0}^{T} \fce{\ls}{s_t, a_t} \right].
+	\]
 \end{defi}
 
-Note also that we haven't specified how exactly the losses at each run are generated.
-We can imagine that there is a function $ E: \dist A \to \R^a $, which computes the losses.
-However, mind you that this function can change between different runs of the game.
-% TODO: příklad (asi ten s deštníkama?)
-We can imagine that the function comes from a distribution of functions.
-This distribution is unknown to the agent, though gathers information about it from the losses he receives as he plays the game.
+To learn the best policy to minimize the cumulative loss, the agent needs to know which actions do well in a given state.
+For this, we define the \emph{q-values}.
+
+\begin{defi}[q-value]
+	Suppose the agent is in a state $ s $ at time $ t $.
+	Suppose $ a \in \actions $.
+	A \emph{q-value} is \[
+		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \sum_{i=t}^{\infty} \fce{\ls}{s_i, a_i} \suchthat s_t = s, a_t = a \right].
+	\]
+\end{defi}
+
+Similarly for states, we can define the \emph{value} of a state under a policy.
+
+\begin{defi}[State value]\label{def:state-value}
+	Suppose the agent is in a state $ s $ at time $ t $.
+	The \emph{value} of a state is \[
+		\fce{v_\pi}{s} \deq \E_\pi \left[ \sum_{i=t}^{\infty} \fce{\ls}{s_i, a_i} \suchthat s_t = s \right].
+	\]
+\end{defi}
+
+\subsection{Reinforcement Learning}
+
+% reiforcement learning vs ML
+Machine learning is a field of computer science, where instead of building algorithms tailored to a specific problem, we instead strive to build algorithms which can use data we give them about a problem to learn the correct behavior themselves, and to adapt to new, unseen data.
+Reinforcement learning specifically is a subfield of machine learning, which studies how an agent can learn to interact with an environment, as defined in \cref{def:online-learning},
+and to learn to minimize the cumulative loss he receives over time.
+The term \emph{deep reinforcement learning} refers to solutions of reinforcement learning problems using deep neural networks.
+
+% TODO: citace
+We will not further discuss here how a neural network works or learns, the reader is encouraged to look at the literature on neural networks for more information.
+Note that in most literature on reinforcement learning, a \emph{reward function} is used instead of a loss function.
+However, the two are equivalent, so we will stick to the term loss, as it is more common especially in the context of regret minimization, which we will discuss later.
+
+% TODO: příklad: spojitý env, kde nebude fungovat regret, protože není konečný počet stavů?
+
+% proč RL
+% TODO: RL je online i jinak?
+One of the reasons why we are interested in deep reinforcement learning is, that it is very flexible.
+More specifically, it is able to work with a much bigger state space.
+For example, a traditional approach to reinforcement learning is to have a table of values, where each entry corresponds to a state-action pair.
+This limits the state space to be finite, and possibly small.
+In contrast, when using PPO (which we will discuss shortly), the state is an input to a neural network, so it can be for example a vector of real numbers.
+This vastly expands the possibilities of what kind of problems we can solve using reinforcement learning.
+
+% PPO
+Deep reinforcement leaning is a very rich and active field.
+The reader is encouraged to look at the recent literature to delve deeper into the topic, and see the advances made since the time of writing of this thesis.
+In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm, which is a state-of-the-art algorithm for reinforcement learning, and has been shown to work well in many applications in all kinds of practical environments.
+% TODO: tabular PPO?
+% \david{Tady to právě vypadá, že PPO je special case "deep RL". To ale není pravda, můžeš klidně dělat tabular PPO.}
+
+PPO uses an actor-critic architecture.
+This means, that we simultaneously train two networks, the \emph{actor} and the \emph{critic}.
+The actor tries to learn the optimal policy which minimizes the cumulative loss.
+In each state, the actor tries to predict the best action to take.
+The critic, on the other hand, tries to predict the loss of an action as best as possible.
+The critic's prediction is then used to \textquote{guide} the actor when training.
+
+More precisely, the critic tries to predict the state-values, as defined in \cref{def:state-value}.
+We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network.
+Similarly, we will denote the actor as $ \actor $, with parameters $ \theta $.
+
+% TODO: popsat jak funguje PPO
+
+
+% nemá garance, ale aspoň může řešit spojité problémy
+The PPO algorithm isn't guaranteed to converge to the optimal policy.
+However, it works very well in practice, and importantly for us, it is able to work with \emph{continuous state spaces}.
+This is thanks to the fact that the state is just an input to a neural network, which means it can be a vector of real numbers.
 
 \subsection{Regret Minimization}
+
 
 % cil RM
 Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
 By hindsight, we mean that the agent compares itself other sequences of strategies he could have chosen, and tries to minimize the difference between the losses he experienced, and the losses the best sequence of strategies would have experienced.
 
-More formally, we say that the agent compares again some \emph{comparison set} $ \algs $ of online algorithms.
-An online algorithm can be thought of as a function $ \alg $, which maps a sequence of already received losses to a distribution over the actions.
-We won't want to compare against all possible algorithms, because among them, there will always be one that always guesses the best action, which will lead to the lowest possible loss.
-% TODO: put this in an example environment?
-For an adversarial environment, this is impossible to compare against.
-\david{Tohle není pravda - porovnat se můžeš, akorát takovýhle regret nejde minimilizovat proti libovolnému black-boxu. Tohle diskuzi bych odložil po definici regretu.}
+The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \cref{def:online-learning}.
+Let us first define the setup for a single-state environment, and then we will generalize it to the multi-state case.
 
-Instead, we will be very general, and define so-called \emph{regret} for a general comparison set $ \algs $, and later discuss behavior of regret for specific comparison sets.
+\begin{defi}[Regret minimization environment]
+	A \emph{regret minimization environment} is a tuple $ \left( \actions, \ls \right) $, where \begin{enumerate}[ ]
+		\item $ \actions $ is a non-empty set of \emph{actions},
+		\item $ \vec \ls: \dist \actions \to \R^n $ is the \emph{loss function}.
+	\end{enumerate}
+\end{defi}
+
+Notice that unlike \cref{def:online-learning}, where we had to choose one action at each step,
+here we choose a distribution over the actions, and receive a per-action loss, based on that distribution.
+This gives us extra information about \textquote{which action costs us the most}.
+Note however that this doesn't mean that the action with lowest loss is the best action to choose.
+Take for example the case of rock, paper, scissors.
+If we supply a uniform distribution, we will receive a per-action loss of $ \frac{1}{3} $ for each action.
+However, if we only played scissors, for example, we would suddenly always receive a loss of $ 1 $ on it!
+\filip{Nejsem si jistej jestli ten example vyzněl tak jak měl xD}
+
+% experienced loss
+To quantify the loss received by the agent, we will compute the expected value of the per-action loss, given the distribution chosen by the agent.
+
+\begin{defi}[Experienced loss]
+	Let $ \vec{\ls} $ be a per-action loss received by the agent when playing $ \pi \in \dist \actions $.
+	The \emph{experienced loss} of the agent is \[
+		\vec\xl \deq \E_{\pi} \left[ \sum_{i=1}^{n} \pi_i \ls_i \right].
+	\]
+\end{defi}
+
+The new definition of the loss function also leads to a new definition of the cumulative loss.
+
+\begin{defi}[Cumulative loss, regret]
+	Suppose the agent received losses $ \vls^1, \dots, \vls^T $.
+	Then the \emph{cumulative loss} of the agent is \[
+		\vcxl^T \deq \sum_{t=1}^{T} \vls^t.
+	\]
+\end{defi}
+
+
+We would now like to compare our agent against some \emph{comparison set} $ \algs $ of online algorithms.
+An online algorithm can be thought of as a function $ \alg $, which maps a sequence of already received losses to a distribution over the actions.
+To properly quantify this, we will define so-called \emph{regret} for a general comparison set $ \algs $, and later discuss behavior of regret for specific comparison sets.
 
 % regret
 \begin{defi}[Regret]
 	Let $ \algs $ be a comparison set.
-	Let $ \ell^1, \dots, \ell^T $ be a sequence of losses received by the agent, playing a sequence of strategies $ \pi^1, \dots, \pi^T $.
+	Let $ \vls^1, \dots, \vls^T $ be a sequence of losses received by the agent, playing a sequence of strategies $ \pi^1, \dots, \pi^T $.
 	Then the \emph{regret} of the agent after $ T $ steps, with respect to $ \algs $, is \[
 		R^T_{\algs} \deq \cxl^T  - \min_{\alg \in \algs} \cxl^T_{\alg},
 	\]
-	where $ \cxl^T_{\alg} $ is the cumulative experienced loss of the algorithm $ \alg $ computed from the losses $ \ell^i $ received by the agent.
+	where $ \cxl^T_{\alg} $ is the cumulative experienced loss of the algorithm $ \alg $ computed from the losses $ \vls^i $ received by the agent.
 \end{defi}
 
 % předpokládáme že losses zůstanou stejné
-Let us emphesize that experienced losses of the algorithms from $ \algs $ are computed from $ \ell^1, \dots, \ell^T $.
-This means, that those aren't the losses the algorithms would have actually experienced, had they been played instead of the agent, as the loss $ \ell^i $ depended on the the distribution $ \pi^i $ chosen by the agent.
-Consider the simple adversarial example, where the loss $ \ell_i $ is $ 1 $ for all actions with non-zero probability, and $ 0 $ otherwise.
+% TODO: někde popsat že vektory jsou tučně
+Let us emphesize that experienced losses of the algorithms from $ \algs $ are computed from $ \vls^1, \dots, \vls^T $.
+This means, that those aren't the losses the algorithms would have actually experienced, had they been played instead of the agent, as the loss $ \vls^i $ depended on the the distribution $ \pi^i $ chosen by the agent.
+Consider the simple adversarial example, where the loss $ \ls_i $ is $ 1 $ for all actions with non-zero probability, and $ 0 $ otherwise.
 Suppose that the agent chooses action $ 1 $ with probability $ 1 $, and an algorithm $ \alg $ chooses action $ 2 $ instead.
 Then the experienced loss of the agent is $ 1 $, while the experienced loss of $ \alg $, as seen from the definition of regret, is $ 0 $, even though, had we followed $ \alg $, we would have experienced loss $ 1 $, too.
-\david{Tomu konci nerozumím. Loss akce 2 je 0 ne? Takže regret k té akci je 1.}
-\filip{Přesně tak. Já tam akorát mluvím o loss. Chci tam vysvětlit že když počítám $\cxl^T_{\alg} $, tak to není to samý jako co by dostal ten algoritmus kdyby reálně hrál.}
-\david{Aha, už chápu. To je určitě fajn point vypíchnout, ale trochu se to ztrácí v téhle formulaci.}
+% TODO: upřsenit tenhle příklad
+% \david{Tomu konci nerozumím. Loss akce 2 je 0 ne? Takže regret k té akci je 1.}
+% \filip{Přesně tak. Já tam akorát mluvím o loss. Chci tam vysvětlit že když počítám $\cxl^T_{\alg} $, tak to není to samý jako co by dostal ten algoritmus kdyby reálně hrál.}
+% \david{Aha, už chápu. To je určitě fajn point vypíchnout, ale trochu se to ztrácí v téhle formulaci.}
+
+We won't want to compare against all possible algorithms, because among them, there will be one that always guesses the best action, which will lead to the lowest possible loss.
+For an adversarial environment, this is impossible to compare against.
+% TODO: přeformulovat
+% \david{Tohle není pravda - porovnat se můžeš, akorát takovýhle regret nejde minimilizovat proti libovolnému black-boxu. Tohle diskuzi bych odložil po definici regretu.}
 
 % swap regret, internal, external?
 Let us now mention different types of regret, meaning different comparison sets $ \algs $, along with their properties.
@@ -307,7 +414,7 @@ Formally: \[
 	\end{cases}
 \]
 % TODO: víc popsat?
-The regret with respect to the comparison set $ \left\{ \alg_{F_{i,j}} \suchthat i,j \in A \right\} $ is called the \emph{internal regret}.
+The regret with respect to the comparison set $ \left\{ \alg_{F_{i,j}} \suchthat i,j \in \actions \right\} $ is called the \emph{internal regret}.
 Even more generally, if we consider a comparison set with all possible modification rules, we get the \emph{swap regret}.
 % TODO: vlastnosti regretů?
 
@@ -333,53 +440,11 @@ External regret is special, because there are algorithms that can provably achie
 
 % TODO: predictive regret?
 
-\subsection{Reinforcement Learning}
-
-% reiforcement learning vs ML
-Reinforcement learning is a subfield of machine learning, which studies how an agent can learn to interact with an environment, so as to maximize cumulative reward.
-It is more natural to define it in a sequential setting right away, so we will do that here.
-% TODO: změnit def na sequential
-The reinforcement learning setting is similar to the \cref{def:online-learning}, but with the key difference that the agent doesn't submit a \emph{distribution} over the actions to the environment, and receive loss per action.
-Instead, he needs to select a single action, and receives a single reward and the new state he's in, as a function of the current state and the chosen action.
-% TODO: formální definice
-
-\begin{defi}[Reinforcement learning model]
-	A \emph{reinforcement learning model} is a tuple $ \left( A, S, T, R \right) $, where \begin{enumerate}[ ]
-		\item $ A $ is a non-empty, finite set of \emph{actions},
-		\item $ S $ is a non-empty set of \emph{states},
-		\item $ T: S \times A \to \dist S $ is the \emph{transition function}, defining the probability that the agent moves to state $ s' $ after taking action $ a $ in state $ s $,
-		\item $ R: S \times A \to \R $ is the \emph{reward function}, defining the reward the agent receives after taking action $ a $ in state $ s $.
-	\end{enumerate}
-\end{defi}
-
-The agent starts in some state $ S_0 $, and then takes steps, interacting with the \emph{environment} through the functions $ T $ and $ R $.
-The goal of the agent is to learn a \emph{policy}, which is a function $ \pi: S \to \dist A $, that maximizes the cumulative reward.
-% TODO: znovu davidův obrázek, tentokrát na RL
+% TODO: příklad (asi ten s deštníkama?)
+We can imagine that the function comes from a distribution of functions.
+This distribution is unknown to the agent, though gathers information about it from the losses he receives as he plays the game.
 
 
-% TODO: příklad: spojitý env, kde nebude fungovat regret, protože není konečný počet stavů
-
-% drl
-There are many approaches to reinforcement learning.
-However, in the last few years, the most popular, and empirically most successful approach has been so-called \emph{deep reinforcement learning}.\david{Tohle nevím jestli není zavádějící. To, že se používá neuronka na approximaci všeho možného neznamená, že je to nějaký nový algoritmus. To je ale co bych si představil pod "approch".}
-In deep reinforcement learning, the agent uses a neural network to get the function that maps states to actions.
-
-% proč RL
-One of the reasons why we are interested in reinforcement learning is, that it is able to work with a much bigger state space.
-As the state is passed to the neural network, it can for example be a vector of real numbers.
-In contrast, recall that in the sequential setting of regret minimization, we needed the set space to be finite (and possibly small), as we needed to have a regret minimizer in each node of the game tree.
-Here, we have a single neural network, and the state information is instead used as a part of its input.
-
-% TODO: RL je online i jinak?
-
-% PPO
-Deep reinforcement leaning is a very rich and active field.
-The reader is encouraged to look at the recent literature to delve deeper into the topic, and see the advances made since the time of writing of this thesis.
-In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm, which is a state-of-the-art algorithm for reinforcement learning, and has been shown to work well in many applications in all kinds of practical environments.
-\david{Tady to právě vypadá, že PPO je special case "deep RL". To ale není pravda, můžeš klidně dělat tabular PPO.}
-
-% TODO: popsat jak funguje PPO
-% TODO: nemá garance, ale aspoň může řešit spojité problémy
 % TODO: minimalizovat regret a maximalizovat reward je to stejné proti "oblivious environment" (to je to, kde bereš gradient loss podle policy jako 0)
 % TODO: RM sublin regret, ale ne minimalizace:
 % \david{Pro naše potřeby by to chtělo asi nějak popsat střeva PPO. Taky bych vypíchnul rozdíly proti regretu - nemá garance, ale zase díky samplování můžešvyřešit i ty spojité problémy třeba. Taky bych ale napsal, že . Další příklad co mám rád je ale, že fundamentálně je to jiné - regret je typicky happy, když má sublineární regret. Algoritmy jsou typicky dané a mají garance na sublinear regret - ale neminimalizují ho! Simple příklad z Balkovy přednášky - máš si vzít ten deštník, nebo opalovací krém? Když je šance 50/50, tak regret ti vrátí uniformní distribuci a je happy. Ale co když bys měl přístup k předpovědi počasí? Regret je furt happy a neumí to nijak použít, protože ten algoritmus je typicky fixní. Na druhou stranu PPO by s takovym environmentem zatočilo snadno a dosáhlo jen tak btw negarivního external regretu.}
