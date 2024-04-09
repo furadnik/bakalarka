@@ -191,132 +191,124 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \label{sec:online-learning}
 
 % co to je
-Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly programmed to do a specific task, but rather to use statistical methods to learn the correct behavior from data.
+Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly told how to perform a task, but rather are programmed to learn the expected behavior by analyzing data.
 % TODO: example
 % TODO: každej to definuje jinaak
-Online learning is a subfield of machine learning, where the agent interacts with an \emph{environment}, which acts as a black-box, and receives feedback on its chosen actions.
-The agent gradually learns from the received feedback.
-Online learning is a very general model, which can be used to model many different problems, including multi-agent systems.
+Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
+The agent learns the proper behavior from the received feedback.
+Online learning is a general model, which can be used to model many different problems, including multi-agent systems.
 However, in this thesis, we will focus on the online learning of a single agent.
 
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Now, let us define the model formally.
-The agent interacts with the environment via two functions, which act more-less like a blackbox.
-First, there is the \emph{transition function}, denoted by $ \tran $, which tells the agent the new state he's in, after an action is played.
-Second, there is the \emph{loss function}, denoted by $ \ls $.
-Through this function, the agent receives the feedback.
-The goal of the agent is to minimize the cumulative loss received over the course of the game.
+The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state he moves to after he chooses an action,
+and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action.
+The goal of the agent is to maximize the cumulative reward received over time.
+We will formalize this as a \emph{Markov decision process}.
 
-% TODO: daviduv oblibeny obrazek
-% TODO: nechceme tomuhle prostě říkat MDP?
-\begin{defi}[Online learning environment]\label{def:online-learning}
-	An \emph{online learning environment} is a tuple $ \left( \actions, \states, s_0, \tran, \ls \right) $, where \begin{enumerate}[ ]
+% MDP?
+\begin{defi}[Markov decision process]\label{def:online-learning}
+	A \emph{Markov decision process} is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
-		\item $ s_0 \in \states $ is the \emph{initial state},
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
-		\item $ \ls: \states \times \actions \to \dist \R $ is the \emph{loss function}.
+		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
+		\item $ \gamma \in \left( 0,1 \right) $ is the \emph{discount factor}.
 	\end{enumerate}
 \end{defi}
+% TODO: daviduv oblibeny obrazek
 
-As far as the agent is concerned, the transition and loss functions are blackboxes.
-He can observe only the outcomes, and from them, approximate the best actions to take next.
-
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a loss $ \ls^t = \fce{\ls}{s_t, a_t} $, and moves to a new state $ s_{t+1} \sim \fce{\tran}{s_t, a_t} $.
-Notice that we haven't specified for how long the game is played.
-This depends on the concrete situation -- sometimes, the game ends after a fixed number of steps, sometimes it ends when the agent reaches a certain state, etc.
-In most situations, we assume that the game will be played for infinitely many steps.
-If it isn't, we just define the next losses to be zero.
-
-% policy
-To formalize the act of choosing actions by the agent, we will define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, moves to a new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
+To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
 \begin{defi}[Policy]
-	A \emph{policy} of an agent in an environment $ \left( \actions, \states, s_0, \tran, \ls \right) $ is a function $ \pi: \states \to \dist \actions $.
+	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
 \end{defi}
 
-As the agent plays, he tries to learn the best policy to minimize the cumulative loss he receives, defined as follows.
+As the agent plays, he receives reward at every step.
+We are interested in quantifying \emph{how well} a policy performs over time.
+To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future are discounted by a factor of $ \gamma^t $.
 
-\begin{defi}[Cumulative loss]
-	Suppose the agent plays according to policy $ \pi $ for $ T $ timesteps.
-	Then the \emph{cumulative loss} is \[
-		\cl^T \deq \E_\pi \left[ \sum_{t=0}^{T} \fce{\ls}{s_t, a_t} \right].
+% TODO: vysvětlivka co znamená \E_\pi
+\begin{defi}[Return]
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $.
+	He chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=0}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
+	Then the \emph{return} of the agent from time $ T $ is \[
+		\return_T \deq \sum_{t=T}^{\infty} \gamma^{t-T} \rew_t.
 	\]
 \end{defi}
 
-To learn the best policy to minimize the cumulative loss, the agent needs to know which actions do well in a given state.
-For this, we define the \emph{q-values}.
+Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
+When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $.
 
-\begin{defi}[q-value]
-	Suppose the agent is in a state $ s $ at time $ t $.
-	Suppose $ a \in \actions $.
-	A \emph{q-value} is \[
-		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \sum_{i=t}^{\infty} \fce{\ls}{s_i, a_i} \suchthat s_t = s, a_t = a \right].
-	\]
-\end{defi}
+The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
+It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
+Further, it makes the agent prefer immediate rewards over future rewards, which helps the training algorithms to converge faster, as is discussed below.
 
-Similarly for states, we can define the \emph{value} of a state under a policy.
+We further want to quantify the performance of a policy in a given state.
 
 \begin{defi}[State value]\label{def:state-value}
-	Suppose the agent is in a state $ s $ at time $ t $.
-	The \emph{value} of a state is \[
-		\fce{v_\pi}{s} \deq \E_\pi \left[ \sum_{i=t}^{\infty} \fce{\ls}{s_i, a_i} \suchthat s_t = s \right].
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	The \emph{value} of a state $ s $ is \[
+		\fce {\stval} {s} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s \right].
 	\]
 \end{defi}
+
+Note that since the process is Markovian, the value of a state $ s $ is equivalent to $ \E_\pi \left[ \return_t \suchthat s_t = s \right] $, for any $ t \in \N $.
+Finally, let us define the value of choosing an action in a state.
+
+\begin{defi}[Action-state value]
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	The \emph{action-state value} of a state $ s $ and an action $ a $ is \[
+		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s, a_0 = a \right].
+	\]
+\end{defi}
+
+This quantity is also referred to as the \emph{q-value} of an action in a state.
+Action-state values approximate the change in the state value, when a given action in a given state is assigned a larger probability.
+This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 \subsection{Reinforcement Learning}
 
 % reiforcement learning vs ML
-Machine learning is a field of computer science, where instead of building algorithms tailored to a specific problem, we instead strive to build algorithms which can use data we give them about a problem to learn the correct behavior themselves, and to adapt to new, unseen data.
-Reinforcement learning specifically is a subfield of machine learning, which studies how an agent can learn to interact with an environment, as defined in \cref{def:online-learning},
-and to learn to minimize the cumulative loss he receives over time.
-The term \emph{deep reinforcement learning} refers to solutions of reinforcement learning problems using deep neural networks.
-
-% TODO: citace
-We will not further discuss here how a neural network works or learns, the reader is encouraged to look at the literature on neural networks for more information.
-Note that in most literature on reinforcement learning, a \emph{reward function} is used instead of a loss function.
-However, the two are equivalent, so we will stick to the term loss, as it is more common especially in the context of regret minimization, which we will discuss later.
-
-% TODO: příklad: spojitý env, kde nebude fungovat regret, protože není konečný počet stavů?
+Reinforcement learning is a subfield of machine learning, which studies how to design an agent to learn the optimal policy in a Markovian environment (as defined in \cref{def:online-learning}).
+The term \emph{deep reinforcement learning} refers to solving reinforcement learning problems using deep neural networks.
 
 % proč RL
-% TODO: RL je online i jinak?
-One of the reasons why we are interested in deep reinforcement learning is, that it is very flexible.
-More specifically, it is able to work with a much bigger state space.
-For example, a traditional approach to reinforcement learning is to have a table of values, where each entry corresponds to a state-action pair.
-This limits the state space to be finite, and possibly small.
-In contrast, when using PPO (which we will discuss shortly), the state is an input to a neural network, so it can be for example a vector of real numbers.
-This vastly expands the possibilities of what kind of problems we can solve using reinforcement learning.
+One of the reasons why we are interested in deep reinforcement learning is its flexibility.
+More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
+In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
 
 % PPO
+% TODO: citace
 Deep reinforcement leaning is a very rich and active field.
-The reader is encouraged to look at the recent literature to delve deeper into the topic, and see the advances made since the time of writing of this thesis.
+We explore it in this thesis only in the extent we require for our purposes.
+We will also not further discuss the details of training deep neural networks.
+The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm, which is a state-of-the-art algorithm for reinforcement learning, and has been shown to work well in many applications in all kinds of practical environments.
 % TODO: tabular PPO?
 % \david{Tady to právě vypadá, že PPO je special case "deep RL". To ale není pravda, můžeš klidně dělat tabular PPO.}
 
+\filip{tohle chci ještě rozepsat, pořádně tam zadefinovat ty losses atd}
+% TODO: popsat jak funguje PPO -- losses n stuff
 PPO uses an actor-critic architecture.
-This means, that we simultaneously train two networks, the \emph{actor} and the \emph{critic}.
-The actor tries to learn the optimal policy which minimizes the cumulative loss.
+This means that we have two networks, the \emph{actor} and the \emph{critic}.
+The actor tries to learn the optimal policy which maximizes the expected return.
 In each state, the actor tries to predict the best action to take.
-The critic, on the other hand, tries to predict the loss of an action as best as possible.
-The critic's prediction is then used to \textquote{guide} the actor when training.
-
-More precisely, the critic tries to predict the state-values, as defined in \cref{def:state-value}.
+The critic, on the other hand, tries to approximate the value $ \fce \stval s $ of each state $ s $.
+The critic's prediction is used to guide the actor when training.
 We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network.
 Similarly, we will denote the actor as $ \actor $, with parameters $ \theta $.
-
-% TODO: popsat jak funguje PPO
-
 
 % nemá garance, ale aspoň může řešit spojité problémy
 The PPO algorithm isn't guaranteed to converge to the optimal policy.
 However, it works very well in practice, and importantly for us, it is able to work with \emph{continuous state spaces}.
 This is thanks to the fact that the state is just an input to a neural network, which means it can be a vector of real numbers.
+\filip{tohle je skoro duplikát předchozího par}
 
 \subsection{Regret Minimization}
-
 
 % cil RM
 Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
@@ -396,14 +388,14 @@ For an adversarial environment, this is impossible to compare against.
 Let us now mention different types of regret, meaning different comparison sets $ \algs $, along with their properties.
 The first and probably most studied type of regret is the \emph{external regret}.
 Many times in literature, when the term \emph{regret} is used without any further specification, it is meant to be the external regret.\david{Přesně z tohohle důvodu bych používal instantaneous / cumulative regret. Jen regret je možná moc vágní, kor takhle na začátku v refinicích.}
-It is defined on the comparison set $ \algs_A \deq \left\{ \alg_a \suchthat a \in A \right\} $, where $ \alg_a $ is the algorithm that always chooses action $ a $.
+It is defined on the comparison set $ \algs_\actions \deq \left\{ \alg_a \suchthat a \in \actions \right\} $, where $ \alg_a $ is the algorithm that always chooses action $ a $.
 The external regret analyzes what would have happened, had the agent chosen a single action, and stuck with it for the entire game.\david{Tady game není jasné co vůbec je. Možná bych tomu online procesu říkal nějak úplně jinak, ale nenapadá mě dobré jméno.}
 The formula can be simplified to \[
-		R^T_{\algs_A} = \cxl^T - \min_{a \in A} \cl^T_a.
+		R^T_{\algs_\actions} = \cxl^T - \min_{a \in \actions} \cl^T_a.
 	\]
 
 For stronger comparison sets, we will use algorithms which are derived from the strategy of the agent, but modify it using \emph{modification rules}.
-A modification rule is any function $ F: A \to A $, and the resulting algorithm $ \alg_F $ looks at the strategy $ \pi $ of the agent, and plays $ \pi' $, defined as \[
+A modification rule is any function $ F: \actions \to \actions $, and the resulting algorithm $ \alg_F $ looks at the strategy $ \pi $ of the agent, and plays $ \pi' $, defined as \[
 	\pi'_a \deq \sum_{i: F(i) = a} \pi_i.
 \]
 Consider the example of a modification rule $ F_{i,j} $, which respects the strategy of the agent, but always plays action $ j $ instead of action $ i $.
@@ -432,6 +424,7 @@ More specifically, we are aiming for a strategy, which keeps the regret sublinea
 \end{defi}
 Once again, when talking about a regret minimizer without any further specification, we mean an external regret minimizer.
 External regret is special, because there are algorithms that can provably achieve sublinear regret, and we will discuss them in further sections.
+% TODO: Balko thm 2.55.
 % TODO: proč sub-lineární regret je cool
 
 % TODO: příklady regret minimizerů?

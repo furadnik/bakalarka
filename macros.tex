@@ -98,6 +98,7 @@
 \def\pot#1{\fce{\mathcal{P}}{#1}}
 \def\deq{\mathbin{:=}}
 \def\absolute#1{\left\lvert #1 \right\rvert }
+\def\vec{\boldsymbol}
 
 % functions with auto parenths
 \def\bfce#1#2{#1\!\bigl(#2\bigr)}
@@ -111,14 +112,23 @@
 \def\Shapley{\phi}
 \newcommand\shapley[1][]{\fce{\Shapley_{#1}}}
 \def\dist#1{\Delta^{#1}}
-\def\exl{\hat{\ell}}
-\def\cl{L}
-\def\cxl{\hat{L}}
+
 \def\algs{\mathcal{A}}
 \def\alg{\textsf{A}}
 \def\k{\mathcal{K}}
 \def\s{\mathcal{S}}
 \def\C{\mathcal{C}}
+
+% loss
+\def\ls{\ell}
+\def\xl{\hat{\ell}}
+\def\cl{L}
+\def\cxl{\hat{\cl}}
+\def\vls{\vec{\ls}}
+\def\vxl{\hat{\vec\ell}}
+\def\vcl{\vec L}
+\def\vcxl{\hat{\vcl}}
+
 
 % lower and upper functions
 \newcommand{\lf}[2][\k]{\underline{#2}_{#1}}
@@ -146,3 +156,12 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
+% online learning
+\def\actions{\mathcal{A}}
+\def\states{\mathcal{S}}
+\def\tran{\tau}
+\def\rew{r}
+\def\return{G}
+\newcommand\stval[1][\pi]{v_{#1}}
+\def\critic{\hat{v}_{\phi}}
+\def\actor{\pi_{\theta}}
