@@ -33,7 +33,7 @@ This may seem unnatural at first, but it will help us in subsequent definitions.
   The class of all $ \C $-extensions of $ \left( f,\k \right) $ is denoted by $ \fce{\C}{f, \k} $.
 \end{defi}
 
-By assuming that $ f \in \C $, the $ \C $-extensions are a class\david{class?}\filip{jako v našem případě je to asi jedno, protože se omezujeme na $ N = \left\{ 1,2,\ldots,n \right\} $, ale většinou když se definujou velký množiny funkcí (nebo třeba grafů nebo jiných struktur), používá se pojem "třída", protože to teoreticky už podle teorie množin nemusí být množina. pojem "množina" je jakoby specifičtější než "třída", tj všechno co je množina je i třída; tudíž bych to tak nechal. možná Martin poradí?} containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
+By assuming that $ f \in \C $, the $ \C $-extensions are a class\david{class?}\filip{jako v našem případě je to asi jedno, protože se omezujeme na $ N = \left\{ 1,2,\ldots,n \right\} $, ale většinou když se definujou velký množiny funkcí (nebo třeba grafů nebo jiných struktur), používá se pojem "třída", protože to teoreticky už podle teorie množin nemusí být množina. pojem "množina" je jakoby specifičtější než "třída", tj všechno co je množina je i třída; tudíž bych to tak nechal. možná Martin poradí?} \david{ale jo, class dobrý. Už ani nevim, co mi tam vadilo :D} containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
 The set $ \fce{\C}{f, \k} $ is non-empty, as $ f $ is always a $ \C $-extension of itself, by the assumption of $ f \in \C $.
 Further, if $ \k = \pot N $, then $ \fce{\C}{f, \k} $ is of size 1 -- only containing $ f $ itself.
 Note that the set of $ \C $-extensions can have size 1 even for $ \k \neq \pot N $, as the following example shows.
@@ -56,7 +56,7 @@ As we will mostly focus on superadditive extensions, we will first define so-cal
 % od teď v(0) = 0 & proč to nevadí
 From this point on, we will limit ourselves to incomplete set functions with minimal information, where further $ \fce{f}{0} = 0 $.
 This restricts the incomplete set functions we are working with, but only by a small margin, as we require only a \emph{linear} number of values to be known, compared to the exponential number of all values, which are still potentially unknown.
-\david{all values tečka}\filip{'all' values přidáno. kde tečka?}
+\david{all values tečka}\filip{'all' values přidáno. kde tečka?}\david{jakože to je prostě konec té věty co tu byla}
 On the other hand, this restriction enables us to \emph{bound} the unknown values of $ f $, assuming that $ f $ is superadditive.
 
 % upper a lower bound
@@ -103,11 +103,11 @@ This leads us to measuring the distance between the upper and lower functions, u
 The most obvious choice of $ \ell $ is some norm, as norms are well studied, well understood and have nice properties.
 However, we state the following definition for an arbitrary $ \ell $, and we will see an example of $ \ell $ which is not a norm, but which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
 
-\filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?}
+\filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?} \david{Kdybys to chtěl natáhnout, tak to určitě není spatný místo. Jinak bych to spíš okecal, že třeba chceš asi nulovost když dostaneš jen jednu extension. A řekl bych, že v sekcích X,Y se zabejváme konkrétníma příkladama.}
 \begin{defi}[Divergence]
   Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
   Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
-  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is\filip{tady je sloveso :D} $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as\david{chybí sloveso} \[
+  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is\filip{tady je sloveso :D} \david{jakože true, ale to defined as mi zní děsně. Co třeba given by?} $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as\david{chybí sloveso} \[
     \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
   \]
 \end{defi}
@@ -115,7 +115,7 @@ However, we state the following definition for an arbitrary $ \ell $, and we wil
 
 Notice that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
 This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
-However, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence\david{Tahle věta mě zmátla, vypadá to, že chceš podvádě a pak ani nepodvádíš.}\filip{Nechápu :D přepsal jsem to trochu, je to lepší?}.
+However, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence\david{Tahle věta mě zmátla, vypadá to, že chceš podvádě a pak ani nepodvádíš.}\filip{Nechápu :D přepsal jsem to trochu, je to lepší?} \david{Tady neni co remedy, je to všechno totálně ok. Napsat bych něco jako It is often natural to work with $\k$ including the minimal information. When refering to $\k$ without minimal information, we will use ...}.
 To remedy this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
 
 The properties of the divergence differ based on the choice of the function $ \ell $.
@@ -173,7 +173,7 @@ This leads to the definition of the \emph{offline principal's problem}.
   \]
 \end{defi}
 
-\filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}
+\filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
 
 This is a approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
 However, there is an approach which leads to a potentially lower value of the divergence.
@@ -182,7 +182,7 @@ The flaw of the offline problem is that the optimal $ \s $ might depend on the s
 Now, granted, the principal doesn't know all the values of $ f $.
 However, in addition to knowing the values of $ \k $, she has the budget to reveal $ \tau $ extra values, which give her further information about the specific instance of $ f $ she is working with.
 \david{tohle zní divně, jako by offline přistup nepoužíval tyhle hodnoty.}
-\filip{přeformulováno. also, tak jak jsem to napsal teď, tak to je vlastně pravda, což nevím jestli chceme. kdyby v $ \fdist $ byly funkce které mají různé hodnoty na $ \k $, tak ten offline problém by tuhle informaci stejně nepoužil.}
+\filip{přeformulováno. also, tak jak jsem to napsal teď, tak to je vlastně pravda, což nevím jestli chceme. kdyby v $ \fdist $ byly funkce které mají různé hodnoty na $ \k $, tak ten offline problém by tuhle informaci stejně nepoužil.}\david{nice}
 It might then be benefitial to spend some of the budget on exploring other values of $ f $,
 and then use the remainder of the budget to reveal the values which are most beneficial, taking into account the values she has already revealed.
 We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
@@ -192,8 +192,8 @@ We call this approach the \emph{online principal's problem}, as the principal ut
 % TODO: formal def
 The formal definition of the online principal's problem is a bit more involved.
 Unlike the offline problem, here the solution will be a \emph{policy} $ \pi $, according to which the principal will choose the next values to reveal, based on the values she has already seen.
-This policy will have as its input the known subsets $ \k $, their corresponding values of $ f $, and the remaining number of steps $ \tau $.
-To quantify the performance of the policy, let us define a \emph{policy valuation function} as follows.
+This policy will have as its input the known subsets $ \k $, their corresponding values of $ f $, and the remaining number of steps $ \tau $\david{This policy takes as input the know values and the remaining steps?}.
+To quantify the performance of the policy, let us\david{we define policy value function tečka} define a \emph{policy valuation function} as follows.
 
 \filip{Jak moc je tohle nechutný?}
 \filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
@@ -209,16 +209,18 @@ To quantify the performance of the policy, let us define a \emph{policy valuatio
       \divg \ell {\k_-} & \text{if } \tau = 0,
     \end{cases}
   \]
-  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $.
+  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $\david{nejsou tohle vlastně extenze $f$?}.
 \end{defi}
 
-Let us take a moment to realize that the policy valuation exactly quantifies the performance we have discussed above.
+Let us take a moment to realize \david{realize není dobré slovo :D} that the policy valuation exactly quantifies the performance we have discussed above.
 It measures the divergence after the budget has been spent, allowing the principal to make moves that might not be optimal in a \textquote{greedy} sense, meaning that they might not lead to the smallest divergence in the next step, but they might lead to a smaller final divergence.
+
+\david{celkově se mi tahle definice líbí a nebál bych se víc říct, že tohle je vlastně normální search s value funkcí za tau kroků. Normálně bysme se mohli tvářit, že ta není přesná a tak, ale to je doslova o co nám jde, takže je to vlastně skutečný outcome.}
 
 Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:online-learning}, with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
 Having $ \tau $ as a part of the state is crutial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most benefitial, given the values it has already seen.
 
-\filip{$ \k $ je tu trochu přetížený, ne? je to rušivé?}
+\filip{$ \k $ je tu trochu přetížený, ne? je to rušivé?}\david{nezdá se mi, tenhle poslední odstavec je za mě fakt hezkej.}
 \begin{defi}[Online principal's problem]
   Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
   Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $.
