@@ -1,21 +1,37 @@
-\chapter{Results}
+\chapter{Tackling the Principal's Problems}
 
-* Preliminaries
-  * Set Functions
-    * Cooperative game theory
-  * Markov chains?
-  * Greedy alg?
-  * Online learning
-    * může dostávat věci
-    * maxiamlizuje reward
-    * RM: obecnej model, rewardy všech akcí
-    * RL: podobný, sampling akce z policy. ztráta garancí, 
-* PP
-  * Incomplete set functions
-    * Super-additivity
-    * Sub/super-modularity
-  * Incomplete games
-* results ( tackling PP )
-  * Exact algorithms -- greedy, optimal
-  * PPO
-  * Regret
+In this chapter, we will first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems, and then see the experimental results of those approaches.
+\filip{Co sem ještě dát? Možná něco o Metacentru? Jak dlouho to běželo + že to je už i v článku (něco z toho)}
+
+\section{Solutions to the Offline Problem}
+
+\begin{itemize}[ ]
+  \item offline optimal alg
+  \item the problem with optimal
+  \item offline greedy alg
+\end{itemize}
+
+\section{Approaching the Online Problem Solition}
+
+\begin{itemize}[ ]
+  \item wanting online optimal is bad
+  \item idea of oracle optimals
+  \item the offline and oracle approaches as a bound on online
+\end{itemize}
+
+\subsection{Utilizing PPO}
+
+\begin{itemize}[ ]
+  \item define the state space
+  \item realize this is technically almost online optimal
+  \item garance nejsou
+\end{itemize}
+
+\section{Results}
+
+\begin{itemize}[ ]
+  \item factory
+  \item supermodular
+  \item shapley divergence je docela podobná l1 divergenci
+  \item Largest Coalition heuristic + komentář o vysvětlení
+\end{itemize}
