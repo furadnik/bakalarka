@@ -76,6 +76,7 @@
 %%% Useful operators for statistics and probability
 \DeclareMathOperator{\pr}{\textsf{P}}
 \DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\EE}{\hat{\mathbb{E}}}
 \DeclareMathOperator{\var}{\textrm{var}}
 \DeclareMathOperator{\sd}{\textrm{sd}}
 
@@ -164,4 +165,6 @@
 \def\return{G}
 \newcommand\stval[1][\pi]{v_{#1}}
 \def\critic{\hat{v}_{\phi}}
-\def\actor{\pi_{\theta}}
+\def\losscritic{\fce {L^v}{\phi \suchthat \theta}}
+\newcommand\actor[1][\theta]{\pi_{#1}}
+\def\lossactor{\fce {L^\pi}{\theta \suchthat \phi}}
