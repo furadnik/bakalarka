@@ -195,7 +195,6 @@ Machine learning refers to a field of Computer Science, where we study algorithm
 % TODO: example
 % TODO: každej to definuje jinaak
 Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
-The agent learns the proper behavior from the received feedback.
 Online learning is a general model, which can be used to model many different problems, including multi-agent systems.
 However, in this thesis, we will focus on the online learning of a single agent.
 
@@ -230,6 +229,7 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 As the agent plays, he receives reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time.
 To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future are discounted by a factor of $ \gamma^t $.
+If the agent plays for $ T $ steps, and then stops, we just set the rewards for times $ t > T $ to zero.
 
 % TODO: vysvětlivka co znamená \E_\pi
 \begin{defi}[Return]
@@ -245,7 +245,7 @@ When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} 
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
-Further, it makes the agent prefer immediate rewards over future rewards, which helps the training algorithms to converge faster, as is discussed below.
+Further, it makes the agent prefer immediate rewards over future rewards, which sometimes helps the training algorithms to converge faster, as is discussed below.
 
 We further want to quantify the performance of a policy in a given state.
 
@@ -256,7 +256,7 @@ We further want to quantify the performance of a policy in a given state.
 	\]
 \end{defi}
 
-Note that since the process is Markovian, the value of a state $ s $ is equivalent to $ \E_\pi \left[ \return_t \suchthat s_t = s \right] $, for any $ t \in \N $.
+Note that since the process is Markovian, the value of a state $ s $ is equal to $ \E_\pi \left[ \return_t \suchthat s_t = s \right] $, for any $ t \in \N $.
 Finally, let us define the value of choosing an action in a state.
 
 \begin{defi}[Action-state value]
@@ -272,41 +272,69 @@ This is crucial in learning, when deciding how to alter a policy to maximize the
 
 \subsection{Reinforcement Learning}
 
-% reiforcement learning vs ML
+% RL je způsob jak udělat agenta
 Reinforcement learning is a subfield of machine learning, which studies how to design an agent to learn the optimal policy in a Markovian environment (as defined in \cref{def:online-learning}).
 The term \emph{deep reinforcement learning} refers to solving reinforcement learning problems using deep neural networks.
 
-% proč RL
-One of the reasons why we are interested in deep reinforcement learning is its flexibility.
-More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
-In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
 
-% PPO
-% TODO: citace
+% existuje spoustu způsobů, my vybíráme PPO + NN
 Deep reinforcement leaning is a very rich and active field.
 We explore it in this thesis only in the extent we require for our purposes.
 We will also not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
-In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm, which is a state-of-the-art algorithm for reinforcement learning, and has been shown to work well in many applications in all kinds of practical environments.
+In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm with deep NNs \filip{jak tohle líp napsat?}.
+
+% PPO je cool protože empiricky funguje dobře, a je flexibilní, umožňuje spojitý stavy
+PPO a state-of-the-art algorithm for reinforcement learning.
+It has been empirically shown to perform well in various environments.
+It is also very flexible in the requirements of its state space.
+More precisely, it works even for continuous state spaces, which is required in our application.
+
+% PPO funguje actor-critic
+PPO uses an actor-critic architecture.
+It uses two deep neural networks, the \emph{actor} and the \emph{critic}.
+The actor tries to learn the optimal policy which maximizes the expected return,
+while the critic tries to approximate the value $ \fce \stval s $ of each state $ s $.
+The critic's prediction is used to guide the actor when training.
+
+% critic dělá tohle, minimalizuje tohle
+We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, with parameters $ \theta $.
+% TODO: return by měl mít nějaký index říkající z jaké policy vyšel
+The critic is trained to minimize the following loss at timestep $ t $ \[
+	\losscritic \deq \fceb {\EE_{\actor}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
+\]
+\filip{Jsou ty losses správně?}
+where $ \EE_\pi $ denotes the empirical expectation over a finite number of samples, where the agent, and thus the returns $ G_t $ were gathered when playing according to the policy $ \actor $.
+The critic is then trying to estimate the value of the state $ s_t $ as close as possible.
+
+% actor dělá tohle, minimalizuje tohle,
+The actor is maximizing the expected return.
+This translates to maximizing the following objective at timestep $ t $ \[
+	\lossactor \deq \fceb {\EE_{\actor}}{\left[ \frac{\actor}{\actor[\theta_{\text{old}}]} \right]^{1+\varepsilon}_{1-\varepsilon} \left( \return_t - \fce{\critic}{s_t} \right) }.
+\]
+Here the $ \left[ \ldots  \right]^{1 + \varepsilon}_{1-\varepsilon} $ refers to the clipped surrogate objective, meaning if the ratio inside the brackets is too large, it is clipped to $ 1 + \varepsilon $, and if it is too small, it is clipped to $ 1 - \varepsilon $.
+\filip{Tohle nevím jak napsat pořádně:}
+This stabilizes the learning algorithm, as without the clipping, the policy updates could be too large, leading to instability, as the loss is only applicable in the vicinity of the old policy.
+
+The critic and the actor are trained simultaneously, ...\filip{dopsat}
+
+% % proč RL
+% One of the reasons why we are interested in deep reinforcement learning is its flexibility.
+% More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
+% In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
+
+% PPO
+% TODO: citace
 % TODO: tabular PPO?
 % \david{Tady to právě vypadá, že PPO je special case "deep RL". To ale není pravda, můžeš klidně dělat tabular PPO.}
 
-\filip{tohle chci ještě rozepsat, pořádně tam zadefinovat ty losses atd}
 % TODO: popsat jak funguje PPO -- losses n stuff
-PPO uses an actor-critic architecture.
-This means that we have two networks, the \emph{actor} and the \emph{critic}.
-The actor tries to learn the optimal policy which maximizes the expected return.
-In each state, the actor tries to predict the best action to take.
-The critic, on the other hand, tries to approximate the value $ \fce \stval s $ of each state $ s $.
-The critic's prediction is used to guide the actor when training.
-We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network.
-Similarly, we will denote the actor as $ \actor $, with parameters $ \theta $.
 
-% nemá garance, ale aspoň může řešit spojité problémy
-The PPO algorithm isn't guaranteed to converge to the optimal policy.
-However, it works very well in practice, and importantly for us, it is able to work with \emph{continuous state spaces}.
-This is thanks to the fact that the state is just an input to a neural network, which means it can be a vector of real numbers.
-\filip{tohle je skoro duplikát předchozího par}
+% % nemá garance, ale aspoň může řešit spojité problémy
+% The PPO algorithm isn't guaranteed to converge to the optimal policy.
+% However, it works very well in practice, and importantly for us, it is able to work with \emph{continuous state spaces}.
+% This is thanks to the fact that the state is just an input to a neural network, which means it can be a vector of real numbers.
+% \filip{tohle je skoro duplikát předchozího par}
 
 \subsection{Regret Minimization}
 
