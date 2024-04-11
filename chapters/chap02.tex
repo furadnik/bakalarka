@@ -43,6 +43,7 @@ Note that the set of $ \C $-extensions can have size 1 even for $ \k \neq \pot N
   Then $ \fce{\cAdditive}{f, \k} $ is of size 1.
 \end{prop}
 % TODO: tohle dokazovat?
+\david{když to má být example, tak proč prop? A navíc tohle podle mě není pravda, potřebuješ ještě grandkoalici v $\k$ ne?}
 
 Now that we have all the candidates, we would like to bound the possible values of $ f $ for $ S \notin \k $.
 As we will mostly focus on superadditive extensions, we will first define so-called \emph{minimal information} which is required to be known in order for all the bounds on the other values to be well defined.
@@ -54,7 +55,7 @@ As we will mostly focus on superadditive extensions, we will first define so-cal
 \end{defi}
 
 % od teď v(0) = 0 & proč to nevadí
-From this point on, we will limit ourselves to incomplete set functions with minimal information, where further $ \fce{f}{0} = 0 $.
+From this point on, we will limit ourselves to incomplete set functions with minimal information, where further $ \fce{f}{0} = 0 $.\david{empty set}
 This restricts the incomplete set functions we are working with, but only by a small margin, as we require only a \emph{linear} number of values to be known, compared to the exponential number of all values, which are still potentially unknown.
 \david{all values tečka}\filip{'all' values přidáno. kde tečka?}\david{jakože to je prostě konec té věty co tu byla}
 On the other hand, this restriction enables us to \emph{bound} the unknown values of $ f $, assuming that $ f $ is superadditive.
@@ -107,7 +108,7 @@ However, we state the following definition for an arbitrary $ \ell $, and we wil
 % \filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?} \david{Kdybys to chtěl natáhnout, tak to určitě není spatný místo. Jinak bych to spíš okecal, že třeba chceš asi nulovost když dostaneš jen jednu extension. A řekl bych, že v sekcích X,Y se zabejváme konkrétníma příkladama.}
 \begin{defi}[Divergence]
   Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
-  Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
+  Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.\david{Je $\funcs$ zavedené značení?}
   Then the \emph{set function divergence} of $ \left( f, \k \right) $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, given by \[
     \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
   \]
@@ -124,7 +125,7 @@ For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote 
 \divg {\lp k} \k \deq \sqrt[k]{\sum_{S \in \pot N}^{} \absolute{ \fce{\uf f}{S} - \fce{\lf f}{S}}^k}.
 \]
 This is exactly the $ L_k $-lenght of the longest diagonal in the hyperrectangle defined by the values of the upper and lower functions,
-when viewed as $ 2^n $-dimensional vectors.
+when viewed as $ 2^n $-dimensional vectors.\david{tohle by asi chtělo ještě rozepsat a říct jak tenhle rectangle nemusí obsahovat jen extenze atd.}
 
 \subsection{Utopian Gap}
 
@@ -151,12 +152,14 @@ Hence the utopian gap defined to measure the difference between the players' cho
   \]
 \end{defi}
 
+\david{ukázat jak to souvisí s divergencí (aka Mistrovo lemma) a tím pádem že to má hezké vlastnosti?}
+
 % TODO: properties of UG? aspoň to že je monotonně klesající
 
 \section{Principal's Problems}
 
 We will now introduce the main framework we will be working with, both in the theoretical and the experimental parts of this thesis.
-The setup is as follows: we have a real-world situation modelled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq N $ values.
+The setup is as follows: we have a real-world situation modelled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq N $ values.\david{není to subset 2 na N?}
 There is a principal, who wants to know the rest of the values of $ f $ as precisely as possible.
 However, she only has the budget to reveal $ \tau $ additional values.
 She wants to choose $ \tau $ subsets from $ \pot N \setminus \k $ whose values to reveal (adding them to $ \k $), such that the bounds on the unknown values are as tight as possible, as measured by the divergence with a chosen function $ \ell $.
@@ -233,3 +236,6 @@ Having $ \tau $ as a part of the state is crutial for the policy, as (intuitivel
   \end{enumerate}
   and outputs a probability distribution over $ \pot N \setminus \k $, such that $ \E_{f \sim \fdist} \val \tau \ell f \k \pi $ is minimal.
 \end{defi}
+
+
+\david{říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?}
