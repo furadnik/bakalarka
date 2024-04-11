@@ -270,53 +270,65 @@ This quantity is also referred to as the \emph{q-value} of an action in a state.
 Action-state values approximate the change in the state value, when a given action in a given state is assigned a larger probability.
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
+% TODO: tohle PPO
 \subsection{Reinforcement Learning}
 
 % RL je způsob jak udělat agenta
-Reinforcement learning is a subfield of machine learning, which studies how to design an agent to learn the optimal policy in a Markovian environment (as defined in \cref{def:online-learning}).
-The term \emph{deep reinforcement learning} refers to solving reinforcement learning problems using deep neural networks.
+Reinforcement learning (RL) is a technique for designing \emph{agents} to learn to perform tasks.
+The agent interacts with an environment, and receives feedback in the form of rewards.
+The goal of the agent is to learn a policy that maximizes the expected future reward.
+\emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
+% my budeme dělat jen trochu RL
+RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
+Similarly, we will not further discuss the details of training deep neural networks.
+The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
-Deep reinforcement leaning is a very rich and active field.
-We explore it in this thesis only in the extent we require for our purposes.
-We will also not further discuss the details of training deep neural networks.
-The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
-In our experiments, we have decided to use the \emph{Proximal Policy Optimization} (PPO) algorithm with deep NNs \filip{jak tohle líp napsat?}.
-
-% PPO je cool protože empiricky funguje dobře, a je flexibilní, umožňuje spojitý stavy
-PPO a state-of-the-art algorithm for reinforcement learning.
-It has been empirically shown to perform well in various environments.
-It is also very flexible in the requirements of its state space.
-More precisely, it works even for continuous state spaces, which is required in our application.
+There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
+In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm. % TODO: citace
+PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments. % TODO: citacee
+Importantly for our purposes, PPO is able to work with continuous state spaces, which is required in our application.%
+\footnote{This is not specific to PPO, but rather to the fact that we are using neural networks.}
 
 % PPO funguje actor-critic
-PPO uses an actor-critic architecture.
+Let us now delve into the specifics of the PPO algorithm.
+PPO belongs to a family of so-called actor-critic algorithms.
+% PPO uses an actor-critic architecture.
 It uses two deep neural networks, the \emph{actor} and the \emph{critic}.
-The actor tries to learn the optimal policy which maximizes the expected return,
+% The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
+The actor tries to learn a policy which maximizes the expected return,
 while the critic tries to approximate the value $ \fce \stval s $ of each state $ s $.
 The critic's prediction is used to guide the actor when training.
+
+% TODO: proto chceme ty neuronky
+
+% TODO: PPO pseudokod?
+
 
 % critic dělá tohle, minimalizuje tohle
 We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, with parameters $ \theta $.
 % TODO: return by měl mít nějaký index říkající z jaké policy vyšel
-The critic is trained to minimize the following loss at timestep $ t $ \[
-	\losscritic \deq \fceb {\EE_{\actor}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
+The critic is trained to minimize the following loss \[
+	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
 \]
 \filip{Jsou ty losses správně?}
-where $ \EE_\pi $ denotes the empirical expectation over a finite number of samples, where the agent, and thus the returns $ G_t $ were gathered when playing according to the policy $ \actor $.
+where $ \EE_\pi $ denotes the empirical expectation over a finite number of samples, and the returns $ G_t $ were gathered when playing according to the policy $ \actor $.
 The critic is then trying to estimate the value of the state $ s_t $ as close as possible.
 
 % actor dělá tohle, minimalizuje tohle,
-The actor is maximizing the expected return.
-This translates to maximizing the following objective at timestep $ t $ \[
-	\lossactor \deq \fceb {\EE_{\actor}}{\left[ \frac{\actor}{\actor[\theta_{\text{old}}]} \right]^{1+\varepsilon}_{1-\varepsilon} \left( \return_t - \fce{\critic}{s_t} \right) }.
+The actor is trying to learn the policy which maximizes the expected return.
+This translates to maximizing the following objective \[
+	\lossactor \deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\actor}{\actor[\theta_{\text{old}}]} \right]^{1+\varepsilon}_{1-\varepsilon} \left( \return_t - \fce{\critic}{s_t} \right), \frac{\actor}{\actor[\theta_{\text{old}}]} \left( \return_t - \fce{\critic}{s_t} \right)}}.
 \]
 Here the $ \left[ \ldots  \right]^{1 + \varepsilon}_{1-\varepsilon} $ refers to the clipped surrogate objective, meaning if the ratio inside the brackets is too large, it is clipped to $ 1 + \varepsilon $, and if it is too small, it is clipped to $ 1 - \varepsilon $.
 \filip{Tohle nevím jak napsat pořádně:}
 This stabilizes the learning algorithm, as without the clipping, the policy updates could be too large, leading to instability, as the loss is only applicable in the vicinity of the old policy.
 
+% TODO: jak se učí PPO
 The critic and the actor are trained simultaneously, ...\filip{dopsat}
+
+% TODO: PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 
 % % proč RL
 % One of the reasons why we are interested in deep reinforcement learning is its flexibility.
