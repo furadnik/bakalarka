@@ -103,11 +103,12 @@ This leads us to measuring the distance between the upper and lower functions, u
 The most obvious choice of $ \ell $ is some norm, as norms are well studied, well understood and have nice properties.
 However, we state the following definition for an arbitrary $ \ell $, and we will see an example of $ \ell $ which is not a norm, but which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
 
-\filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?} \david{Kdybys to chtěl natáhnout, tak to určitě není spatný místo. Jinak bych to spíš okecal, že třeba chceš asi nulovost když dostaneš jen jednu extension. A řekl bych, že v sekcích X,Y se zabejváme konkrétníma příkladama.}
+% TODO: restrikce na \ell?
+% \filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?} \david{Kdybys to chtěl natáhnout, tak to určitě není spatný místo. Jinak bych to spíš okecal, že třeba chceš asi nulovost když dostaneš jen jednu extension. A řekl bych, že v sekcích X,Y se zabejváme konkrétníma příkladama.}
 \begin{defi}[Divergence]
   Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
   Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
-  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is\filip{tady je sloveso :D} \david{jakože true, ale to defined as mi zní děsně. Co třeba given by?} $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as\david{chybí sloveso} \[
+  Then the \emph{set function divergence} of $ \left( f, \k \right) $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, given by \[
     \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
   \]
 \end{defi}
@@ -150,7 +151,7 @@ Hence the utopian gap defined to measure the difference between the players' cho
   \]
 \end{defi}
 
-% TODO: properties of UG?
+% TODO: properties of UG? aspoň to že je monotonně klesající
 
 \section{Principal's Problems}
 
@@ -173,32 +174,32 @@ This leads to the definition of the \emph{offline principal's problem}.
   \]
 \end{defi}
 
-\filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
+% TODO: okomentovat rozdíl mezi online a offline, a že to nevadí, protože divergence je monotonně klesající:
+% \filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
 
-This is a approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
+This is an approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
 However, there is an approach which leads to a potentially lower value of the divergence.
 The flaw of the offline problem is that the optimal $ \s $ might depend on the specific instance $ f $ taken from $ \fdist $.
 % \david{Observe that the principal doesn't use the values on the coalitions she encounters during the revelation process. These can be used to restrict the distribution $\fdist$, improving performance.}
 Now, granted, the principal doesn't know all the values of $ f $.
 However, in addition to knowing the values of $ \k $, she has the budget to reveal $ \tau $ extra values, which give her further information about the specific instance of $ f $ she is working with.
-\david{tohle zní divně, jako by offline přistup nepoužíval tyhle hodnoty.}
-\filip{přeformulováno. also, tak jak jsem to napsal teď, tak to je vlastně pravda, což nevím jestli chceme. kdyby v $ \fdist $ byly funkce které mají různé hodnoty na $ \k $, tak ten offline problém by tuhle informaci stejně nepoužil.}\david{nice}
 It might then be benefitial to spend some of the budget on exploring other values of $ f $,
 and then use the remainder of the budget to reveal the values which are most beneficial, taking into account the values she has already revealed.
 We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
 
 % TODO: example: factory? all zeros a additive
 
-% TODO: formal def
+% formal def
 The formal definition of the online principal's problem is a bit more involved.
 Unlike the offline problem, here the solution will be a \emph{policy} $ \pi $, according to which the principal will choose the next values to reveal, based on the values she has already seen.
-This policy will have as its input the known subsets $ \k $, their corresponding values of $ f $, and the remaining number of steps $ \tau $\david{This policy takes as input the know values and the remaining steps?}.
-To quantify the performance of the policy, let us\david{we define policy value function tečka} define a \emph{policy valuation function} as follows.
+This input of the policy are the known subsets $ \k $, their corresponding values of $ f $, and the remaining budget, or the number of steps left, $ \tau $
+\david{This policy takes as input the know values and the remaining steps?}
+\filip{To není úplně přesný žejo, protože ona potřebuje i ty hodnoty...}
+.
+To quantify the performance of a policy, we define a \emph{policy valuation function}.
 
-\filip{Jak moc je tohle nechutný?}
-\filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
-\filip{Also, neměli bychom nějak víc tady popsat co je $ \ell $?}
-% TODO: policy cost
+% TODO: \filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
+% policy cost
 \begin{defi}[Online policy valuation]
   Let $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
   Let $ \left( f, \k \right) $ be an incomplete set function with minimal information, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function,
@@ -209,18 +210,18 @@ To quantify the performance of the policy, let us\david{we define policy value f
       \divg \ell {\k_-} & \text{if } \tau = 0,
     \end{cases}
   \]
-  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $\david{nejsou tohle vlastně extenze $f$?}.
+  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $.
 \end{defi}
 
-Let us take a moment to realize \david{realize není dobré slovo :D} that the policy valuation exactly quantifies the performance we have discussed above.
+We can see that the policy valuation exactly quantifies the performance we have discussed above.
 It measures the divergence after the budget has been spent, allowing the principal to make moves that might not be optimal in a \textquote{greedy} sense, meaning that they might not lead to the smallest divergence in the next step, but they might lead to a smaller final divergence.
 
-\david{celkově se mi tahle definice líbí a nebál bych se víc říct, že tohle je vlastně normální search s value funkcí za tau kroků. Normálně bysme se mohli tvářit, že ta není přesná a tak, ale to je doslova o co nám jde, takže je to vlastně skutečný outcome.}
+% TODO: říct, že tohle je vlastně normální search s value funkcí za tau kroků
+% \david{celkově se mi tahle definice líbí a nebál bych se víc říct, že tohle je vlastně normální search s value funkcí za tau kroků. Normálně bysme se mohli tvářit, že ta není přesná a tak, ale to je doslova o co nám jde, takže je to vlastně skutečný outcome.}
 
-Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:online-learning}, with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
+Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:online-learning} (\cref{def:policy}), with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
 Having $ \tau $ as a part of the state is crutial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most benefitial, given the values it has already seen.
 
-\filip{$ \k $ je tu trochu přetížený, ne? je to rušivé?}\david{nezdá se mi, tenhle poslední odstavec je za mě fakt hezkej.}
 \begin{defi}[Online principal's problem]
   Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
   Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $.
