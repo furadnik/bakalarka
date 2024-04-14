@@ -1,5 +1,6 @@
 \usepackage[english]{babel}
 \usepackage{csquotes}
+\usepackage[noend]{algpseudocode}
 %%% This file contains definitions of various useful macros and environments %%%
 %%% Please add more macros here instead of cluttering other files with them. %%%
 
@@ -76,6 +77,7 @@
 %%% Useful operators for statistics and probability
 \DeclareMathOperator{\pr}{\textsf{P}}
 \DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\EE}{\hat{\mathbb{E}}}
 \DeclareMathOperator{\var}{\textrm{var}}
 \DeclareMathOperator{\sd}{\textrm{sd}}
 
@@ -98,12 +100,13 @@
 \def\pot#1{\fce{\mathcal{P}}{#1}}
 \def\deq{\mathbin{:=}}
 \def\absolute#1{\left\lvert #1 \right\rvert }
+\def\vec{\boldsymbol}
 
 % functions with auto parenths
 \def\bfce#1#2{#1\!\bigl(#2\bigr)}
 \def\fce#1#2{#1\!\left(#2\right)}
 \def\fceb#1#2{#1\!\left[ #2 \right]}
-\def\fcec#1#2{#1\{#2\}}
+\def\fcec#1#2{#1\!\left\{#2\right\}}
 \def\fces#1#2{#1\!\left< #2 \right>}
 
 \def\games#1{\Gamma^{#1}}
@@ -111,14 +114,23 @@
 \def\Shapley{\phi}
 \newcommand\shapley[1][]{\fce{\Shapley_{#1}}}
 \def\dist#1{\Delta^{#1}}
-\def\exl{\hat{\ell}}
-\def\cl{L}
-\def\cxl{\hat{L}}
+
 \def\algs{\mathcal{A}}
 \def\alg{\textsf{A}}
 \def\k{\mathcal{K}}
 \def\s{\mathcal{S}}
 \def\C{\mathcal{C}}
+
+% loss
+\def\ls{\ell}
+\def\xl{\hat{\ell}}
+\def\cl{L}
+\def\cxl{\hat{\cl}}
+\def\vls{\vec{\ls}}
+\def\vxl{\hat{\vec\ell}}
+\def\vcl{\vec L}
+\def\vcxl{\hat{\vcl}}
+
 
 % lower and upper functions
 \newcommand{\lf}[2][\k]{\underline{#2}_{#1}}
@@ -146,3 +158,23 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
+% online learning
+\def\actions{\mathcal{A}}
+\def\states{\mathcal{S}}
+\def\tran{\tau}
+\def\rew{r}
+\def\return{G}
+\newcommand\stval[1][\pi]{v_{#1}}
+\def\critic{\hat{v}_{\phi}}
+\def\losscritic{\fce {L^v}{\phi \suchthat \theta}}
+\newcommand\actor[1][\theta]{\pi_{#1}}
+\def\lossactor{\fce {L^\pi}{\theta \suchthat \phi}}
+
+% algorithms
+\newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{algo}}
+\def\AlgIn{\emph{Input: }}
+\def\AlgOut{\emph{Output: }}
+\theoremstyle{definition}
+\newtheorem{algo}[thm]{Algorithm}
+\algdef{SN}[SUBALG]{Indent}{EndIndent}{}{}%
+\algdef{SN}[SUBALG]{Procedure}{EndProcedure}[2]{\algofont{#1}({#2}):}{}%
