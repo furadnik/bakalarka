@@ -301,32 +301,58 @@ The actor tries to learn a policy which maximizes the expected return,
 while the critic tries to approximate the value $ \fce \stval s $ of each state $ s $.
 The critic's prediction is used to guide the actor when training.
 
+% jak se učí PPO
+We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+Before defining their respective losses, let us mention how the training process works on a high level.
+The critic and the actor are trained simultaneously.
+The training process is split into \emph{iterations}.
+In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
+Then, for each time step in each run, we can compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
+An approximation of $ G_t $ can be easily computed from the gathered rewards.
+The advantage quantifies, how much more reward we've received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic.
+If the advantage is positive, it suggests we should play $ a_t $ \emph{more often}, and if it is negative, it is probably best to play it \emph{less often}.
+
+From the gathered values, we perform minibatch SGD for $ K $ epochs.
+The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.
+
 % TODO: proto chceme ty neuronky
 
 % TODO: PPO pseudokod?
 
-
 % critic dělá tohle, minimalizuje tohle
-We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, with parameters $ \theta $.
 % TODO: return by měl mít nějaký index říkající z jaké policy vyšel
+Let us now discuss the details of the actor and the critic.
 The critic is trained to minimize the following loss \[
 	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
 \]
-\filip{Jsou ty losses správně?}
-where $ \EE_\pi $ denotes the empirical expectation over a finite number of samples, and the returns $ G_t $ were gathered when playing according to the policy $ \actor $.
-The critic is then trying to estimate the value of the state $ s_t $ as close as possible.
+where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all runs in the current iteration.
+This loss results in the critic estimating the value of the state $ s_t $ as close as possible.
 
-% actor dělá tohle, minimalizuje tohle,
+% TODO: actor dělá tohle, minimalizuje tohle,
 The actor is trying to learn the policy which maximizes the expected return.
-This translates to maximizing the following objective \[
-	\lossactor \deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\actor}{\actor[\theta_{\text{old}}]} \right]^{1+\varepsilon}_{1-\varepsilon} \left( \return_t - \fce{\critic}{s_t} \right), \frac{\actor}{\actor[\theta_{\text{old}}]} \left( \return_t - \fce{\critic}{s_t} \right)}}.
+As mentioned above, when $ \hat{A_t} $ is positive, we should play the action $ a_t $ more often, and when it is negative, we should play it less often.
+Observe that this can be expressed as maximizing the following objective \[
+	\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
-Here the $ \left[ \ldots  \right]^{1 + \varepsilon}_{1-\varepsilon} $ refers to the clipped surrogate objective, meaning if the ratio inside the brackets is too large, it is clipped to $ 1 + \varepsilon $, and if it is too small, it is clipped to $ 1 - \varepsilon $.
-\filip{Tohle nevím jak napsat pořádně:}
-This stabilizes the learning algorithm, as without the clipping, the policy updates could be too large, leading to instability, as the loss is only applicable in the vicinity of the old policy.
+where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous run.
 
-% TODO: jak se učí PPO
-The critic and the actor are trained simultaneously, ...\filip{dopsat}
+However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
+To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
+Hence, we define the objective of the actor followingly \begin{align*}
+	\lossactor &\deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
+	\text{where }
+	\left[ x \right]^a_b &\deq \begin{cases}
+		a & \text{if $ x > a $,} \\
+		b & \text{if $ x < b $,} \\
+		x & \text{otherwise.}
+	\end{cases}
+\end{align*}
+\[
+\]
+The hyperparameter $ \varepsilon $ is used to control the amount of clipping.
+The authors suggest the choice of $ \varepsilon = 0.2 $.
+The \emph{min} ensures that the loss is clipped from only one direction.
+This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % TODO: PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 
@@ -334,19 +360,6 @@ The critic and the actor are trained simultaneously, ...\filip{dopsat}
 % One of the reasons why we are interested in deep reinforcement learning is its flexibility.
 % More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
 % In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
-
-% PPO
-% TODO: citace
-% TODO: tabular PPO?
-% \david{Tady to právě vypadá, že PPO je special case "deep RL". To ale není pravda, můžeš klidně dělat tabular PPO.}
-
-% TODO: popsat jak funguje PPO -- losses n stuff
-
-% % nemá garance, ale aspoň může řešit spojité problémy
-% The PPO algorithm isn't guaranteed to converge to the optimal policy.
-% However, it works very well in practice, and importantly for us, it is able to work with \emph{continuous state spaces}.
-% This is thanks to the fact that the state is just an input to a neural network, which means it can be a vector of real numbers.
-% \filip{tohle je skoro duplikát předchozího par}
 
 \subsection{Regret Minimization}
 
@@ -480,4 +493,3 @@ This distribution is unknown to the agent, though gathers information about it f
 
 % TODO: minimalizovat regret a maximalizovat reward je to stejné proti "oblivious environment" (to je to, kde bereš gradient loss podle policy jako 0)
 % TODO: RM sublin regret, ale ne minimalizace:
-% \david{Pro naše potřeby by to chtělo asi nějak popsat střeva PPO. Taky bych vypíchnul rozdíly proti regretu - nemá garance, ale zase díky samplování můžešvyřešit i ty spojité problémy třeba. Taky bych ale napsal, že . Další příklad co mám rád je ale, že fundamentálně je to jiné - regret je typicky happy, když má sublineární regret. Algoritmy jsou typicky dané a mají garance na sublinear regret - ale neminimalizují ho! Simple příklad z Balkovy přednášky - máš si vzít ten deštník, nebo opalovací krém? Když je šance 50/50, tak regret ti vrátí uniformní distribuci a je happy. Ale co když bys měl přístup k předpovědi počasí? Regret je furt happy a neumí to nijak použít, protože ten algoritmus je typicky fixní. Na druhou stranu PPO by s takovym environmentem zatočilo snadno a dosáhlo jen tak btw negarivního external regretu.}
