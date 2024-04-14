@@ -1,7 +1,7 @@
 % Metadata to be stored in PDF, see documentation of the pdfx package for more details.
 
-\Author{Name Surname}
-\Title{Thesis title}
-\Keywords{keywords\sep more such\sep yet another}
+\Author{Filip Úradník}
+\Title{Balancing Space Complexity and Ambiguity in Superadditive Set Functions}
+\Keywords{set functions\sep reinforcement learning\sep cooperative game theory\sep supermodular set functions}
 \Subject{Abstract of thesis}
 \Publisher{Charles University}
