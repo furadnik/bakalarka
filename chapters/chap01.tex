@@ -334,7 +334,7 @@ As mentioned above, when $ \hat{A_t} $ is positive, we should play the action $ 
 Observe that this can be expressed as maximizing the following objective \[
 	\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
-where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous run.
+where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
 
 However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
