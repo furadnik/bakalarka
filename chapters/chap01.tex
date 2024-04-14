@@ -317,8 +317,6 @@ The number of epochs is a hyperparameter, and after we finish all the epochs, we
 
 % TODO: proto chceme ty neuronky
 
-% TODO: PPO pseudokod?
-
 % critic dělá tohle, minimalizuje tohle
 % TODO: return by měl mít nějaký index říkající z jaké policy vyšel
 Let us now discuss the details of the actor and the critic.
@@ -353,6 +351,20 @@ The hyperparameter $ \varepsilon $ is used to control the amount of clipping.
 The authors suggest the choice of $ \varepsilon = 0.2 $.
 The \emph{min} ensures that the loss is clipped from only one direction.
 This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
+
+% PPO pseudokod?
+\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon $, number of epochs $ K $, number of iterations $ I $, number of runs $ R $.}
+	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
+	\State Initialize $ \critic $ and $ \actor $ randomly.
+	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
+		\State Gather rewards for $ R $ runs using the current policy $ \actor $.
+		\State Compute the advantage $ \hat{A_t} $ for each timestep $ t $ in each run.
+		\Indent Compute $ K $ epochs of minibatch SGD:
+			\State For the critic, use the loss $ \losscritic $.
+			\State For the actor, use the loss $ \lossactor $.
+		\EndIndent
+	\EndIndent
+\end{algor}
 
 % TODO: PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 

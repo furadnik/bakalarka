@@ -1,5 +1,6 @@
 \usepackage[english]{babel}
 \usepackage{csquotes}
+\usepackage[noend]{algpseudocode}
 %%% This file contains definitions of various useful macros and environments %%%
 %%% Please add more macros here instead of cluttering other files with them. %%%
 
@@ -168,3 +169,12 @@
 \def\losscritic{\fce {L^v}{\phi \suchthat \theta}}
 \newcommand\actor[1][\theta]{\pi_{#1}}
 \def\lossactor{\fce {L^\pi}{\theta \suchthat \phi}}
+
+% algorithms
+\newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{algo}}
+\def\AlgIn{\emph{Input: }}
+\def\AlgOut{\emph{Output: }}
+\theoremstyle{definition}
+\newtheorem{algo}[thm]{Algorithm}
+\algdef{SN}[SUBALG]{Indent}{EndIndent}{}{}%
+\algdef{SN}[SUBALG]{Procedure}{EndProcedure}[2]{\algofont{#1}({#2}):}{}%
