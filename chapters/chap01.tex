@@ -329,10 +329,10 @@ The critic is trained to minimize the following loss \[
 where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all runs in the current iteration.
 This loss results in the critic estimating the value of the state $ s_t $ as close as possible.
 
-% TODO: actor dělá tohle, minimalizuje tohle,
+% actor dělá tohle, minimalizuje tohle,
 The actor is trying to learn the policy which maximizes the expected return.
 As mentioned above, when $ \hat{A_t} $ is positive, we should play the action $ a_t $ more often, and when it is negative, we should play it less often.
-Observe that this can be expressed as maximizing the following objective \[
+Observe that this can be expressed as maximizing (over the parameters $ \theta $) the following objective \[
 	\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
 where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
@@ -352,7 +352,7 @@ Hence, the objective of the actor is defined followingly \begin{align*}
 \]
 The hyperparameter $ \varepsilon $ is used to control the amount of clipping.
 In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $. % TODO: citace
-The \emph{min} ensures that the loss is clipped from only one direction.
+By taking the minimum of the clipped and unclipped objective, we ensure that the loss is clipped from only one direction.
 This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod?
@@ -382,7 +382,7 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
 By hindsight, we mean that the agent compares itself other sequences of strategies he could have chosen, and tries to minimize the difference between the losses he experienced, and the losses the best sequence of strategies would have experienced.
 
-The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \cref{def:online-learning}.
+The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \Cref{def:online-learning}.
 Let us first define the setup for a single-state environment, and then we will generalize it to the multi-state case.
 
 \begin{defi}[Regret minimization environment]
@@ -392,7 +392,7 @@ Let us first define the setup for a single-state environment, and then we will g
 	\end{enumerate}
 \end{defi}
 
-Notice that unlike \cref{def:online-learning}, where we had to choose one action at each step,
+Notice that unlike \Cref{def:online-learning}, where we had to choose one action at each step,
 here we choose a distribution over the actions, and receive a per-action loss, based on that distribution.
 This gives us extra information about \textquote{which action costs us the most}.
 Note however that this doesn't mean that the action with lowest loss is the best action to choose.
