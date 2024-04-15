@@ -187,21 +187,31 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \end{prop}
 % TODO: další vlastnosti SV?
 
-\section{Online Learning}
-\label{sec:online-learning}
+\section{Reinforcement Learning}
+\label{sec:rl}
 
-% co to je
-Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly designed to perform a specific task, but rather are programmed to learn the expected behavior by analyzing data.
-% TODO: example
-% TODO: každej to definuje jinaak
-Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
-Online learning is a general model, which can be used to model many different situations, including those with multiple agents.
-However, in this thesis, we focus on the online learning of a single agent.
+% RL je způsob jak udělat agenta
+Reinforcement learning (RL) is a technique for designing \emph{agents} to learn to perform tasks.
+The agent interacts with an environment, and receives feedback in the form of rewards.
+The goal of the agent is to learn a policy that maximizes the expected future reward.
+\emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
+
+% my budeme dělat jen trochu RL
+RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
+Similarly, we do not further discuss the details of training deep neural networks.
+The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
+
+% % co to je
+% Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly designed to perform a specific task, but rather are programmed to learn the expected behavior by analyzing data.
+% Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
+% Online learning is a general model, which can be used to model many different situations, including those with multiple agents.
+% However, in this thesis, we focus on the online learning of a single agent.
 
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
-Now, let us define the model formally.
-The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state he moves to \martin{environment má state} after he chooses an action,
+Let us first formally define the model used when discussing RL.
+The environment is a black box to the agent, which is in some state.
+The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
 We will formalize this as a \emph{Markov decision process}.
@@ -219,7 +229,7 @@ Note that in the definition of the Markov decision process, we further require a
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, moves to a new state\martin{him or env?} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a new state from the environment\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
@@ -273,18 +283,8 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{Reinforcement Learning}
+\subsection{PPO}
 
-% RL je způsob jak udělat agenta
-Reinforcement learning (RL) is a technique for designing \emph{agents} to learn to perform tasks.
-The agent interacts with an environment, and receives feedback in the form of rewards.
-The goal of the agent is to learn a policy that maximizes the expected future reward.
-\emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
-
-% my budeme dělat jen trochu RL
-RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
-Similarly, we do not further discuss the details of training deep neural networks.
-The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
 There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
@@ -376,7 +376,8 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 % More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
 % In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
 
-\subsection{Regret Minimization}
+\section{Regret Minimization}
+\filip{tohle přepsat nebo smazat idk}
 
 % cil RM
 Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
@@ -392,7 +393,7 @@ Let us first define the setup for a single-state environment, and then we will g
 	\end{enumerate}
 \end{defi}
 
-Notice that unlike \Cref{def:online-learning}, where we had to choose one action at each step,
+Notice that unlike \Cref{def:rl}, where we had to choose one action at each step,
 here we choose a distribution over the actions, and receive a per-action loss, based on that distribution.
 This gives us extra information about \textquote{which action costs us the most}.
 Note however that this doesn't mean that the action with lowest loss is the best action to choose.
