@@ -316,7 +316,8 @@ If the advantage is positive, it suggests the agent should play $ a_t $ \emph{mo
 
 From the gathered values, we perform minibatch SGD for $ K $ epochs.
 The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.
-\filip{tady chceme říct že tohle je cool on-policy, bez toho to spadlo z nebe tahle věta}
+This approach is called \emph{on-policy}, and it ensures higher stability.
+We will discuss the differences between on-policy and off-policy algorithms later.
 
 % TODO: proto chceme ty neuronky
 
@@ -369,12 +370,16 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 	\EndIndent
 \end{algor}
 
-% TODO: PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
+% PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
+Finally, let us mention the difference between PPO and other RL algorithms.
+We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO.
+Another property we have briefly mentioned already is the \emph{on-policy} approach of PPO.
+This means that after each update of the policy (each iteration of the PPO algorithm), we drop all the gathered rewards, and start anew.
+This is in contrast to \emph{off-policy} algorithms, which can use rewards gathered by an old policy to train a new one.
+\emph{Off-policy} algorithms work well when the expected returns do not change much between iterations, however, when they do, the critic's predictions become inaccurate, and the training becomes unstable.
+PPO further stabilizes the training by clipping the loss, as discussed above.
+\filip{Tenhle paragraf je takovej meh, a chtěl by asi nějak pěkně ukončit, ale nevím jak}
 
-% % proč RL
-% One of the reasons why we are interested in deep reinforcement learning is its flexibility.
-% More precisely, we are interested in working with continuous state spaces, represented by vectors of real numbers.
-% In contrast, most traditional approaches to reinforcement learning require the state space to be finite, and possibly small.
 
 \section{Regret Minimization}
 \filip{tohle přepsat nebo smazat idk}

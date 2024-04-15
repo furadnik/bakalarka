@@ -21,6 +21,7 @@ First, let us formalize the set functions with incomplete information.
   An \emph{incomplete set function} is $ \left( f, \k \right) $, where $ \k \subseteq \pot N $ are the \emph{known values} of the set function.
 \end{defi}
 
+% TODO: jak se liší od partial set funcs
 Notice that the $ f $ in the pair $ \left( f, \k \right) $ is still the \emph{complete} set function.
 We are just restricting ourselves to using only the values from $ \k $ in computations.
 This may seem unnatural at first, but it will help us in subsequent definitions.
@@ -32,6 +33,7 @@ This may seem unnatural at first, but it will help us in subsequent definitions.
   \]
   The class of all $ \C $-extensions of $ \left( f,\k \right) $ is denoted by $ \fce{\C}{f, \k} $.
 \end{defi}
+% TODO: tady možná říct že tohle už asi někdy někoho napadlo
 
 By assuming that $ f \in \C $, the $ \C $-extensions are a class containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
 The set $ \fce{\C}{f, \k} $ is non-empty, as $ f $ is always a $ \C $-extension of itself, by the assumption of $ f \in \C $.
@@ -116,8 +118,8 @@ However, we state the following definition for an arbitrary $ \ell $, and we wil
 
 Notice that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
 This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
-However, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence\david{Tahle věta mě zmátla, vypadá to, že chceš podvádě a pak ani nepodvádíš.}\filip{Nechápu :D přepsal jsem to trochu, je to lepší?} \david{Tady neni co remedy, je to všechno totálně ok. Napsat bych něco jako It is often natural to work with $\k$ including the minimal information. When refering to $\k$ without minimal information, we will use ...}.
-To remedy this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
+However, we will often encounter $ \k $ including the minimal information, which is technically not a valid input of the divergence.
+To avoid this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, transforming $ \k $ to a valid input of the divergence.
 
 The properties of the divergence differ based on the choice of the function $ \ell $.
 For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote by $ \lp k $), then the divergence will be \[
