@@ -191,20 +191,21 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \label{sec:online-learning}
 
 % co to je
-Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly told how to perform a task, but rather are programmed to learn the expected behavior by analyzing data.
+Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly designed to perform a specific task, but rather are programmed to learn the expected behavior by analyzing data.
 % TODO: example
 % TODO: každej to definuje jinaak
 Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
-Online learning is a general model, which can be used to model many different problems, including multi-agent systems.
-However, in this thesis, we will focus on the online learning of a single agent.
+Online learning is a general model, which can be used to model many different situations, including those with multiple agents.
+However, in this thesis, we focus on the online learning of a single agent.
 
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Now, let us define the model formally.
-The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state he moves to after he chooses an action,
-and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action.
+The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state he moves to \martin{environment má state} after he chooses an action,
+and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
 We will formalize this as a \emph{Markov decision process}.
+Note that in the definition of the Markov decision process, we further require a \emph{discount factor} $ \gamma $, which will be discussed later.
 
 % MDP?
 \begin{defi}[Markov decision process]\label{def:online-learning}
@@ -218,17 +219,18 @@ We will formalize this as a \emph{Markov decision process}.
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, moves to a new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, moves to a new state\martin{him or env?} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
+\martin{Definovat policy jen v textu?}
 \begin{defi}[Policy]
 	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
 \end{defi}
 
 As the agent plays, he receives reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time.
-To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future are discounted by a factor of $ \gamma^t $.
+To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future\martin{after t steps?}\filip{nevim..} are discounted by a factor of $ \gamma^t $.
 If the agent plays for $ T $ steps, and then stops, we just set the rewards for times $ t > T $ to zero.
 
 % TODO: vysvětlivka co znamená \E_\pi
@@ -281,7 +283,7 @@ The goal of the agent is to learn a policy that maximizes the expected future re
 
 % my budeme dělat jen trochu RL
 RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
-Similarly, we will not further discuss the details of training deep neural networks.
+Similarly, we do not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
@@ -309,11 +311,12 @@ The training process is split into \emph{iterations}.
 In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
 Then, for each time step in each run, we can compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the gathered rewards.
-The advantage quantifies, how much more reward we've received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic.
-If the advantage is positive, it suggests we should play $ a_t $ \emph{more often}, and if it is negative, it is probably best to play it \emph{less often}.
+The advantage quantifies, how much more reward the agent received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic.
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform minibatch SGD for $ K $ epochs.
 The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.
+\filip{tady chceme říct že tohle je cool on-policy, bez toho to spadlo z nebe tahle věta}
 
 % TODO: proto chceme ty neuronky
 
@@ -336,7 +339,7 @@ where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previ
 
 However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
-Hence, we define the objective of the actor followingly \begin{align*}
+Hence, the objective of the actor is defined followingly \begin{align*}
 	\lossactor &\deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
 	\text{where }
 	\left[ x \right]^a_b &\deq \begin{cases}
@@ -348,7 +351,7 @@ Hence, we define the objective of the actor followingly \begin{align*}
 \[
 \]
 The hyperparameter $ \varepsilon $ is used to control the amount of clipping.
-The authors suggest the choice of $ \varepsilon = 0.2 $.
+In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $. % TODO: citace
 The \emph{min} ensures that the loss is clipped from only one direction.
 This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
