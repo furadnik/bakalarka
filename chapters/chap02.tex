@@ -221,7 +221,7 @@ It measures the divergence after the budget has been spent, allowing the princip
 % TODO: říct, že tohle je vlastně normální search s value funkcí za tau kroků
 % \david{celkově se mi tahle definice líbí a nebál bych se víc říct, že tohle je vlastně normální search s value funkcí za tau kroků. Normálně bysme se mohli tvářit, že ta není přesná a tak, ale to je doslova o co nám jde, takže je to vlastně skutečný outcome.}
 
-Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:online-learning} (\cref{def:policy}), with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
+Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:rl} (\Cref{def:policy}), with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
 Having $ \tau $ as a part of the state is crutial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most benefitial, given the values it has already seen.
 
 \begin{defi}[Online principal's problem]

@@ -218,7 +218,7 @@ We will formalize this as a \emph{Markov decision process}.
 Note that in the definition of the Markov decision process, we further require a \emph{discount factor} $ \gamma $, which will be discussed later.
 
 % MDP?
-\begin{defi}[Markov decision process]\label{def:online-learning}
+\begin{defi}[Markov decision process]\label{def:mdp}
 	A \emph{Markov decision process} is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
@@ -383,7 +383,7 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
 By hindsight, we mean that the agent compares itself other sequences of strategies he could have chosen, and tries to minimize the difference between the losses he experienced, and the losses the best sequence of strategies would have experienced.
 
-The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \Cref{def:online-learning}.
+The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \Cref{def:mdp}.
 Let us first define the setup for a single-state environment, and then we will generalize it to the multi-state case.
 
 \begin{defi}[Regret minimization environment]
@@ -393,7 +393,7 @@ Let us first define the setup for a single-state environment, and then we will g
 	\end{enumerate}
 \end{defi}
 
-Notice that unlike \Cref{def:rl}, where we had to choose one action at each step,
+Notice that unlike \Cref{def:mdp}, where we had to choose one action at each step,
 here we choose a distribution over the actions, and receive a per-action loss, based on that distribution.
 This gives us extra information about \textquote{which action costs us the most}.
 Note however that this doesn't mean that the action with lowest loss is the best action to choose.
