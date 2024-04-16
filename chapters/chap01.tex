@@ -187,17 +187,17 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \end{prop}
 % TODO: další vlastnosti SV?
 
-\section{Reinforcement Learning}
+\section{Reinforcement Learning\david{přečteno 15.4}}
 \label{sec:rl}
 
 % RL je způsob jak udělat agenta
-Reinforcement learning (RL) is a technique for designing \emph{agents} to learn to perform tasks.
+Reinforcement learning (RL) is a technique for designing \emph{agents} to learn\david{to learn smazat?} to perform tasks.
 The agent interacts with an environment, and receives feedback in the form of rewards.
 The goal of the agent is to learn a policy that maximizes the expected future reward.
 \emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
 % my budeme dělat jen trochu RL
-RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
+RL is an extensive field, which shall\david{zní to fakt vzletně :D} be discussed in this thesis only to the extent required for our purposes.
 Similarly, we do not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 
@@ -210,7 +210,7 @@ The reader is encouraged to look deeper into the literature for more information
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Let us first formally define the model used when discussing RL.
-The environment is a black box to the agent, which is in some state.
+The environment is a black box to the agent, which is in some state.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
@@ -219,21 +219,22 @@ Note that in the definition of the Markov decision process, we further require a
 
 % MDP?
 \begin{defi}[Markov decision process]\label{def:mdp}
-	A \emph{Markov decision process} is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
+	A \emph{Markov decision process} \david{(MPD)} is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
-		\item $ \gamma \in \left( 0,1 \right) $ is the \emph{discount factor}.
+		\item $ \gamma \in \left( 0,1 \right) $ is the \emph{discount factor}.\david{$\gamma$ může mít i krajní hornosty ne? Obě dávaj smysl (pokud zadefinuješ $0^0=1$)}
 	\end{enumerate}
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a new state from the environment\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a new state from the environment\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} \david{is informed of the next state the environment is in?} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
 \martin{Definovat policy jen v textu?}
+\david{Nevim, takhle se bude líp v textu hledat podle mě. A není to tak dlouhé, že bysme museli šetřit místem (možná naopak)}
 \begin{defi}[Policy]
 	\label{def:policy}
 	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
@@ -241,20 +242,20 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 
 As the agent plays, he receives reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time.
-To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future\martin{after t steps?}\filip{nevim..} are discounted by a factor of $ \gamma^t $.
-If the agent plays for $ T $ steps, and then stops, we just set the rewards for times $ t > T $ to zero.
+To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future\martin{after t steps?}\filip{nevim..}\david{Formally, the agent interacts with the env indefinitely. To make the cumulative future reward finite, we exponentially discount future rewards.\footnote{This is true under the mild assumption that the rewards are bounded.} Something about how humans do the same thing...} are discounted by a factor of $ \gamma^t $.
+If the agent plays for $ T $ steps, and then stops, we just set the rewards for times $ t > T $ to zero.\david{To capture environments with a finite horizon $T$, we set...?}
 
 % TODO: vysvětlivka co znamená \E_\pi
 \begin{defi}[Return]
-	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $.
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $.\david{Let ... be a MDP.}
 	He chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=0}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
-	Then the \emph{return} of the agent from time $ T $ is \[
+	Then the \emph{return} of the agent from time $ T $ \david{tohle je potenciálně trochu zmatečné, protože T byl horizont předtím. Co takhle $\tau$?}is \[
 		\return_T \deq \sum_{t=T}^{\infty} \gamma^{t-T} \rew_t.
 	\]
 \end{defi}
 
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
-When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $.
+When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $.\david{where the expectation is over...}
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
@@ -284,7 +285,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO}
+\subsection{PPO\david{přečteno 15.4}}
 
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
@@ -301,24 +302,24 @@ PPO belongs to a family of so-called actor-critic algorithms.
 It uses two deep neural networks, the \emph{actor} and the \emph{critic}.
 % The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
 The actor tries to learn a policy which maximizes the expected return,
-while the critic tries to approximate the value $ \fce \stval s $ of each state $ s $.
+while the critic tries\david{2x tries, nahradit seeks třeba?} to approximate the value $ \fce \stval s $ of each state $ s $\david{encountered when following the policy $\pi$}.
 The critic's prediction is used to guide the actor when training.
 
 % jak se učí PPO
-We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
-Then, for each time step in each run, we can compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
-An approximation of $ G_t $ can be easily computed from the gathered rewards.
-The advantage quantifies, how much more reward the agent received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic.
-If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, and if it is negative, it is probably best to play it \emph{less often}.
+In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\david{In each iteration, the agent collects trajectories (sequences of state-action-reward triplets) by interaction with the env (possibly in parallel)}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
+Then, for each time step in each run, we can\david{zrušit can} compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
+An approximation of $ G_t $ can be easily computed from the gathered\david{observed?} rewards.
+The advantage quantifies, how much more reward the agent received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic\david{(i.e. the ecpected reward under pi)?}.
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}\david{as it is above average}, and if it is negative, it is probably best to play it \emph{less often}.
 
-From the gathered values, we perform minibatch SGD for $ K $ epochs.
-The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.
-This approach is called \emph{on-policy}, and it ensures higher stability.
-We will discuss the differences between on-policy and off-policy algorithms later.
+From the gathered values, we perform minibatch SGD \david{SGD nebylo definované ne?} for $ K $ epochs.
+The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.\david{tahle věta by asi šla pomasírovat}
+This approach is called \emph{on-policy}, and it ensures higher stability\david{as the critic always learns from data generated by the current actor's policy. This leads to more stable learning?}.
+We will discuss the differences between on-policy and off-policy algorithms later.\david{really? :D}
 
 % TODO: proto chceme ty neuronky
 
@@ -333,11 +334,11 @@ This loss results in the critic estimating the value of the state $ s_t $ as clo
 
 % actor dělá tohle, minimalizuje tohle,
 The actor is trying to learn the policy which maximizes the expected return.
-As mentioned above, when $ \hat{A_t} $ is positive, we should play the action $ a_t $ more often, and when it is negative, we should play it less often.
+As mentioned above, when $ \hat{A_t} $ is positive, we\david{want to increase the probability with which a is selected?} should play the action $ a_t $ more often, and when it is negative, we should play it less often.
 Observe that this can be expressed as maximizing (over the parameters $ \theta $) the following objective \[
 	\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
-where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
+where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.\david{Jakoby tohle je sice pravda, ale není to jediná možnost. Jak jsme si říkali, ani to historicky není ta první, takže by stálo za to to nějak zmínit.}
 
 However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
@@ -352,12 +353,13 @@ Hence, the objective of the actor is defined followingly \begin{align*}
 \end{align*}
 \[
 \]
-The hyperparameter $ \varepsilon $ is used to control the amount of clipping.
-In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $. % TODO: citace
+The hyperparameter $ \varepsilon $ is used to control the amount of clipping.\david{a tím pádem i jak moc se může ta policy změnit.}
+In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $.\david{dal bych spíš jako footnote, jinak to je takový výstřel do tmy.} % TODO: citace
 By taking the minimum of the clipped and unclipped objective, we ensure that the loss is clipped from only one direction.
 This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod?
+\david{nefunguje nějaký hezčí alg env?}
 \begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon $, number of epochs $ K $, number of iterations $ I $, number of runs $ R $.}
 	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
@@ -371,15 +373,17 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 	\EndIndent
 \end{algor}
 
+\david{možná udělat paragraf?}
 % PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 Finally, let us mention the difference between PPO and other RL algorithms.
 We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO.
 Another property we have briefly mentioned already is the \emph{on-policy} approach of PPO.
 This means that after each update of the policy (each iteration of the PPO algorithm), we drop all the gathered rewards, and start anew.
 This is in contrast to \emph{off-policy} algorithms, which can use rewards gathered by an old policy to train a new one.
-\emph{Off-policy} algorithms work well when the expected returns do not change much between iterations, however, when they do, the critic's predictions become inaccurate, and the training becomes unstable.
+\emph{Off-policy} algorithms work well when the expected returns do not change much between iterations, however, when they do, the critic's predictions become inaccurate, and the training becomes unstable.\david{On the other hand, off-policy algorithms can be much more data-efficient, as they are able to reuse old trajectories (possibly generated by some expert which is inaccessable at train-time).}
 PPO further stabilizes the training by clipping the loss, as discussed above.
 \filip{Tenhle paragraf je takovej meh, a chtěl by asi nějak pěkně ukončit, ale nevím jak}
+\david{tohle kdyžtak nějak rozepíšeme. PPO je rozhodně ještě super díky tomu, že jde paralelizovat to sbírání trajektorií. To vlastně dost zachranuje to, že jinak je off-policy daleko víc data efficient.}
 
 
 \section{Regret Minimization}
