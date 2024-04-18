@@ -224,12 +224,12 @@ Note that in the definition of the Markov decision process, we further require a
 		\item $ \states $ is a non-empty set of \emph{states},
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
-		\item $ \gamma \in \left( 0,1 \right] $ is the \emph{discount factor}.\david{$\gamma$ může mít i krajní hornosty ne? Obě dávaj smysl (pokud zadefinuješ $0^0=1$)}\filip{jo 1 asi jo, ale tu nulu bych tam teda nedával :D}
+		\item $ \gamma \in \left[ 0,1 \right] $ is the \emph{discount factor}.
 	\end{enumerate}
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $,\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} \david{is informed of the next state the environment is in?}\filip{co takhle? kdyžtak smaž komentáře jestli jsi spoko :D} is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
@@ -362,16 +362,14 @@ This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{dec
 
 % PPO pseudokod?
 \david{nefunguje nějaký hezčí alg env?}
-\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon $, number of epochs $ K $, number of iterations $ I $, number of runs $ R $.}
+\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of runs $ R $.}
 	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
 	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
 		\State Gather rewards for $ R $ runs using the current policy $ \actor $.
 		\State Compute the advantage $ \hat{A_t} $ for each timestep $ t $ in each run.
-		\Indent Compute $ K $ epochs of minibatch SGD:
-			\State For the critic, use the loss $ \losscritic $.
-			\State For the actor, use the loss $ \lossactor $.
-		\EndIndent
+		\State Compute $ K $ epochs gradient descent of the critic, minimizing $ \losscritic $.\filip{podívat se na SB}
+		\State Compute $ K $ epochs gradient descent of the actor, minimizing $ \lossactor $.
 	\EndIndent
 \end{algor}
 
