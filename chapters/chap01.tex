@@ -210,7 +210,7 @@ The reader is encouraged to look deeper into the literature for more information
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Let us first formally define the model used when discussing RL.
-The environment is a black box to the agent, which is in some state.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}
+The environment is a black box to the agent, which is in some state.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}\filip{Uhh o tom ta věta je ne? :D}
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
@@ -287,7 +287,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO\david{přečteno 15.4}\filip{rozpracováni 18.4}}
+\subsection{PPO\filip{opraveno 18.4, až na poslední paragraf}}
 
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
@@ -308,20 +308,21 @@ while the critic seeks to approximate the value $ \fce \stval s $ of each state 
 The critic's prediction is used to guide the actor when training.
 
 % jak se učí PPO
-We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}\filip{uuuuh nevim co myslíš? policy je $ \actor $, dává mi momentálně smysl to udělat takhle...}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}\filip{už vím co myslíš, ale nevím co s tím. změnit kritika na jiný písmeno je asi nejlepší možnost no...}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\david{In each iteration, the agent collects trajectories (sequences of state-action-reward triplets) by interaction with the env (possibly in parallel)}\filip{Já potřebuju jen potenciálně nahradit runs, protože se na to potřebuju pak odkazovat :D}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
-Then, for each time step in each run, we compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets) by interaction with the environment, each time using the actor's current strategy, possibly in parallel\filip{není tu potřeba víc vyzdvihnout že se to vždycky jakože resetuje, že každá trajectory je vlastně ta celá "hra" odznovu?}.
+Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
-The advantage quantifies how much more reward the agent received from a given state (after choosing a single random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
-If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}\david{as it is above average}\filip{eeeh to nevim jestli se mi libi}, and if it is negative, it is probably best to play it \emph{less often}.
+The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward then expected, and if it is negative, it is probably best to play it \emph{less often}.
 
-From the gathered values, we perform minibatch SGD \david{SGD nebylo definované ne?} for $ K $ epochs.
-The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.\david{tahle věta by asi šla pomasírovat}
-This approach is called \emph{on-policy}, and it ensures higher stability\david{as the critic always learns from data generated by the current actor's policy. This leads to more stable learning?}.
-We will discuss the differences between on-policy and off-policy algorithms later.\david{really? :D}
+From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
+After the training, we drop all the gathered rewards, and move to the next iteration.
+Observe that the critic always learns from data generated by the current actor's policy.
+This approach is called \emph{on-policy}, and it leads to more stable learning.\filip{as the critic isnt confused by the old actor's choices? něco takového}
+We will discuss the differences between on-policy and off-policy algorithms later.\david{really? :D}\filip{jj, viz poslední odstavec, ne?}
 
 % TODO: proto chceme ty neuronky
 
@@ -331,16 +332,17 @@ Let us now discuss the details of the actor and the critic.
 The critic is trained to minimize the following loss \[
 	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
 \]
-where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all runs in the current iteration.
+where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all trajectories in the current iteration.
 This loss results in the critic estimating the value of the state $ s_t $ as close as possible.
 
 % actor dělá tohle, minimalizuje tohle,
 The actor is trying to learn the policy which maximizes the expected return.
-As mentioned above, when $ \hat{A_t} $ is positive, we\david{want to increase the probability with which a is selected?} should play the action $ a_t $ more often, and when it is negative, we should play it less often.
-Observe that this can be expressed as maximizing (over the parameters $ \theta $) the following objective \[
+As mentioned above, when $ \hat{A_t} $ is positive, we want to increase the probability with which we choose the action $ a_t $, and decrease it otherwise.
+Observe that one way to express this is as maximizing (over the parameters $ \theta $) the following objective \[
 	\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
-where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.\david{Jakoby tohle je sice pravda, ale není to jediná možnost. Jak jsme si říkali, ani to historicky není ta první, takže by stálo za to to nějak zmínit.}
+where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
+\filip{Říct proč to chceme dělat zrovna takhle? že je to dobrý pro paralelizaci i presume??}
 
 However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
@@ -355,25 +357,25 @@ Hence, the objective of the actor is defined followingly \begin{align*}
 \end{align*}
 \[
 \]
-The hyperparameter $ \varepsilon $ is used to control the amount of clipping.\david{a tím pádem i jak moc se může ta policy změnit.}
-In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $.\david{dal bych spíš jako footnote, jinak to je takový výstřel do tmy.} % TODO: citace
+The hyperparameter $ \varepsilon $ is used to control the amount of clipping, and thus the maximum rate of change of the policy in each iteration, along with the stability of the learning process.
+In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $.\david{dal bych spíš jako footnote, jinak to je takový výstřel do tmy.}\filip{a nebo zahodit? :P} % TODO: citace
 By taking the minimum of the clipped and unclipped objective, we ensure that the loss is clipped from only one direction.
-This is crucial as, if we are unlucky, one epoch of SGD might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
+This is crucial as, if we are unlucky, one epoch of SGD\filip{tady zase používám SGD... nahradit něčím jako "one policy update"?} might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod?
-\david{nefunguje nějaký hezčí alg env?}
-\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of runs $ R $.}
+\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $.}
 	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
 	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
-		\State Gather rewards for $ R $ runs using the current policy $ \actor $.
-		\State Compute the advantage $ \hat{A_t} $ for each timestep $ t $ in each run.
+		\State Gather rewards for $ R $ trajectories using the current policy $ \actor $.
+		\State Compute the advantage $ \hat{A_t} $ for each timestep $ t $ in each trajectory.
 		\State Compute $ K $ epochs gradient descent of the critic, minimizing $ \losscritic $.\filip{podívat se na SB}
 		\State Compute $ K $ epochs gradient descent of the actor, minimizing $ \lossactor $.
 	\EndIndent
 \end{algor}
 
-\david{možná udělat paragraf?}
+\david{možná udělat paragraf?}\filip{not sure yet}
+\filip{tenhle paragraf ještě nemám hotovej, takže ho nečti}
 % PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 Finally, let us mention the difference between PPO and other RL algorithms.
 We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO.
