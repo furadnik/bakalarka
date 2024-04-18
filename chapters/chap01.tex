@@ -187,17 +187,17 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \end{prop}
 % TODO: další vlastnosti SV?
 
-\section{Reinforcement Learning\david{přečteno 15.4}}
+\section{Reinforcement Learning\filip{opraveno 18.4}}
 \label{sec:rl}
 
 % RL je způsob jak udělat agenta
-Reinforcement learning (RL) is a technique for designing \emph{agents} to learn\david{to learn smazat?} to perform tasks.
+Reinforcement learning (RL) is a technique for designing \emph{agents} which learn\david{to learn smazat?}\filip{nahradil jsem "to" s "with", lepší? bez learn se mi to nelíbí} to perform tasks.
 The agent interacts with an environment, and receives feedback in the form of rewards.
 The goal of the agent is to learn a policy that maximizes the expected future reward.
 \emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
 % my budeme dělat jen trochu RL
-RL is an extensive field, which shall\david{zní to fakt vzletně :D} be discussed in this thesis only to the extent required for our purposes.
+RL is an extensive field, which shall\david{zní to fakt vzletně :D}\filip{slíbils že to tam necháme xD} be discussed in this thesis only to the extent required for our purposes.
 Similarly, we do not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
 
@@ -219,43 +219,45 @@ Note that in the definition of the Markov decision process, we further require a
 
 % MDP?
 \begin{defi}[Markov decision process]\label{def:mdp}
-	A \emph{Markov decision process} \david{(MPD)} is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
+	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
-		\item $ \gamma \in \left( 0,1 \right) $ is the \emph{discount factor}.\david{$\gamma$ může mít i krajní hornosty ne? Obě dávaj smysl (pokud zadefinuješ $0^0=1$)}
+		\item $ \gamma \in \left( 0,1 \right] $ is the \emph{discount factor}.\david{$\gamma$ může mít i krajní hornosty ne? Obě dávaj smysl (pokud zadefinuješ $0^0=1$)}\filip{jo 1 asi jo, ale tu nulu bych tam teda nedával :D}
 	\end{enumerate}
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, receives a new state from the environment\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} \david{is informed of the next state the environment is in?} $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the agent chooses an action $ a_t \in \actions $,\filip{bylo "moves to a state", ale mistr má pravdu že teď jsem říkal že state má ten environment, tak teď nevim jak to napsat :D} \david{is informed of the next state the environment is in?}\filip{co takhle? kdyžtak smaž komentáře jestli jsi spoko :D} is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
-\martin{Definovat policy jen v textu?}
-\david{Nevim, takhle se bude líp v textu hledat podle mě. A není to tak dlouhé, že bysme museli šetřit místem (možná naopak)}
 \begin{defi}[Policy]
 	\label{def:policy}
 	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
 \end{defi}
 
-As the agent plays, he receives reward at every step.
-We are interested in quantifying \emph{how well} a policy performs over time.
-To define this formally, we will assume that the agent plays and gathers rewards indefinitely, but the rewards received $ t $ steps in the future\martin{after t steps?}\filip{nevim..}\david{Formally, the agent interacts with the env indefinitely. To make the cumulative future reward finite, we exponentially discount future rewards.\footnote{This is true under the mild assumption that the rewards are bounded.} Something about how humans do the same thing...} are discounted by a factor of $ \gamma^t $.
-If the agent plays for $ T $ steps, and then stops, we just set the rewards for times $ t > T $ to zero.\david{To capture environments with a finite horizon $T$, we set...?}
+\filip{Co dát aspoň čášt tohohle odstavce až pod def returnu?}
+As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
+We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives overall.
+However, formally, the agent plays indefinitely.
+To make the total expected cumulative reward finite, we discount the future rewards exponentially, by a factor of $ \gamma^t $.\footnote{This gives a finite sum, assuming $ \gamma < 1 $ and the rewards are bounded.}
+This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
+To capture environments with a finite horizon of $ T $ steps, we set the rewards for times $ t > T $ to zero.
 
 % TODO: vysvětlivka co znamená \E_\pi
 \begin{defi}[Return]
-	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $.\david{Let ... be a MDP.}
-	He chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=0}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
-	Then the \emph{return} of the agent from time $ T $ \david{tohle je potenciálně trochu zmatečné, protože T byl horizont předtím. Co takhle $\tau$?}is \[
-		\return_T \deq \sum_{t=T}^{\infty} \gamma^{t-T} \rew_t.
+	Let $ \left( \actions, \states, \tran, \rew, \gamma \right) $ be a MDP.
+	The agent chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=0}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
+	Then the \emph{return} of the agent from time $ \tau $ is \[
+		\return_T \deq \sum_{t=\tau}^{\infty} \gamma^{t-\tau} \rew_t.
 	\]
 \end{defi}
 
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
-When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $.\david{where the expectation is over...}
+When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over different instances of the same environment, meaning over the randomness of the states, actions, and rewards, and the policy itself.
+\filip{nevim jestli tohle jsem napsal dobře :D}
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
@@ -285,7 +287,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO\david{přečteno 15.4}}
+\subsection{PPO\david{přečteno 15.4}\filip{rozpracováni 18.4}}
 
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
@@ -301,20 +303,20 @@ PPO belongs to a family of so-called actor-critic algorithms.
 % PPO uses an actor-critic architecture.
 It uses two deep neural networks, the \emph{actor} and the \emph{critic}.
 % The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
-The actor tries to learn a policy which maximizes the expected return,
-while the critic tries\david{2x tries, nahradit seeks třeba?} to approximate the value $ \fce \stval s $ of each state $ s $\david{encountered when following the policy $\pi$}.
+The actor tries to learn a policy $ \pi $ which maximizes the expected return,
+while the critic seeks to approximate the value $ \fce \stval s $ of each state $ s $ encountered when following the policy $\pi$.
 The critic's prediction is used to guide the actor when training.
 
 % jak se učí PPO
-We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}\filip{uuuuh nevim co myslíš? policy je $ \actor $, dává mi momentálně smysl to udělat takhle...}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\david{In each iteration, the agent collects trajectories (sequences of state-action-reward triplets) by interaction with the env (possibly in parallel)}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
-Then, for each time step in each run, we can\david{zrušit can} compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
-An approximation of $ G_t $ can be easily computed from the gathered\david{observed?} rewards.
-The advantage quantifies, how much more reward the agent received from a given state (after choosing a random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic\david{(i.e. the ecpected reward under pi)?}.
-If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}\david{as it is above average}, and if it is negative, it is probably best to play it \emph{less often}.
+In each iteration, we play multiple (parallel) \filip{Lepší slovo než runs?}\david{In each iteration, the agent collects trajectories (sequences of state-action-reward triplets) by interaction with the env (possibly in parallel)}\filip{Já potřebuju jen potenciálně nahradit runs, protože se na to potřebuju pak odkazovat :D}\emph{runs} of the game, each time using the actor's current strategy, gathering all the rewards along the way.
+Then, for each time step in each run, we compute the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
+An approximation of $ G_t $ can be easily computed from the observed rewards.
+The advantage quantifies how much more reward the agent received from a given state (after choosing a single random action $ a_t \sim \fce{\actor}{s_t} $), compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}\david{as it is above average}\filip{eeeh to nevim jestli se mi libi}, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform minibatch SGD \david{SGD nebylo definované ne?} for $ K $ epochs.
 The number of epochs is a hyperparameter, and after we finish all the epochs, we drop all the gathered rewards, and move to the next iteration.\david{tahle věta by asi šla pomasírovat}
