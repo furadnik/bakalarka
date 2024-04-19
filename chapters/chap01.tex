@@ -187,19 +187,19 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \end{prop}
 % TODO: další vlastnosti SV?
 
-\section{Reinforcement Learning\filip{opraveno 18.4}}
+\section{Reinforcement Learning\david{18.4}}
 \label{sec:rl}
 
 % RL je způsob jak udělat agenta
-Reinforcement learning (RL) is a technique for designing \emph{agents} which learn\david{to learn smazat?}\filip{nahradil jsem "to" s "with", lepší? bez learn se mi to nelíbí} to perform tasks.
+Reinforcement learning (RL) is a technique for designing \emph{agents} which learn\david{to learn smazat?}\filip{nahradil jsem "to" s "with", lepší? bez learn se mi to nelíbí}\david{ale jo, já jen nemám rád learn, je to takové nic neříkající :D} to perform tasks.
 The agent interacts with an environment, and receives feedback in the form of rewards.
 The goal of the agent is to learn a policy that maximizes the expected future reward.
 \emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
 % my budeme dělat jen trochu RL
-RL is an extensive field, which shall\david{zní to fakt vzletně :D}\filip{slíbils že to tam necháme xD} be discussed in this thesis only to the extent required for our purposes.
+RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
 Similarly, we do not further discuss the details of training deep neural networks.
-The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}.
+The reader is encouraged to look deeper into the literature for more information\filip{tady bych dal nějaký odkazy}\david{yop, třeba Reinforcement Learning: An Introduction, Sutton 2015 a Ian Goodfellow, Yoshua Bengio, Aaron Courville - Deep Learning (2017, MIT)}.
 
 % % co to je
 % Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly designed to perform a specific task, but rather are programmed to learn the expected behavior by analyzing data.
@@ -210,7 +210,7 @@ The reader is encouraged to look deeper into the literature for more information
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Let us first formally define the model used when discussing RL.
-The environment is a black box to the agent, which is in some state.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}\filip{Uhh o tom ta věta je ne? :D}
+The environment is a black box to the agent, which is in some state.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}\filip{Uhh o tom ta věta je ne? :D}\david{jako ano, akorát se mi nelíbí ta formulace. Prostě za formally by měla být pauza, než následuje slovo some :D}
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
@@ -258,6 +258,7 @@ To capture environments with a finite horizon of $ T $ steps, we set the rewards
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
 When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over different instances of the same environment, meaning over the randomness of the states, actions, and rewards, and the policy itself.
 \filip{nevim jestli tohle jsem napsal dobře :D}
+\david{co prostě říct něco jako the expectation is taken over the environment transition dynamics, and the policy itself?}
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
@@ -287,7 +288,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO\filip{opraveno 18.4, až na poslední paragraf}}
+\subsection{PPO\david{přečteno 18.4, až na poslední paragraf}}
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
 There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
@@ -311,7 +312,7 @@ We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí t
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets) by interaction with the environment, each time using the actor's current strategy, possibly in parallel\filip{není tu potřeba víc vyzdvihnout že se to vždycky jakože resetuje, že každá trajectory je vlastně ta celá "hra" odznovu?}.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets) by interaction with the environment, each time using the actor's current strategy, possibly in parallel\filip{není tu potřeba víc vyzdvihnout že se to vždycky jakože resetuje, že každá trajectory je vlastně ta celá "hra" odznovu?}\david{můžeme za trajectory do té závorky napsat, že začínáme v tom initial stavu}.
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
 The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
@@ -320,8 +321,8 @@ If the advantage is positive, it suggests the agent should play $ a_t $ \emph{mo
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
 After the training, we drop all the gathered rewards, and move to the next iteration.
 Observe that the critic always learns from data generated by the current actor's policy.
-This approach is called \emph{on-policy}, and it leads to more stable learning.\filip{as the critic isnt confused by the old actor's choices? něco takového}
-We will discuss the differences between on-policy and off-policy algorithms later.\david{really? :D}\filip{jj, viz poslední odstavec, ne?}
+This approach is called \emph{on-policy}, and it leads to more stable learning.\filip{as the critic isnt confused by the old actor's choices? něco takového}\david{zaprvé, pojistil bych se něčím jako generaly leads to a more stable learning. A pak bych spíš napsal něco jako "when dealing with off-policy trajectories, one needs to resort to importance sampling, which introduces variance (citace imp samplingu)"}
+We will discuss the differences between on-policy and off-policy algorithms later.\david{really? :D}\filip{jj, viz poslední odstavec, ne?}\david{ok fair, když jsem to prvně četl tak mi přišlo divný, že nás to vůbec do téhle hloubky zajímá :)}
 
 % TODO: proto chceme ty neuronky
 
@@ -374,7 +375,7 @@ This is crucial as, if we are unlucky, one epoch of SGD\filip{tady zase použív
 \end{algor}
 
 \david{možná udělat paragraf?}\filip{not sure yet}
-\filip{tenhle paragraf ještě nemám hotovej, takže ho nečti}
+\filip{tenhle paragraf ještě nemám hotovej, takže ho nečti}\david{roger that, obecně by se daly nějaké subsekce přidat mi přijde.}
 % PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 Finally, let us mention the difference between PPO and other RL algorithms.
 We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO.
