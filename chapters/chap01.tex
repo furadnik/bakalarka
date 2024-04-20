@@ -242,7 +242,7 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 % \david{jakože klidně, přijde mi to takhle dobrý. Já rád omáčku před definicí}
 As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
-\david{emph spíš na overall?}\filip{já to tam dával aby to bylo symetrické k tomu \emph{how well}. Takhle už je to asi moc žejo?}\david{ok, takhle taky dobrý. Ale prostě overall je to důležitý, tak jestl}
+\david{emph spíš na overall?}\filip{já to tam dával aby to bylo symetrické k tomu \emph{how well}. Takhle už je to asi moc žejo?}\david{ok, takhle taky dobrý. Ale prostě overall je to důležitý, tak jestli}
 However, formally, the agent plays indefinitely.
 To make the total expected cumulative reward finite, we discount the future rewards exponentially, by a factor of $ \gamma^t $.\footnote{This gives a finite sum, assuming $ \gamma < 1 $ and the rewards are bounded.}
 This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
