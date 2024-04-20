@@ -95,6 +95,7 @@
 \newcommand{\abs}[1]{\left|{#1}\right|}
 \newcommand{\dint}{\int_0^\tau\!\!\int_0^\tau}
 \newcommand{\isqr}[1]{\frac{1}{\sqrt{#1}}}
+\def\O{\mathcal{O}}
 
 %%% Various table goodies
 \newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
@@ -105,6 +106,8 @@
 \def\deq{\mathbin{:=}}
 \def\absolute#1{\left\lvert #1 \right\rvert }
 \def\vec{\boldsymbol}
+
+\def\tprog#1{\texttt{#1}}
 
 % functions with auto parenths
 \def\bfce#1#2{#1\!\bigl(#2\bigr)}
@@ -154,6 +157,7 @@
 
 % divergence
 \newcommand{\divg}[2][f]{\fce{\Delta_{#1}^{#2}}}
+\def\divt{T_\Delta}
 
 % policy valuation
 \def\val#1#2#3#4{\fce{V^{#1,#2}_{#3,#4}}}
