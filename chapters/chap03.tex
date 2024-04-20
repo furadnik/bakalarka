@@ -1,6 +1,6 @@
-\chapter{Tackling the Principal's Problems\filip{20.4. návrh implementace?}}
+\chapter{Tackling the Principal's Problems\filip{20.4.}}
 
-\filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím.}
+\filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}
 In this chapter, we will first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems, and then see the experimental results of those approaches.
 When describing the algorithms, we assume we have a given distribution $ \fdist $ and a given divergence function $ \ell $.
 Later, when discussing the results, we compare the performance of the algorithms on different distributions and divergence functions.
@@ -41,7 +41,7 @@ For simplicity, we will assume that the time complexity of computing the diverge
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 
 \filip{je tohle theorem??}
-\begin{thm}[Offline Optimal Time Complexity]
+\begin{thm}[Offline Optimal time complexity]
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence for a specific divergence function is $ \fce\divt{n} $.
   Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
@@ -64,7 +64,7 @@ For a constant, small budget $ \tau $, the time complexity of the Offline Optima
 This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results ($ \fce{\O}{s \binom{2^n - k}{n}} $).
 However, if $ k $ is small, and $ \tau $ grows with $ n $, the time (and space) complexity becomes double exponential in $ n $.
 In our experiments, we want to compare the Offline Optimal algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.
-For an illustration of double-exponential growth, consider computing the Offline Optimal algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process took $ 30 $ hours (details are discussed in the Results section), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+For an illustration of double-exponential growth, consider computing the Offline Optimal algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process took $ 30 $ hours (details are discussed in the \nameref{sec:results} section), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
 % hence, motivace offline greedy a popis
 This problem motivates the following simplification of the Offline Optimal algorithm, the Offline Greedy algorithm.
@@ -85,7 +85,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{algor}
 
 % analýza časové složitosti OG
-\begin{thm}[Offline Greedy Time Complexity]
+\begin{thm}[Offline Greedy time complexity]
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence for a specific divergence function is $ \fce\divt{n} $.
   Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
@@ -132,6 +132,7 @@ This can be overcome by either approximating the distribution, and computing the
 \end{itemize}
 
 \section{Results}
+\label{sec:results}
 
 \begin{itemize}[ ]
   \item Metacentrum + technické věci + jak dlouho + články + škálovatelnost (časová složitost?)
