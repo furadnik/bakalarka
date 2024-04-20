@@ -36,21 +36,21 @@ This approach doesn't guarantee the optimal solution, however, with $ s $ large 
 
 % analýza časové složitosti
 The time complexity of the Offline Optimal algorithm is dependent on the choice of parameters, especially the number of samples $ s $ and the computation of divergence, which depends on $ \ell $.
-We will denote the time complexity of computing the divergence for a specific divergence function as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
+We will denote the time complexity of computing the divergence for the specific divergence function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 
 \filip{je tohle theorem??}
 \begin{thm}[Offline Optimal time complexity]
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
-  Suppose that the time complexity of computing the divergence for a specific divergence function is $ \fce\divt{n} $.
+  Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
   Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 \end{thm}
 
 \begin{proof}
   The algorithm iterates over $ s $ samples, for each sample it computes the divergence for every possible coalition structure of size $ \tau $.
   The number of possible coalition structures of size $ \tau $ is $ \binom{2^n-k}{\tau} $.
-  The time complexity of computing the divergence for a specific divergence function is $ \fce\divt{n} $.
+  The time complexity of computing the divergence is $ \fce\divt{n} $.
   Therefore, the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
 
@@ -87,7 +87,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 % analýza časové složitosti OG
 \begin{thm}[Offline Greedy time complexity]
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
-  Suppose that the time complexity of computing the divergence for a specific divergence function is $ \fce\divt{n} $.
+  Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
   Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
 \end{thm}
 
