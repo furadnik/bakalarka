@@ -12,11 +12,11 @@ Later, when discussing the results, we compare the performance of the algorithms
 
 % offline problém řešíme optimálně, jen aproximujeme E
 To reach an exact optimal solution to the Offline principal's problem (\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
-This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}\filip{Co to udělat jako $ \sigma $ samples a $ \kappa $ velikost $ \k $?}
-We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \kappa $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded}\filip{ooo, tam to byla $ \kappa $, tak to kradu xD kdybyste někdo někde viděl ještě $ s $ jako samples, tak to pls nahlašte.. Also, nebude se to teď plést s $ k $, což je označení pro $ \absolute{\k} $? co to třeba změnit na $ K $?} samples from the distribution $ \fdist $.
+This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}
+We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \kappa $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded}\filip{ooo, tam to byla $ \kappa $, tak to kradu xD kdybyste někdo někde viděl ještě $ s $ jako samples, tak to pls nahlašte.. Also, nebude se to teď plést s $ k $, což je označení pro $ \absolute{\k} $? co to třeba změnit na $ K $?}\filip{Co to udělat jako $ \sigma $ samples a $ \kappa $ velikost $ \k $?} samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
-This approach doesn't guarantee the optimal solution, however, with $ s $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
+This approach doesn't guarantee the optimal solution, however, with $ \kappa $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
 
 % pseudokód \algFO{}
 \begin{algor}{\algFO{}}{Function distribution $ \fdist $, number of samples $ \kappa $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
@@ -38,30 +38,80 @@ For simplicity, we will assume that the time complexity of computing the diverge
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 
 \filip{je tohle theorem??}\david{spíš ne, lemma?}\filip{lemma mi evokuje jako že by to mělo být jako pomocný tvrzení k nějaký větě... proposition? možná zeptáme se mistra na názor?}
+\filip{fyi, všechno dávám zatím jako theoremy, a pak se domluvíme co s tím :) referencuju to všude pomocí cref, takže se to samo změní}
 \begin{thm}[\algFO{} time complexity]
+  \label{thm:algfo-time-complexity}
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ \kappa $ the number of samples, and $ \ell $ a divergence function.
-  Suppose\david{taky let?} that the time complexity of computing the divergence is $ \fce\divt{n} $.
-  Then the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $\david{není tohle bez O? A naopak by tohle šlo rozepsat pomocí O kde rozbiješ to kombinační číslo?}.\filip{umm bez O by to nefungovalo :) a "rozbít komb číslo" nevím co znamená :D}
+  Let $ \fce\divt{n} $ be the time complexity of computing the divergence.
+  Then the time complexity of the \algFO{} algorithm is $ \fce\Theta{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $\david{není tohle bez O? A naopak by tohle šlo rozepsat pomocí O kde rozbiješ to kombinační číslo?}.\filip{umm bez O by to nefungovalo :) a "rozbít komb číslo" nevím co znamená :D}
 \end{thm}
 
 \begin{proof}
   The algorithm iterates over $ \kappa $ samples, for each sample it computes the divergence for every possible coalition structure of size $ \tau $.
   The number of possible coalition structures of size $ \tau $ is $ \binom{2^n-k}{\tau} $.
   The time complexity of computing the divergence is $ \fce\divt{n} $.
-  Therefore, the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
+  Therefore, the time complexity of the \algFO{} algorithm is $ \fce\Theta{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
 
 % je to paralelizovatelné
 Observe that computing each sample is independent of the others, assuming we have a way to then quickly sum the result.
 Thus the computation can be parallelized, which significantly reduces the computation time in practice.
-In our Python implementation we do in fact compute every sample in a parallel process, and we use \tprog{numpy}\filip{chceme používat tohle písmo? za mě jo, ale ještě nevim :D alternativně by to mohlo být italikou}\david{za mě dobrý :)} arrays to sum the results, which gives little overhead compared to the overall computation time.
+In our Python implementation we do in fact compute every sample in a parallel process, and we use \tprog{numpy} arrays to sum the results, which gives little overhead compared to the overall computation time.
 
 % časové odhady pro různé velikosti instance
 For a constant, small budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
-This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results ($ \fce{\O}{s \binom{2^n - k}{n}} $).
-However, if $ k $ is small, and $ \tau $ grows with $ n $, the time (and space) complexity becomes double exponential in $ n $.\filip{Tohle je zapadlý, udělat corollary. A pořádně dodělat tu asymptotiku}
+This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results ($ \fce{\O}{\kappa \binom{2^n - k}{n}} $).
+If $ k $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
+
+\begin{thm}[ ]
+  \label{thm:algfo-time-complexity-poly-tau}
+  Suppose the initial information is linear in $ n $, and $ \tau \in \fce{\Theta}{n^c} $.
+  Then the time complexity of the \algFO{} algorithm is $ \kappa \cdot \fce\divt{n} \cdot 2^{\fce{\Theta}{n^{c+1}}} $.
+\end{thm}
+
+
+\begin{proof}
+  From \Cref{thm:algfo-time-complexity}, we know that the time complexity of the \algFO{} algorithm is $ \kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n} $, up to a multiplicative constant.
+  It is known that \[
+    \left( \frac{n}{k} \right)^k \leq \binom nk \leq n^k.
+  \]
+  Applying these bounds to $ \binom{2^n-k}\tau $, we get \[
+    \left( \frac{2^n-k}{\tau} \right)^\tau \leq \binom{2^n-k}\tau \leq \left( 2^n-k \right)^\tau.
+  \]
+  Starting with the upper bound, we get \begin{align*}
+    \binom{2^n-k}\tau \leq \left( 2^n-k \right)^\tau \leq \left( 2^n \right)^\tau = 2^{\fce{\Theta}{n^{c+1}}}.
+  \end{align*}
+  Similar analysis can be done for the lower bound, yielding
+  \begin{align*}
+    \binom{2^n-k}\tau \geq \left( \frac{2^n-k}{\tau} \right)^\tau = \left( \frac{2^{\fce{\Theta}{n}}}{n^c} \right)^\tau = 2^{\fce{\Theta}{n^{c+1}}}.
+  \end{align*}
+\end{proof}
+
+\filip{Jak moc někdo z vás rozumí asymptotice? Rád bych aby na tyhle věci někdo kouknul, protože já sám si v tom úplně 100\% jistej nejsem...}
+
+\Cref{thm:algfo-time-complexity-poly-tau} shows that for a polynomially growing budget, the time complexity of the \algFO{} algorithm grows beyond exponentially\filip{"beyond exponentially" se asi nepoužívá normálně, ale je jasný co tím myslím ne?}.
+However, if we wanted to have $ \tau $ even bigger than polynomial in $ n $, the time complexity would grow even faster.
+This would happen for example if we wanted to reveal a half of the ground set, meaning $ \tau = \frac{2^n - k}{2} $.
+Then, the time complexity of the \algFO{} algorithm would be double exponential.
+
+\begin{thm}[ ]
+  \label{thm:algfo-time-complexity-double-exp}
+  Suppose the initial information is $ \k_0 $, and $ \tau = 2^{n-1} $.
+  Then the time complexity of the \algFO{} algorithm is $ \fce{\Theta}{2^{2^n} \cdot 2^{-\frac{3n}{2}} \cdot \fce\divt{n} \cdot \kappa} $.
+\end{thm}
+
+\begin{proof}
+  To show this \namecref{thm:algfo-time-complexity-double-exp}, we will once again use the result of \Cref{thm:algfo-time-complexity}, along with the Stirling approximation of the binomial coefficient \[
+    \binom {2m}m \approx \frac{2^{2m}}{\sqrt{\pi m}}.
+  \]
+  First, let us observe that $ k = \absolute{\k_0} = n + 2 $.
+  The wanted complexity is obtained by applying \Cref{thm:algfo-time-complexity} with the following bound \[
+    \binom{2^{n}-k}{\frac{2^n - k}{2}} \approx \frac{2^{2^n - k}}{\sqrt{\pi \frac{2^n - k}{2}}} = \fce{\Theta}{\frac{2^{2^n}}{2^k 2^{\frac n2}}} = \fce{\Theta}{2^{2^n} 2^{-\frac{3n}{2}}}.
+  \]
+\end{proof}
+
 In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.
-For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process took $ 30 $ hours (details are discussed in the \nameref{sec:results} section), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process takes $ 30 $ hours (details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
 % hence, motivace \algFG{} a popis
 This problem motivates the following simplification of the \algFO{} algorithm, the \algFG{} algorithm.
@@ -85,7 +135,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \begin{thm}[\algFG{} time complexity]
   Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ \kappa $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
-  Then the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
+  Then the time complexity of the \algFG{} algorithm is $ \fce\Theta{\kappa \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
 \end{thm}
 
 \begin{proof}
@@ -96,15 +146,16 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
   Putting it all together, we get the required time complexity.
 \end{proof}
 
-We can see that, even for a large $ \tau $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\O}{s \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\O}{s \cdot 2^{2^n} \cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+% TODO: tohle přepsat, potenciálně corollary
+We can see that, even for a large $ \tau $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{s \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\Theta}{s \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
-One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the Optimal approach, we first compute all the divergences for all samples, and then choose the best coalition structure, while in Greedy, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
+One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best coalition structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
 We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best coalition structure in each timestep.
 This gives slightly bigger overhead, but it is still considerably faster than the \algFO{} algorithm, due to the far better overall time complexity.
 
 % k čemu to je vlastně?
-The offline principal's problem seeks to find coalition structure that yields the best approximation of the underlying function, on average.
+The offline principal's problem seeks to find a coalition structure that yields the best approximation of the underlying function, on average.
 We study it with the hope that it gives us insight into what subsets are important for a given class of set functions.
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.

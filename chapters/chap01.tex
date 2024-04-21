@@ -187,7 +187,7 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 \end{prop}
 % TODO: další vlastnosti SV?
 
-\section{Reinforcement Learning\david{20.4}}
+\section{Reinforcement Learning\filip{21.4}}
 \label{sec:rl}
 
 % RL je způsob jak udělat agenta
@@ -210,7 +210,7 @@ The reader is encouraged to look deeper into the literature for more information
 % agent+environment
 % TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Let us first formally define the model used when discussing RL.
-The environment is a black box to the agent, which holds a \emph{state}.\david{tahle věta se mi moc nelíbí jako první hned za "teď pojdme dělat věci formálně", ale moc nevim jak jí změnit. Možná něco o tom, že si env drží interně stav?}\filip{Uhh o tom ta věta je ne? :D}\david{jako ano, akorát se mi nelíbí ta formulace. Prostě za formally by měla být pauza, než následuje slovo some :D}\filip{ok, akorát "internal" mi zavání POMDP...}\david{Takhle dobrý, možná by se dalo říct which is in some state, ale tohle taky fajn.}\filip{Davide, takhle to ale bylo před tím, to jsem přesně měnil ne? Přesně jsi říkal že mezi "formally" a "some" má být hodně pauza. Lol :D}\david{:D :D :D :D :D Ajo :D No tak zjevně jsme full circle, udělej to jak myslíš a já to budu dál hatit xD}
+The environment is a black box to the agent, which holds some \emph{state}.
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
@@ -222,7 +222,7 @@ Note that in the definition of the Markov decision process, we further require a
 	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
-		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},\filip{Jinak jak jsme se bavili o tom že straka má $ p(s_{t+1},r_{t+1} | s_t) $, tak to je sice pravda, a není to úplně ekvivalentní, ale moje definice je zase používaná třeba na wikipedii, takže to asi prostě je jedno :D}\david{Jo tohle je podle mě super}
+		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
 		\item $ \gamma \in \left[ 0,1 \right] $ is the \emph{discount factor}.
 	\end{enumerate}
@@ -242,7 +242,6 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 % \david{jakože klidně, přijde mi to takhle dobrý. Já rád omáčku před definicí}
 As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
-\david{emph spíš na overall?}\filip{já to tam dával aby to bylo symetrické k tomu \emph{how well}. Takhle už je to asi moc žejo?}\david{ok, takhle taky dobrý. Ale prostě overall je to důležitý, tak jestli něco tak určitě tohle zvýraznit. A klidně i další věci jak to máš}
 However, formally, the agent plays indefinitely.
 To make the total expected cumulative reward finite, we discount the future rewards exponentially, by a factor of $ \gamma^t $.\footnote{This gives a finite sum, assuming $ \gamma < 1 $ and the rewards are bounded.}
 This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
@@ -288,7 +287,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO\david{20.4}}
+\subsection{PPO\filip{21.4}}
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
 There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
@@ -312,7 +311,7 @@ We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí t
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from some initial state\filip{initial state jsme mimochodem nedefinovali....}\david{za mě super, initial state bych buď nedefonoval, nebo dal pod definici returnu za E[G0]?}\filip{Straka má distribuci nad initial stavama... to by asi taky bylo dobrý, a možná to dát už do definice MDP?}\david{jako klidně, i když u nás to tak nebude, tak bych se na to vykašlal?}) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from some initial state\filip{initial state jsme mimochodem nedefinovali....}\david{za mě super, initial state bych buď nedefonoval, nebo dal pod definici returnu za E[G0]?}\filip{Straka má distribuci nad initial stavama... to by asi taky bylo dobrý, a možná to dát už do definice MDP?}\david{jako klidně, i když u nás to tak nebude, tak bych se na to vykašlal?}\filip{noo, my sice normujeme, takže máme jeden initial stav, ale teoreticky nemusí být jeden, teoreticky nemusíme normovat... dal bych to tam}) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
 The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
@@ -373,42 +372,19 @@ This is crucial as, if we are unlucky, one policy update might actually \emph{de
 
 % PPO vs ostatní AC -- problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
 Finally, let us mention the differences between PPO and other RL algorithms.
-We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO, but rather to the fact that we are using neural networks for the policy. \filip{tohle ocitovat?}\david{jako citovat, že neuronky berou na vstupu reálná čísla?}\filip{:D spíš jsem myslel odkazy na ostatní přístupy které fungují s continuous stavy, třeba REINFORCE}\david{Hmm, spíš zkusim najít nějakou základní práci, co na tohle použila neuronky jako první?}
+We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO, but rather to the fact that we are using neural networks for the policy. \filip{tohle ocitovat?}\david{jako citovat, že neuronky berou na vstupu reálná čísla?}\filip{:D spíš jsem myslel odkazy na ostatní přístupy které fungují s continuous stavy, třeba REINFORCE}\david{Hmm, spíš zkusim najít nějakou základní práci, co na tohle použila neuronky jako první?}\filip{skvělé!}
 PPO operates on an \emph{on-policy} basis, meaning thath the critic always learns from data generated by the current policy of the actor.
 This is in contrast to \emph{off-policy} algorithms, which can utilize rewards gathered in previous iterations under previous policies to train the new policy.
 On-policy algorithms generally maintain better learning stability since the critic isn't influenced by outdated rewards.
-Conversly, off-policy algorithms are more data efficient, as utilizing old trajectories reduces the need to gather as many new ones\filip{s touhle větou ještě nejsem spokojenej}.\filip{citace}\david{něco zkusim najít}
+\filip{co tahle následující věta? může být?}
+Conversly, off-policy algorithms are more data efficient, as utilizing old trajectories reduces the need to gather as many new ones.\filip{citace}\david{něco zkusim najít}
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
 \david{Něco o tom, že sbírání trajektorií se typicky dělá na cpu a to je levný? Nebo prostě to, že ten algoritmus jde obecně škálovat?}
 \filip{V jakém směru škálovat? :D}
 \filip{Uuuuuh, myslíš tím že proč je ta $ \lossactor $ tak "divná" (oproti tomu logaritmu jako je u REINFORCE s baseline)? Nebo zmínit vůbec to že to vlastně jde i bez kritika, jako nějakej $ \varepsilon $-greedy?}\david{To jsou všechno věci, co by se tady daly okecat. Rozhodně bych vyzdvihnul to log-loss, protože ta je unikátní pro PPO. Ale ty ostatní věci můžeš taky. Otázka je, jak moc to vlastně chceme - pro představení PPO stačí vlastně co je nad tímhle odstavcem.}
+\filip{Zatím jsem ve stádiu rozhodování co s tímhle... To co jsi napsal by vydalo tak ještě na dva odstavce lol, to zas nemusím mít o tolik delší bakalářku než Julie, ten název stačí xD}
 These properties make PPO a good choice for various problems, including the one we are interested in, as described in \Cref{sec:ppo}.
-\filip{Jaký to je takhle?}\david{sure}
-
-
-
-% Finally, let us mention the differences between PPO and other RL algorithms.
-% We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO, but rather to the fact that we are using neural networks for the policy. \filip{tohle ocitovat?}\david{jako citovat, že neuronky berou na vstupu reálná čísla?}\filip{:D spíš jsem myslel odkazy na ostatní přístupy které fungují s continuous stavy, třeba REINFORCE}
-% PPO is so-called \emph{on-policy}, as the critic always learns from data generated by the current actor's policy.
-% This is in contrast to \emph{off-policy} algorithms, which can use rewards gathered by an old policy to train a new one.
-% On-policy algorithms generally have better learning stability, as the critic isn't \textquote{mislead} by no longer relevant rewards.
-% On the other hand, off-policy algorithms are generally more data efficient, since they don't throw away old trajectories completely, and hence don't need to gather as many new ones.\filip{citace}\david{něco zkusim najít}
-% PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
-% \filip{potřebuju to nějak zakončit ale tohle je strašný:}\david{Něco o tom, že sbírání trajektorií se typicky dělá na cpu a to je levný? Nebo prostě to, že ten algoritmus jde obecně škálovat?}
-% \filip{V jakém směru škálovat? :D}
-% In conclusion, PPO is designed for stability of learning, while offering parallelization of data gathering, which makes it also fast, as it is limited only by the number of CPUs, which tend to be readily available on current computation centers.
-% \david{tady by se fakt hodilo mluvit o tom policy gradient vs jak trénuje actora ppo.}
-% \filip{Uuuuuh, myslíš tím že proč je ta $ \lossactor $ tak "divná" (oproti tomu logaritmu jako je u REINFORCE s baseline)? Nebo zmínit vůbec to že to vlastně jde i bez kritika, jako nějakej $ \varepsilon $-greedy?}
-
-% This approach , and it generally leads to more stable learning.\filip{as the critic isnt confused by the old actor's choices? něco takového}\david{A pak bych spíš napsal něco jako "when dealing with off-policy trajectories, one needs to resort to importance sampling, which introduces variance (citace imp samplingu)"}
-% Another interesting property we have briefly mentioned already is the \emph{on-policy} approach of PPO.
-% This means that after each update of the policy (each iteration of the PPO algorithm), we drop all the gathered rewards, and start anew.
-% \emph{Off-policy} algorithms work well when the expected returns do not change much between iterations, however, when they do, the critic's predictions become inaccurate, and the training becomes unstable.\david{On the other hand, off-policy algorithms can be much more data-efficient, as they are able to reuse old trajectories (possibly generated by some expert which is inaccessable at train-time).}
-% PPO further stabilizes the training by clipping the loss, as discussed above.
-% \filip{Tenhle paragraf je takovej meh, a chtěl by asi nějak pěkně ukončit, ale nevím jak}
-% \david{tohle kdyžtak nějak rozepíšeme. PPO je rozhodně ještě super díky tomu, že jde paralelizovat to sbírání trajektorií. To vlastně dost zachranuje to, že jinak je off-policy daleko víc data efficient.}
-% We will discuss the differences between on-policy and off-policy algorithms later.
 
 \section{Regret Minimization}
 \filip{tohle přepsat nebo smazat idk}
