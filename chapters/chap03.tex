@@ -1,4 +1,4 @@
-\chapter{Tackling the Principal's Problems\filip{21.4.}}
+\chapter{Tackling the Principal's Problems\david{21.4.}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 In this chapter, we first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems.
@@ -12,8 +12,8 @@ Later, when discussing the results, we compare the performance of the algorithms
 
 % offline problém řešíme optimálně, jen aproximujeme E
 To reach an exact optimal solution to the Offline principal's problem (\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
-This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}
-We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \kappa $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded}\filip{ooo, tam to byla $ \kappa $, tak to kradu xD kdybyste někdo někde viděl ještě $ s $ jako samples, tak to pls nahlašte.. Also, nebude se to teď plést s $ k $, což je označení pro $ \absolute{\k} $? co to třeba změnit na $ K $?}\filip{Co to udělat jako $ \sigma $ samples a $ \kappa $ velikost $ \k $?} samples from the distribution $ \fdist $.
+This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}\david{No nevim, když je to $\fdist$ spojitý, tak bych to teda dělal dost nerad a čekal bych, že půjde jen hodně symetrickej případ.}
+We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \kappa $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded}\filip{ooo, tam to byla $ \kappa $, tak to kradu xD kdybyste někdo někde viděl ještě $ s $ jako samples, tak to pls nahlašte.. Also, nebude se to teď plést s $ k $, což je označení pro $ \absolute{\k} $? co to třeba změnit na $ K $?}\filip{Co to udělat jako $ \sigma $ samples a $ \kappa $ velikost $ \k $?}\david{Za mě cokoliv co je konzistentní. I to s bych zkoušnul, jen mi to přišlo potenciálně už moc} samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
 This approach doesn't guarantee the optimal solution, however, with $ \kappa $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
@@ -32,7 +32,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \kappa $ l
 \end{algor}
 
 % analýza časové složitosti
-The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, especially\david{Tohle je sice empiricky možná pravda, ale už vidim hate co říká, že na n to přece závisí daleko víc :)}\filip{To technicky není parametr žejo, to je daný tím problémem... ale jako fair point. Připsal jsem k tomu něco, je to lepší?} the number of samples $ \kappa $ and the computation of divergence, which depends on $ \ell $.
+The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, especially\david{Tohle je sice empiricky možná pravda, ale už vidim hate co říká, že na n to přece závisí daleko víc :)}\filip{To technicky není parametr žejo, to je daný tím problémem... ale jako fair point. Připsal jsem k tomu něco, je to lepší?}\david{furt mi přijde, že especially je tam navíc, ale může být} the number of samples $ \kappa $ and the computation of divergence, which depends on $ \ell $.
 We will denote the time complexity of computing the divergence for the specific divergence function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
@@ -85,11 +85,12 @@ If $ k $ is small, but $ \tau $ grows polynomially with $ n $, the time (and spa
   \begin{align*}
     \binom{2^n-k}\tau \geq \left( \frac{2^n-k}{\tau} \right)^\tau = \left( \frac{2^{\fce{\Theta}{n}}}{n^c} \right)^\tau = 2^{\fce{\Theta}{n^{c+1}}}.
   \end{align*}
+  \david{tohle tvrzení se mi líbí, je to to "rozbití kombinačního čísla z Thm 7. Ale ten spodní bound mi přijde divnej. Neměla by tam být spíš $\Omega(n^{c+1})$?}
 \end{proof}
 
 \filip{Jak moc někdo z vás rozumí asymptotice? Rád bych aby na tyhle věci někdo kouknul, protože já sám si v tom úplně 100\% jistej nejsem...}
 
-\Cref{thm:algfo-time-complexity-poly-tau} shows that for a polynomially growing budget, the time complexity of the \algFO{} algorithm grows beyond exponentially\filip{"beyond exponentially" se asi nepoužívá normálně, ale je jasný co tím myslím ne?}.
+\Cref{thm:algfo-time-complexity-poly-tau} shows that for a polynomially growing budget, the time complexity of the \algFO{} algorithm grows beyond exponentially\filip{"beyond exponentially" se asi nepoužívá normálně, ale je jasný co tím myslím ne?}\david{super-exponentially? In n?}.
 However, if we wanted to have $ \tau $ even bigger than polynomial in $ n $, the time complexity would grow even faster.
 This would happen for example if we wanted to reveal a half of the ground set, meaning $ \tau = \frac{2^n - k}{2} $.
 Then, the time complexity of the \algFO{} algorithm would be double exponential.
@@ -159,7 +160,7 @@ The offline principal's problem seeks to find a coalition structure that yields 
 We study it with the hope that it gives us insight into what subsets are important for a given class of set functions.
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.
-This can be overcome\david{d, nebo lepší we can overcome?}\filip{nn, tohle je dobře imo} by either approximating the distribution, and computing the offline solution on the new, approximated distribution, or by studying the real distribution, but on a smaller scale, thus having a managable cost of computing the offline solution.
+This can be overcome by either approximating the distribution, and computing the offline solution on the new, approximated distribution, or by studying the real distribution, but on a smaller scale, thus having a managable cost of computing the offline solution.
 
 \section{Approaching the Online Problem Solition}
 
