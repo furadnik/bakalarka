@@ -1,33 +1,28 @@
-\chapter{Tackling the Principal's Problems\david{20.4.}}
+\chapter{Tackling the Principal's Problems\filip{21.4.}}
 
-\filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}
-In this chapter, we will first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems,\david{nová věta, přeformulovat see} and then see the experimental results of those approaches.
-When describing the algorithms, we assume we have a given distribution $ \fdist $ and a given divergence function $ \ell $.
+\filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
+In this chapter, we first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems.
+Finally, we examine the experimental results of those approaches.
+When describing the algorithms, we assume we have a given distribution $ \fdist $ (given by the nature of the application) and a given divergence function $ \ell $ (which we have chosen).
 Later, when discussing the results, we compare the performance of the algorithms on different distributions and divergence functions.
 
-\filip{Co sem dát ještě popis Random rovnou?}
-\david{zní jako fajn nápad. Možná ještě bych trochu rozvedl, že to F a l se daj nějak odhadnout pro daný problém? To l je dokonce úplně naše volba.}
-
-\section{Implementation Details}
-\filip{je tohle dobrej nápad? a je to dobrej nápad dávat sem? nebo až po? nebo appendix? možná svoje vlastní chapter?}
-\david{Tohle má být jako "hardware and software" v článku? Takže použili jsme knihovnu XY a běželo to Z let? To možná až za 3.3, ale sepiš s tímhle půjde hýbat dobře.}
-
+% TODO: random
 
 \section{Solutions to the Offline Problem}
 
 % offline problém řešíme optimálně, jen aproximujeme E
 To reach an exact optimal solution to the Offline principal's problem (\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
-This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}
-We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ s $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded} samples from the distribution $ \fdist $.
+This is in theory feasible, only for very small instances, with specifically chosen distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}\filip{Co to udělat jako $ \sigma $ samples a $ \kappa $ velikost $ \k $?}
+We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \kappa $\david{nejmenovalo se tohle v článku jinak? s / S je trochu overloaded}\filip{ooo, tam to byla $ \kappa $, tak to kradu xD kdybyste někdo někde viděl ještě $ s $ jako samples, tak to pls nahlašte.. Also, nebude se to teď plést s $ k $, což je označení pro $ \absolute{\k} $? co to třeba změnit na $ K $?} samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
 This approach doesn't guarantee the optimal solution, however, with $ s $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
 
-% pseudokód offline optimal
-\begin{algor}{Offline Optimal}{Function distribution $ \fdist $, number of samples $ s $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
+% pseudokód \algFO{}
+\begin{algor}{\algFO{}}{Function distribution $ \fdist $, number of samples $ \kappa $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
   \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.
-  \Indent For $ i \in \left\{ 1, 2, \ldots, s \right\} $:
+  \Indent For $ i \in \left\{ 1, 2, \ldots, \kappa \right\} $:
     \State $ f \sim \fdist $
     \Indent For $ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau $:
       \State $ D[\s] \gets D[\s] + \divg \ell {\k_- \cup \s} $
@@ -37,23 +32,23 @@ This approach doesn't guarantee the optimal solution, however, with $ s $ large 
 \end{algor}
 
 % analýza časové složitosti
-The time complexity of the Offline Optimal algorithm is dependent on the choice of parameters, especially\david{Tohle je sice empiricky možná pravda, ale už vidim hate co říká, že na n to přece závisí daleko víc :)} the number of samples $ s $ and the computation of divergence, which depends on $ \ell $.
+The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, especially\david{Tohle je sice empiricky možná pravda, ale už vidim hate co říká, že na n to přece závisí daleko víc :)}\filip{To technicky není parametr žejo, to je daný tím problémem... ale jako fair point. Připsal jsem k tomu něco, je to lepší?} the number of samples $ \kappa $ and the computation of divergence, which depends on $ \ell $.
 We will denote the time complexity of computing the divergence for the specific divergence function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 
 \filip{je tohle theorem??}\david{spíš ne, lemma?}\filip{lemma mi evokuje jako že by to mělo být jako pomocný tvrzení k nějaký větě... proposition? možná zeptáme se mistra na názor?}
-\begin{thm}[Offline Optimal time complexity]
-  Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
+\begin{thm}[\algFO{} time complexity]
+  Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ \kappa $ the number of samples, and $ \ell $ a divergence function.
   Suppose\david{taky let?} that the time complexity of computing the divergence is $ \fce\divt{n} $.
-  Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $\david{není tohle bez O? A naopak by tohle šlo rozepsat pomocí O kde rozbiješ to kombinační číslo?}.\filip{umm bez O by to nefungovalo :) a "rozbít komb číslo" nevím co znamená :D}
+  Then the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $\david{není tohle bez O? A naopak by tohle šlo rozepsat pomocí O kde rozbiješ to kombinační číslo?}.\filip{umm bez O by to nefungovalo :) a "rozbít komb číslo" nevím co znamená :D}
 \end{thm}
 
 \begin{proof}
-  The algorithm iterates over $ s $ samples, for each sample it computes the divergence for every possible coalition structure of size $ \tau $.
+  The algorithm iterates over $ \kappa $ samples, for each sample it computes the divergence for every possible coalition structure of size $ \tau $.
   The number of possible coalition structures of size $ \tau $ is $ \binom{2^n-k}{\tau} $.
   The time complexity of computing the divergence is $ \fce\divt{n} $.
-  Therefore, the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
+  Therefore, the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
 
 % je to paralelizovatelné
@@ -62,22 +57,22 @@ Thus the computation can be parallelized, which significantly reduces the comput
 In our Python implementation we do in fact compute every sample in a parallel process, and we use \tprog{numpy}\filip{chceme používat tohle písmo? za mě jo, ale ještě nevim :D alternativně by to mohlo být italikou}\david{za mě dobrý :)} arrays to sum the results, which gives little overhead compared to the overall computation time.
 
 % časové odhady pro různé velikosti instance
-For a constant, small budget $ \tau $, the time complexity of the Offline Optimal algorithm is exponential in the size of the ground set $ n $.
+For a constant, small budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
 This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results ($ \fce{\O}{s \binom{2^n - k}{n}} $).
 However, if $ k $ is small, and $ \tau $ grows with $ n $, the time (and space) complexity becomes double exponential in $ n $.\filip{Tohle je zapadlý, udělat corollary. A pořádně dodělat tu asymptotiku}
-In our experiments, we want to compare the Offline Optimal algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.
-For an illustration of double-exponential growth, consider computing the Offline Optimal algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process took $ 30 $ hours (details are discussed in the \nameref{sec:results} section), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.
+For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process took $ 30 $ hours (details are discussed in the \nameref{sec:results} section), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
-% hence, motivace offline greedy a popis
-This problem motivates the following simplification of the Offline Optimal algorithm, the Offline Greedy algorithm.
-Here, we do not conside\david{r} all possible choices of $ \s $, of which there might be double-exponentially many in $ n $, but rather we build $ \s $ incrementally.
+% hence, motivace \algFG{} a popis
+This problem motivates the following simplification of the \algFO{} algorithm, the \algFG{} algorithm.
+Here, we do not consider all possible choices of $ \s $, of which there might be double-exponentially many in $ n $, but rather we build $ \s $ incrementally.
 We start with an empty set, and in each step, we reveal the subset which gives the smallest divergence.
 This is a greedy approach, and it is not guaranteed to give the optimal solution, but it is much faster in practice.
 
-% pseudokód offline greedy
-\begin{algor}{Offline Greedy}{Function distribution $ \fdist $, number of samples $ s $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
+% pseudokód \algFG{}
+\begin{algor}{\algFG{}}{Function distribution $ \fdist $, number of samples $ \kappa $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) greedy solution of the offline principal's problem.}
-  \State $ G \gets $ sample $ s $ samples of $ f \sim \fdist $.
+  \State $ G \gets $ sample $ \kappa $ samples of $ f \sim \fdist $.
   \State $ \hat{\s_*} \gets \emptyset $
   \Indent For $ t \in \left\{ 1, \dots, \tau \right\} $:
   \State $ S \gets \argmin_{S \subseteq N \setminus \k \setminus \hat{\s_*}} \sum_{f \in G} \divg \ell {\k_- \cup \hat{\s_*} \cup \left\{ S \right\}} $
@@ -87,26 +82,26 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{algor}
 
 % analýza časové složitosti OG
-\begin{thm}[Offline Greedy time complexity]
-  Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ s $ the number of samples, and $ \ell $ a divergence function.
+\begin{thm}[\algFG{} time complexity]
+  Let $ n $ be the size of the ground set, $ k $ the size of the initial information, $ \tau $ the remaining budget, $ \kappa $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
-  Then the time complexity of the Offline Optimal algorithm is $ \fce\O{s \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
+  Then the time complexity of the \algFO{} algorithm is $ \fce\O{\kappa \cdot 2^n\cdot\tau \cdot \fce\divt{n}} $.
 \end{thm}
 
 \begin{proof}
-  First, we sample $ s $ games (we assume sampling of a single game takes $ 2^n $, i.e. constant time for each subset).
+  First, we sample $ \kappa $ games (we assume sampling of a single game takes $ 2^n $, i.e. constant time for each subset).
   The algorithm iterates over $ \tau $ timesteps. 
   In each timestep, we compute the argmin, which translates to going over all viable coalition structures, of which there are at most $ 2^n $.
-  For each subset, we compute the divergence in each sample, reaching $ s \cdot \fce\divt{n} $.
+  For each subset, we compute the divergence in each sample, reaching $ \kappa \cdot \fce\divt{n} $.
   Putting it all together, we get the required time complexity.
 \end{proof}
 
-We can see that, even for a large $ \tau $, the offline greedy\david{nekonzistentní velký písmena na začátku} algorithm has a worst-case time complexity $ \fce{\O}{s \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\O}{s \cdot 2^{2^n} \cdot \fce{\divt}{n}} $ of the offline optimal algorithm.
+We can see that, even for a large $ \tau $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\O}{s \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\O}{s \cdot 2^{2^n} \cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the Optimal approach, we first compute all the divergences for all samples, and then choose the best coalition structure, while in Greedy, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
 We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best coalition structure in each timestep.
-This gives slightly bigger overhead, but it is still considerably faster than the Offline Optimal algorithm, due to the far better overall time complexity.
+This gives slightly bigger overhead, but it is still considerably faster than the \algFO{} algorithm, due to the far better overall time complexity.
 
 % k čemu to je vlastně?
 The offline principal's problem seeks to find coalition structure that yields the best approximation of the underlying function, on average.
@@ -114,8 +109,6 @@ We study it with the hope that it gives us insight into what subsets are importa
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.
 This can be overcome\david{d, nebo lepší we can overcome?}\filip{nn, tohle je dobře imo} by either approximating the distribution, and computing the offline solution on the new, approximated distribution, or by studying the real distribution, but on a smaller scale, thus having a managable cost of computing the offline solution.
-\filip{je tenhle paragraf reasonable? :D}
-\david{Je dost technickej a nevim koho to bude moc zajímat, ale rozhodně bych ho tu nechal. Ukazuje netriviální pochopení toho problému a to je účel té bakalářky}
 
 \section{Approaching the Online Problem Solition}
 
