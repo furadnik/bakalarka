@@ -204,7 +204,7 @@ To quantify the performance of a policy, we define a \emph{policy valuation func
 
 % TODO: \filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
 % policy cost
-\begin{defi}[Online policy valuation]
+\begin{defi}[Online policy valuation]\label{def:online-pv}
   Let $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
   Let $ \left( f, \k \right) $ be an incomplete set function with minimal information, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function,
   and let $ \tau \in \N $ be the remaining budget, such that $ \tau \leq \absolute{\pot N \setminus \k} $.
@@ -226,7 +226,7 @@ It measures the divergence after the budget has been spent, allowing the princip
 Notice that the policy used here matches the definition of a policy we have given in \Cref{sec:rl} (\Cref{def:policy}), with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
 Having $ \tau $ as a part of the state is crutial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most benefitial, given the values it has already seen.
 
-\begin{defi}[Online principal's problem]
+\begin{defi}[Online principal's problem] \label{def:online-pp}
   Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
   Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $.
   Finally, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
