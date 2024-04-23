@@ -257,7 +257,7 @@ This yields the following algorithm.
   \State $ \hat O \gets 0 $
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
     \State $ f \sim \fdist $
-    \State $ \hat O \gets \hat O + \argmin \left\{ \divg \ell {\k_- \cup \s}  \suchthat \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $
+    \State $ \hat O \gets \hat O + \min \left\{ \divg \ell {\k_- \cup \s}  \suchthat \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $
   \EndIndent
   \State $ \hat O \gets \frac{\hat O}{\sigma} $
 \end{algor}
