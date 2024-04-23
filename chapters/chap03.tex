@@ -213,9 +213,9 @@ To get a lower bound on the online problem, then, we can give the principal an o
 
 \begin{defi}[Oracle valuation]
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $ a budget, and $ \k \supseteq \k_0 $ the initial information.
-  For a specific function $ f \sim \fdist $, we define \[
+  For a specific function $ f \sim \fdist $, we define \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
-  \]
+  \end{equation}
   Then the \emph{oracle valuation} of $ \fdist $ is \[
     \oracle \fdist \deq \E_{f \sim \fdist} \divg \ell {\k_- \cup \s_f}.
   \]
@@ -239,7 +239,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
     \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
   \]
-  from the definition of $ \s_f $.\david{možná referencovat rovnici přímo?}
+  from the definition of $ \s_f $ (\cref{eq:def-sf}).
   As such, the same can be said for the expected value over the trajectory, which is exactly the valuation of $ \pi^* $. \[
     \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
   \]
