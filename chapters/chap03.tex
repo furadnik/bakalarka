@@ -234,7 +234,17 @@ The oracle valuation is exactly the lower bound we described above, as the follo
 \end{thm}
 
 \begin{proof}
-  \filip{eeeh nějak pěkně to napsat by to chtělo :D}
+  Let us fix one $ f \sim \fdist $.
+  The value of $ \val \tau \ell f \k {\pi^*} $ is the expected divergence of a trajectory of revealed coalitions according to $ \pi^* $.
+  For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
+    \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
+  \]
+  from the definition of $ \s_f $.
+  As such, the same can be said for the expected value over the trajectory, which is exactly the valuation of $ \pi^* $. \[
+    \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
+  \]
+  This holds for every $ f $, so it must also hold in expectation over $ \fdist $, which is what we wanted to prove.
+  \filip{Je tohle dost OK co se formalismu týče? (Otázka hlavně na Mistra, promiň Davide :D)}
 \end{proof}
 
 % oracle optimal
@@ -274,6 +284,8 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 \end{algor}
 
 \filip{Nevím jak moc tady psát to co jsem psal u offline...}
+
+\filip{Říct ještě něco k tomu že vlastně vůbec nic neříkáme o greedy variantách oracle vs offline vs optimal?}
 
 \subsection{Utilizing PPO}
 \label{sec:ppo}
