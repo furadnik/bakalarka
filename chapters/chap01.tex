@@ -219,9 +219,10 @@ Note that in the definition of the Markov decision process, we further require a
 
 % MDP?
 \begin{defi}[Markov decision process]\label{def:mdp}
-	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
+	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
+		\item $ \initial \in \dist \states $ is the \emph{initial state distribution},\filip{přidal jsem initial state, snad jsem to všude změnil}
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
 		\item $ \gamma \in \left[ 0,1 \right] $ is the \emph{discount factor}.
@@ -229,13 +230,14 @@ Note that in the definition of the Markov decision process, we further require a
 \end{defi}
 % TODO: daviduv oblibeny obrazek
 
-At each step $ t $, the agent chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+The agent starts in an initial state $ s_0 \sim \initial $.
+At each step $ t $, the he chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
 \begin{defi}[Policy]
 	\label{def:policy}
-	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
+	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
 \end{defi}
 
 % TODO: \filip{Co dát aspoň část tohohle odstavce až pod def returnu?}
@@ -249,15 +251,15 @@ To capture environments with a finite horizon of $ T $ steps, we set the rewards
 
 % TODO: vysvětlivka co znamená \E_\pi
 \begin{defi}[Return]
-	Let $ \left( \actions, \states, \tran, \rew, \gamma \right) $ be a MDP.
-	The agent chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=0}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
+	Let $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ be a MDP.
+	The agent starts in $ s_0 \sim \initial $, chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=1}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
 	Then the \emph{return} of the agent from time $ \tau $ is \[
 		\return_T \deq \sum_{t=\tau}^{\infty} \gamma^{t-\tau} \rew_t.
 	\]
 \end{defi}
 
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
-When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the transition function and the policy in each step.
+When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, and the transition function with the policy in each step.
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
@@ -266,7 +268,7 @@ Further, it makes the agent prefer immediate rewards over future rewards, which 
 We further want to quantify the performance of a policy in a given state.
 
 \begin{defi}[State value]\label{def:state-value}
-	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
 	The \emph{value} of a state $ s $ is \[
 		\fce {\stval} {s} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s \right].
 	\]
@@ -276,7 +278,7 @@ Note that since the process is Markovian, the value of a state $ s $ is equal to
 Finally, let us define the value of choosing an action in a state.
 
 \begin{defi}[Action-state value]
-	Suppose the agent takes steps in an environment $ \left( \actions, \states, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
 	The \emph{action-state value} of a state $ s $ and an action $ a $ is \[
 		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s, a_0 = a \right].
 	\]
@@ -287,7 +289,7 @@ Action-state values approximate the change in the state value, when a given acti
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
 % TODO: tohle PPO
-\subsection{PPO\david{21.4}}
+\subsection{PPO\filip{23.4}}
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
 There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
@@ -311,7 +313,7 @@ We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí t
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from some initial state\filip{initial state jsme mimochodem nedefinovali....}\david{za mě super, initial state bych buď nedefonoval, nebo dal pod definici returnu za E[G0]?}\filip{Straka má distribuci nad initial stavama... to by asi taky bylo dobrý, a možná to dát už do definice MDP?}\david{jako klidně, i když u nás to tak nebude, tak bych se na to vykašlal?}\filip{noo, my sice normujeme, takže máme jeden initial stav, ale teoreticky nemusí být jeden, teoreticky nemusíme normovat... dal bych to tam}\david{Okok, tak proč ne. Pak bude i dávat větší smysl to maximalizování $G_0$ snad.}) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
 The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
@@ -383,7 +385,8 @@ The gathering of trajectories is typically performed on CPUs, which are readily 
 \david{Něco o tom, že sbírání trajektorií se typicky dělá na cpu a to je levný? Nebo prostě to, že ten algoritmus jde obecně škálovat?}
 \filip{V jakém směru škálovat? :D}
 \filip{Uuuuuh, myslíš tím že proč je ta $ \lossactor $ tak "divná" (oproti tomu logaritmu jako je u REINFORCE s baseline)? Nebo zmínit vůbec to že to vlastně jde i bez kritika, jako nějakej $ \varepsilon $-greedy?}\david{To jsou všechno věci, co by se tady daly okecat. Rozhodně bych vyzdvihnul to log-loss, protože ta je unikátní pro PPO. Ale ty ostatní věci můžeš taky. Otázka je, jak moc to vlastně chceme - pro představení PPO stačí vlastně co je nad tímhle odstavcem.}
-\filip{Zatím jsem ve stádiu rozhodování co s tímhle... To co jsi napsal by vydalo tak ještě na dva odstavce lol, to zas nemusím mít o tolik delší bakalářku než Julie, ten název stačí xD}\david{Ok, to já myslel, že cíl je tady jasnej :D Ale ok, za mě klidně může být i jen tohle, i když to s tím policy gradientem bych minimálně krátce zmínil. Jde to podle mě ve 2-4 větách.}
+\filip{Zatím jsem ve stádiu rozhodování co s tímhle... To co jsi napsal by vydalo tak ještě na dva odstavce lol, to zas nemusím mít o tolik delší bakalářku než Julie, ten název stačí xD}\david{Ok, to já myslel, že cíl je tady jasnej :D Ale ok, za mě klidně může být i jen tohle, i když to s tím policy gradientem bych minimálně krátce zmínil. Jde to podle mě ve 2-4 větách.}\filip{FYI: Julie má cca 32}
+\filip{Rád bych sem napsal něco o té loss, ale pobavíme se o tom nejdřív na schůzce, co přesně.}
 These properties make PPO a good choice for various problems, including the one we are interested in, as described in \Cref{sec:ppo}.
 
 \section{Regret Minimization}
