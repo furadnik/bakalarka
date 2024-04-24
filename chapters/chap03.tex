@@ -1,10 +1,15 @@
-\chapter{Tackling the Principal's Problems\filip{23.4.}}
+\chapter{Tackling the Principal's Problems\filip{24.4.}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 In this chapter, we first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems.
 Finally, we examine the experimental results of those approaches.
 When describing the algorithms, we assume we have a given distribution $ \fdist $ (given by the nature of the application) and a given divergence function $ \ell $ (which we have chosen).
 Later, when discussing the results, we compare the performance of the algorithms on different distributions and divergence functions.
+
+\filip{Tohle je novej odstavec, ať je jasný že tohle je z článku. What do you think?}
+In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} and \algRG{} algorithms, which we have already introduced in \cite{uradnik2024reducing}.
+In this thesis, we extend the algorithms to a setting with a general divergence function and extend the intuition behind the definition of these algorithms.
+Further, we formally describe the time complexity of each algorithm, as it depends on the choice of the size of the budget, and we compare the solutions of these algorithms as they relate to one another, and to the Offline/Online principal's problems.
 
 % TODO: random
 
@@ -164,14 +169,17 @@ This can be overcome by either approximating the distribution, and computing the
 
 \section{Approaching the Online Problem Solition}
 
-% TODO: wanting online optimal is bad
-When solving the offline\david{optimal?} problem, we perform an exhaustive search over the domain, or the set of all possible subsets.
-Though this is double-exponential in the number of players in the worst case, it is at \david{least? ale není to taky nekonečné i pto offline když $\fdist$ je spojitá?} finite.
-\david{in contrast...}A solution of the \nameref{def:online-pp} (\Cref{def:online-pp}) is a \emph{policy}, a function that maps the current state to a distribution over the next actions, minimizing the final expected divergence.
-The domain of the online problem then is the set of all policies, which is uncounably infinite, and thus we cannot perform an exhaustive search on it.
+% wanting online optimal is bad
+When solving the \nameref{def:offline-pp}, we perform an exhaustive search over the domain, or the set of all possible subsets.
+Though this is double-exponential in the number of players in the worst case, it is at least \david{least? ale není to taky nekonečné i pto offline když $\fdist$ je spojitá?}\filip{Já mluvím o domain ve stylu "množina všech podmnožin délky $ \tau $", tj to přes co dělám argmin. Ty mluvíš o tom že navíc tu $ \E $ musíme aproximovat. Mám to tu taky zmínit?} finite.
+In contrast, a solution of the \nameref{def:online-pp} (\Cref{def:online-pp}) is a \emph{policy}, a function that maps the current state to a distribution over the next actions, minimizing the final expected divergence.
+The domain of the online problem then is the set of all policies, which is uncounably infinite, and due to that fact, an exhaustive search becomes infeasible.
 
-Since there is no other straightforward way to find the optimal policy\david{nooooo, RL je jeden způsob. Řekl bych to nějak víc opatrně?}, we strive to at least bound the optimum.
-An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, as the following \namecref{thm:online-bound-offline} shows.\david{možná pár slov o intuici - když se nedívám na ty hodnoty, dostanu offline řešení}
+Instead of finding a solution to the online problem, in this section, we strive to at least bound the optimum.
+An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, since the offline solition can be seen as a policy where the online information is just ignored.
+This is formalised in the following \namecref{thm:online-bound-offline}.
+\david{možná pár slov o intuici - když se nedívám na ty hodnoty, dostanu offline řešení}
+\filip{Přepsal jsem trochu poslední dvě věty, lepší? Nechci to zas moc rozebírat, protože to budu dělat potom u oracle}
 
 % offline bounds online
 \begin{thm}[Offline bounds online]
@@ -212,8 +220,8 @@ Using this intuition, we can clearly see that the best thing the principal can h
 To get a lower bound on the online problem, then, we can give the principal an oracle, which tells her all the values in advance, and she can pick the best coalition structure accordingly.
 
 \begin{defi}[Oracle valuation]
-  Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $\david{$\ge 0$?} a budget, and $ \k \supseteq \k_0 $ the initial information.
-  For a specific\david{specific navic?} function $ f \sim \fdist $, we define\david{let?} \begin{equation}\label{eq:def-sf}
+  Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau \in \N $ a budget, and $ \k \supseteq \k_0 $ the initial information.
+  For a specific\david{specific navic?}\filip{Chci říct že se na $ f $ díváme jako prostě na funkci, ne jako na náhodnou proměnnou. Možná $ f \in \supp \fdist $?} function $ f \sim \fdist $, let \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
   \end{equation}
   Then the \emph{oracle valuation} of $ \fdist $ is \[
@@ -248,7 +256,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
 \end{proof}
 
 % oracle optimal
-The advantage of this approach, compared to the online problem, is that now the domain is once again finite\david{stejný prblém jako výš, pro spojitý $\fdist$ není finite}, and we can perform an exhaustive search over it.
+The advantage of this approach, compared to the online problem, is that now the domain is once again finite\david{stejný prblém jako výš, pro spojitý $\fdist$ není finite}\filip{Jedná se o to že množina přes kterou se dělá minimum ($  \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $) je finite, to je to čemu říkám "domain". možná lepší slovo?}, and we can perform an exhaustive search over it.
 This yields the following algorithm.
 
 % we have the same problem as with the offline optimal -- time, hence greedy
@@ -263,7 +271,7 @@ This yields the following algorithm.
 \end{algor}
 
 % comparison to FG
-The \algRO{} algorithm is almost identical to the \algFG{}\david{tohle mě zmátlo, nemá tu být optimal? Když ne, stejně by to asi chtělo nějak rozvést...} algorithm.
+The \algRO{} algorithm is almost identical to the \algFO{}\david{tohle mě zmátlo, nemá tu být optimal? Když ne, stejně by to asi chtělo nějak rozvést...}\filip{Jo mělo... Mám to i tak rozvádět? Nevím moc co k tomu říct, to je něco co si člověk musí rozmyslet imho} algorithm.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
@@ -283,9 +291,11 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
   \State $ \hat O \gets \frac{\hat O}{\sigma} $
 \end{algor}
 
-\filip{Nevím jak moc tady psát to co jsem psal u offline...}\david{možná stačí říct něco ve stylu, že bysme mohli dojít k podobným závěrům jako u offline?}
+\filip{Nevím jak moc tady psát to co jsem psal u offline...}\david{možná stačí říct něco ve stylu, že bysme mohli dojít k podobným závěrům jako u offline?}\filip{souhlas}
+% TODO: RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 
 \filip{Říct ještě něco k tomu že vlastně vůbec nic neříkáme o greedy variantách oracle vs offline vs optimal?}\david{rozhodně to chce nějaké porovnání co je rozhodně lepší, co je neporovnatelný apod.}
+% TODO: greedy vs greedy neporovnatelný
 
 \subsection{Utilizing PPO}
 \label{sec:ppo}
