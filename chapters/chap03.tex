@@ -1,13 +1,14 @@
-\chapter{Tackling the Principal's Problems\filip{24.4.}}
+\chapter{Tackling the Principal's Problems\filip{24.4.}\david{26.4}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
+\filip{subset system?}
 In this chapter, we first define the different approaches to solving, or approximately solving the Online and Offline Principal's problems.
 Finally, we examine the experimental results of those approaches.
-When describing the algorithms, we assume we have a given distribution $ \fdist $ (given by the nature of the application) and a given divergence function $ \ell $ (which we have chosen).
+When describing the algorithms, we assume we have a given distribution $ \fdist $ (given by the nature of the application) and a given\martin{třikrát given} divergence function $ \ell $ (which we have chosen).
 Later, when discussing the results, we compare the performance of the algorithms on different distributions and divergence functions.
 
-\filip{Tohle je novej odstavec, ať je jasný že tohle je z článku. What do you think?}
-In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} and \algRG{} algorithms, which we have already introduced in \cite{uradnik2024reducing}.
+\filip{Tohle je novej odstavec, ať je jasný že tohle je z článku. What do you think?}\martin{Ok}\david{skvělé! Možná random?}
+In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} and \algRG{} algorithms, which we have already \david{been} introduced in \cite{uradnik2024reducing}.
 In this thesis, we extend the algorithms to a setting with a general divergence function and extend the intuition behind the definition of these algorithms.
 Further, we formally describe the time complexity of each algorithm, as it depends on the choice of the size of the budget, and we compare the solutions of these algorithms as they relate to one another, and to the Offline/Online principal's problems.
 
@@ -17,7 +18,7 @@ Further, we formally describe the time complexity of each algorithm, as it depen
 
 % offline problém řešíme optimálně, jen aproximujeme E
 To reach an exact optimal solution to the Offline principal's problem (\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
-This is sometimes feasible, but only for very small instances, with very specific and artificial distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}\david{No nevim, když je to $\fdist$ spojitý, tak bych to teda dělal dost nerad a čekal bych, že půjde jen hodně symetrickej případ.}\filip{jo, přesně tak bych si to taky představoval :D proto to tak nějak píšu. zkusil jsem to trochu víc vyzdvihnout, je to lepší?}
+This is sometimes feasible, but only for very small instances, with very specific and artificial distributions and divergence functions.\david{možná něco o tom, že nás zajímá spojitej případ, takže tohle nejde?}\filip{nejde? technicky vzato pro nějaký specifický $ \fdist $ a $ \ell $ by to šlo ne?}\david{No nevim, když je to $\fdist$ spojitý, tak bych to teda dělal dost nerad a čekal bych, že půjde jen hodně symetrickej případ.}\filip{jo, přesně tak bych si to taky představoval :D proto to tak nějak píšu. zkusil jsem to trochu víc vyzdvihnout, je to lepší?}\david{rozhodně lepší, ale co třeba ještě dodat In a general case the problem is XY?}
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
@@ -26,19 +27,20 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 % pseudokód \algFO{}
 \begin{algor}{\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
-  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.
+  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.\martin{Neni vic language-agnostic rict array nez map?}\david{bych řekl právě naopak, ale znám jen python :)}
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
-    \State $ f \sim \fdist $
+    \State $ f \sim \fdist $ \martin{Nechceš dát $f_i$? Možná by bylo maličko názornější}
     \Indent For $ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau $:
       \State $ D[\s] \gets D[\s] + \divg \ell {\k_- \cup \s} $
     \EndIndent
   \EndIndent
   \State $ \hat{\s_*} \gets \argmin_{\s} D[\s] $
 \end{algor}
+\martin{Nezabere mi krok 3 ještě $2^n$ času, stejně jako Thm 11 (offline greedy time complexity)? Nebo bereš samplování z orákula a nepočítáš tam složitost? Pochopil jsem potom důkaz Thm11 špatně?}
 
 % analýza časové složitosti
-The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, especially\david{Tohle je sice empiricky možná pravda, ale už vidim hate co říká, že na n to přece závisí daleko víc :)}\filip{To technicky není parametr žejo, to je daný tím problémem... ale jako fair point. Připsal jsem k tomu něco, je to lepší?}\david{furt mi přijde, že especially je tam navíc, ale může být}\filip{mně nepřijde.. Mistře?} the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
-We will denote the time complexity of computing the divergence for the specific divergence function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
+The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
+We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 
@@ -46,7 +48,7 @@ This simplifies the notation, and it holds for every divergence function we cons
 \filip{fyi, všechno dávám zatím jako theoremy, a pak se domluvíme co s tím :) referencuju to všude pomocí cref, takže se to samo změní}
 \begin{thm}[\algFO{} time complexity]
   \label{thm:algfo-time-complexity}
-  Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
+  Let $ n $ be the size of the ground set, $ \kappa $ \martin{Zkontroluj, že máš $\kappa$ i všude dál. Používáš tam $k$} the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
   Let $ \fce\divt{n} $ be the time complexity of computing the divergence.
   Then the time complexity of the \algFO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $\david{není tohle bez O? A naopak by tohle šlo rozepsat pomocí O kde rozbiješ to kombinační číslo?}.\filip{umm bez O by to nefungovalo :) a "rozbít komb číslo" nevím co znamená :D}
 \end{thm}
@@ -57,6 +59,7 @@ This simplifies the notation, and it holds for every divergence function we cons
   The time complexity of computing the divergence is $ \fce\divt{n} $.
   Therefore, the time complexity of the \algFO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
+\martin{Thm 7 mi připadá ok.}
 
 % je to paralelizovatelné
 Observe that computing each sample is independent of the others, assuming we have a way to then quickly sum the result.
@@ -65,13 +68,13 @@ In our Python implementation we do in fact compute every sample in a parallel pr
 
 % časové odhady pro různé velikosti instance
 For a constant, small budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
-This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results ($ \fce{\O}{\sigma \binom{2^n - k}{n}} $).
+This is computable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - k}{n}}$.
 If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
 
 \begin{thm}[ ]
   \label{thm:algfo-time-complexity-poly-tau}
-  Suppose the initial information is linear in $ n $, and $ \tau \in \fce{\Theta}{n^c} $.
-  Then the time complexity of the \algFO{} algorithm is $ \sigma \cdot \fce\divt{n} \cdot 2^{\fce{\Theta}{n^{c+1}}} $.
+  Suppose the initial information is linear in $ n $\martin{Nechceš dát také O-notaci?}, and $ \tau \in \fce{\Theta}{n^c} $.
+  Then the time complexity of the \algFO{} algorithm is $ \sigma \cdot \fce\divt{n} \cdot 2^{\fce{\Theta}{n^{c+1}}}$.
 \end{thm}
 
 
@@ -90,10 +93,11 @@ If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (an
   \begin{align*}
     \binom{2^n-k}\tau \geq \left( \frac{2^n-k}{\tau} \right)^\tau = \left( \frac{2^{\fce{\Theta}{n}}}{n^c} \right)^\tau = 2^{\fce{\Theta}{n^{c+1}}}.
   \end{align*}
-  \david{tohle tvrzení se mi líbí, je to to "rozbití kombinačního čísla z Thm 7. Ale ten spodní bound mi přijde divnej. Neměla by tam být spíš $\Omega(n^{c+1})$?}\filip{$ \Theta(n^{c+1}) = \Omega(n^{c+1}) \cap \O(n^{c+1}) $, tj. $ \O $ je horní multiplikativní bound, $ \Omega $ je dolní, a $ \Theta $ jsou oba, tj. jakoby prostě tight bound}
+  \david{tohle tvrzení se mi líbí, je to to "rozbití kombinačního čísla z Thm 7. Ale ten spodní bound mi přijde divnej. Neměla by tam být spíš $\Omega(n^{c+1})$?}\filip{$ \Theta(n^{c+1}) = \Omega(n^{c+1}) \cap \O(n^{c+1}) $, tj. $ \O $ je horní multiplikativní bound, $ \Omega $ je dolní, a $ \Theta $ jsou oba, tj. jakoby prostě tight bound}\david{jasný, akorát jak tady dělíš tím $n^c$, tak asi používáš něco jako $2^{n^c} << n^c$, ale to není těsný odhad ne?}
 \end{proof}
 
 \filip{Jak moc někdo z vás rozumí asymptotice? Rád bych aby na tyhle věci někdo kouknul, protože já sám si v tom úplně 100\% jistej nejsem...}
+\martin{Připadá mi to legit.}
 
 \Cref{thm:algfo-time-complexity-poly-tau} shows that for a polynomially growing budget, the time complexity of the \algFO{} algorithm grows super-exponentially in $ n $.
 However, if we wanted to have $ \tau $ even bigger than polynomial in $ n $, the time complexity would grow even faster.
@@ -107,7 +111,7 @@ Then, the time complexity of the \algFO{} algorithm would be double exponential.
 \end{thm}
 
 \begin{proof}
-  To show this \namecref{thm:algfo-time-complexity-double-exp}, we will once again use the result of \Cref{thm:algfo-time-complexity}, along with the Stirling approximation of the binomial coefficient \[
+  To show\martin{prove?} this \namecref{thm:algfo-time-complexity-double-exp}, we will once again use the result of \Cref{thm:algfo-time-complexity}, along with the Stirling approximation of the binomial coefficient \[
     \binom {2m}m \approx \frac{2^{2m}}{\sqrt{\pi m}}.
   \]
   First, let us observe that $ \kappa = \absolute{\k_0} = n + 2 $.
@@ -115,9 +119,12 @@ Then, the time complexity of the \algFO{} algorithm would be double exponential.
     \binom{2^{n}-k}{\frac{2^n - k}{2}} \approx \frac{2^{2^n - k}}{\sqrt{\pi \frac{2^n - k}{2}}} = \fce{\Theta}{\frac{2^{2^n}}{2^k 2^{\frac n2}}} = \fce{\Theta}{2^{2^n} 2^{-\frac{3n}{2}}}.
   \]
 \end{proof}
+\martin{Používáš notaci $f(x)=\fce{\Theta}{...}$, ale víc čistá je $f(x) \in \fce{\Theta}{...}$. Formálně je $\fce{\Theta}{...}$ množina funkcí, ne funkce samotná. Ale tahle "abuse of notation" je docela zaběhnutá, takže asi jak chceš.}
+\martin{}
 
-In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.
-For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $. then for $ n=5 $, this process takes $ 30 $ hours (details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+
+In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so this is the time complexity we arrive at.\martin{Which one, the one from the last Thm? All of them? }
+For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $.\martin{Velké písmeno za tečkou} then for $ n=5 $, this process takes $ 30 $ hours \martin{by hand/laptop/metacentrum?}(details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
 % hence, motivace \algFG{} a popis
 This problem motivates the following simplification of the \algFO{} algorithm, the \algFG{} algorithm.
@@ -136,6 +143,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
   \EndIndent
   
 \end{algor}
+\martin{Uzávorkoval bych pořadí setminus v bodě 4. Takto formálně ok, ale připadá mi méně přehledné}
 
 % analýza časové složitosti OG
 \begin{thm}[\algFG{} time complexity]
@@ -171,15 +179,13 @@ This can be overcome by either approximating the distribution, and computing the
 
 % wanting online optimal is bad
 When solving the \nameref{def:offline-pp}, we perform an exhaustive search over the domain, or the set of all possible subsets.
-Though this is double-exponential in the number of players in the worst case, it is at least \david{least? ale není to taky nekonečné i pto offline když $\fdist$ je spojitá?}\filip{Já mluvím o domain ve stylu "množina všech podmnožin délky $ \tau $", tj to přes co dělám argmin. Ty mluvíš o tom že navíc tu $ \E $ musíme aproximovat. Mám to tu taky zmínit?} finite.
+Though this is double-exponential in the number of players in the worst case, it is at least \david{least? ale není to taky nekonečné i pto offline když $\fdist$ je spojitá?}\filip{Já mluvím o domain ve stylu "množina všech podmnožin délky $ \tau $", tj to přes co dělám argmin. Ty mluvíš o tom že navíc tu $ \E $ musíme aproximovat. Mám to tu taky zmínit?}\david{No osobně mě to trochu zmátlo, ale koukám, že "domain" je definovaná jako all subsets. Stejně bych možná hodil za tuhle větu footnote, že celá ta úloha každopádně nemusí být finite.} finite.
 In contrast, a solution of the \nameref{def:online-pp} (\Cref{def:online-pp}) is a \emph{policy}, a function that maps the current state to a distribution over the next actions, minimizing the final expected divergence.
 The domain of the online problem then is the set of all policies, which is uncounably infinite, and due to that fact, an exhaustive search becomes infeasible.
 
-Instead of finding a solution to the online problem, in this section, we strive to at least bound the optimum.
+Instead of finding a solution to the online problem, in this section, we strive to at least bound the\david{its?} optimum.
 An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, since the offline solition can be seen as a policy where the online information is just ignored.
 This is formalised in the following \namecref{thm:online-bound-offline}.
-\david{možná pár slov o intuici - když se nedívám na ty hodnoty, dostanu offline řešení}
-\filip{Přepsal jsem trochu poslední dvě věty, lepší? Nechci to zas moc rozebírat, protože to budu dělat potom u oracle}
 
 % offline bounds online
 \begin{thm}[Offline bounds online]
@@ -221,7 +227,7 @@ To get a lower bound on the online problem, then, we can give the principal an o
 
 \begin{defi}[Oracle valuation]
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau \in \N $ a budget, and $ \k \supseteq \k_0 $ the initial information.
-  For a specific\david{specific navic?}\filip{Chci říct že se na $ f $ díváme jako prostě na funkci, ne jako na náhodnou proměnnou. Možná $ f \in \supp \fdist $?} function $ f \sim \fdist $, let \begin{equation}\label{eq:def-sf}
+  For a specific\david{specific navic?}\filip{Chci říct že se na $ f $ díváme jako prostě na funkci, ne jako na náhodnou proměnnou. Možná $ f \in \supp \fdist $?}\david{jasný, ale to podle mě už to sim říká (podobně se to používá v těch algoritmech žejo). Element taky dobrý.} function $ f \sim \fdist $, let \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
   \end{equation}
   Then the \emph{oracle valuation} of $ \fdist $ is \[
@@ -256,7 +262,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
 \end{proof}
 
 % oracle optimal
-The advantage of this approach, compared to the online problem, is that now the domain is once again finite\david{stejný prblém jako výš, pro spojitý $\fdist$ není finite}\filip{Jedná se o to že množina přes kterou se dělá minimum ($  \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $) je finite, to je to čemu říkám "domain". možná lepší slovo?}, and we can perform an exhaustive search over it.
+The advantage of this approach, compared to the online problem, is that now the domain is once again finite\david{stejný prblém jako výš, pro spojitý $\fdist$ není finite}\filip{Jedná se o to že množina přes kterou se dělá minimum ($  \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $) je finite, to je to čemu říkám "domain". možná lepší slovo?}\david{možná explicitně za domain napsat $2^N \setminus \k$?}, and we can perform an exhaustive search over it.
 This yields the following algorithm.
 
 % we have the same problem as with the offline optimal -- time, hence greedy
@@ -271,7 +277,7 @@ This yields the following algorithm.
 \end{algor}
 
 % comparison to FG
-The \algRO{} algorithm is almost identical to the \algFO{}\david{tohle mě zmátlo, nemá tu být optimal? Když ne, stejně by to asi chtělo nějak rozvést...}\filip{Jo mělo... Mám to i tak rozvádět? Nevím moc co k tomu říct, to je něco co si člověk musí rozmyslet imho} algorithm.
+The \algRO{} algorithm is almost identical to the \algFO{}\david{tohle mě zmátlo, nemá tu být optimal? Když ne, stejně by to asi chtělo nějak rozvést...}\filip{Jo mělo... Mám to i tak rozvádět? Nevím moc co k tomu říct, to je něco co si člověk musí rozmyslet imho}\david{není ta změna akorát v tom, že sampluješ hru před / potom co zafixuješ policy? Takže v jednom případě je ta policy adaptovaná na tu konkrétní hru a v druhém na tu distribuci? Ale z hlediska výpočetní náročnosti je to to samé?} algorithm.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
