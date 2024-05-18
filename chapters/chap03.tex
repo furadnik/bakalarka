@@ -309,7 +309,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 \algRG{} is once again almost identical to \algFG{}, in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
 The resulting value of the oracle valuation is once again very clearly a lower bound on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
-% TODO: greedy vs greedy neporovnatelný
+% greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
 The \algRG{} algorithm is in fact incomparable to the online solution.
 Empirically, it is in most cases very close or even identical to \algRO{}, but we do have examples where the two differ significantly.
@@ -320,17 +320,44 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 \subsection{Utilizing PPO}
 \label{sec:ppo}
 
-% TODO: oracle je teorie, ppo je praktický
+% oracle je teorie, ppo je praktický
+We have introduced the oracle approach to find a provable lower bound on the online solution.
+However, in practice, the oracle algorithms are infeasible, as having access to an oracle defeats the purpose in the first place.
+We thus turn to \emph{reinforcement learning} to find a solution of the online problem which is usable in practice.
 
-% TODO: PPO state space
+% PPO state space
+We employ the PPO algorithm.
+For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
+As the state space, we use a vector of size $ 2^n - \kappa $, where each element is a value of a subset, or zero if the value is unknown.
+This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
-% TODO: state space grows exponentially, což není dobrý
+% maskable ppo
+The action space is the set of all unknown subsets.
+Notice that the action space changes depending on the currently known subsets.
+We handle this by using the so-called \emph{Maskable PPO} variant of the algorithm, where we mask the actions that are not available, and thus the agent cannot choose them.
 
-% TODO: reward
+% state space grows exponentially, což není dobrý
+Assuming the size of the initial information $ \kappa $ is sub-exponential, the size of both the state and action space is exponential in the size of the ground set.
+This is not ideal, as for larger $ n $, the required number of training epochs increases quite quickly.
+This is one of the directions for future work, to find a way to reduce the size of the state space, and thus make the training of the PPO algorithm more efficient.
+\filip{Je to takhle řečeno ok?}
 
-% TODO: PPO teda není online, ale něco jako online
+% reward
+We have not yet discussed the reward function.
+In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.
+However, in order to make the training more stable, we have decided to alter the reward function.
+Instead, we give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
+This gives the agent more information about the action it has just taken, thus allowing it to learn faster.
 
-% TODO: garance nejsou, proto testujeme empiricky
+% PPO teda není online, ale něco jako online
+Consequently, the PPO algorithm does not approximate the online solution exactly.
+It is incentivized to reveal the subsets that minimize the divergence \textquote{along the way}, whereas the online problem is interested only in the final divergence.
+This might lead the agent to behave in a greedy way.
+However, as mentioned above, and as the experimental results show, the greedy approaches are generally very close to the optimum, and the PPO works well in practice.
+
+% garance nejsou, proto testujeme empiricky
+Unfortunately, since we are using deep neural networks to approximate the policy, we cannot give any guarantees about the quality of the solution.
+We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
 
 \section{Results}
 \label{sec:results}
