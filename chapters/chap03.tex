@@ -16,7 +16,7 @@ Further, we formally describe the time complexity of each algorithm, as it depen
 \section{Solutions to the Offline Problem}
 
 % offline problém řešíme optimálně, jen aproximujeme E
-To reach an exact optimal solution to the Offline principal's problem (\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
+To reach an exact optimal solution to the Offline principal's problem (\david{see }\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
 This is sometimes feasible, but only for very small instances, with very specific and artificial distributions and divergence functions.
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
@@ -40,7 +40,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
-We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
+We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} \david{co takhle We will denote the time complexity of computing the divergence given by a specific $l$ as ...} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 We further assume that this is $ \fce{\Omega}{2^n} $, which is motivated by the fact that the divergence should take into account all the values of coalitions.
@@ -55,6 +55,7 @@ With this, we can prove the time complexity of the \algFO{} algorithm.
 \filip{fyi, všechno dávám zatím jako theoremy, a pak se domluvíme co s tím :) referencuju to všude pomocí cref, takže se to samo změní}
 \david{Proposition zní dobře. Taky se mi moc nelíbí to "prove", protože není ještě jasné co dokazuješ. Co třeba formalize?}
 \filip{Formalize se mi nelíbí :(}
+\david{tak co třeb study the time complexity?}
 \begin{thm}[\algFO{} time complexity]
   \label{thm:algfo-time-complexity}
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
@@ -75,7 +76,7 @@ Thus the computation can be parallelized, which significantly reduces the comput
 In our Python implementation we do in fact compute every sample in a parallel process, and we use \tprog{numpy} arrays to sum the results, which gives little overhead compared to the overall computation time.
 
 % časové odhady pro různé velikosti instance
-For a constant, small budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
+For a constant, small budget $ \tau $,\david{Tohle zní divně, co takhle "For a small constant budget t, ...} the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
 This is managable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - \kappa}{n}}$.
 If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
 
@@ -104,7 +105,6 @@ If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (an
   where the final equality holds because \[
       \frac{2^{\Theta(n)}}{n^c} = \frac{2^{\Theta(n)}}{2^{\log n^c}} = 2^{\Theta(n) - c \log n} = 2^{\Theta(n)}.
   \]
-  \filip{Upravil jsem důkaz, snad je to teď lepší. Davide když je to ok tak tohle smaž.}
 \end{proof}
 
 \Cref{thm:algfo-time-complexity-poly-tau} shows that for a polynomially growing budget, the time complexity of the \algFO{} algorithm grows super-exponentially in $ n $.
@@ -130,7 +130,7 @@ Then, the time complexity of the \algFO{} algorithm would be double exponential.
 
 In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so we do reach the double-exponential time complexity.
 For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $.
-Then for $ n=5 $, this process takes $ 30 $ hours on a CPU \martin{by hand/laptop/metacentrum?}\filip{Hmm, nevim jak moc se tomu tady chci věnovat... nestačí ten odkaz na Results?}\david{soulas s Mistrem, ale netřeba být moc konkrétní, stačí říct on a standard CPU a nechat odkaz}\filip{takhle ok?}(details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+Then for $ n=5 $, this process takes $ 30 $ hours on a CPU \martin{by hand/laptop/metacentrum?}\filip{Hmm, nevim jak moc se tomu tady chci věnovat... nestačí ten odkaz na Results?}\david{soulas s Mistrem, ale netřeba být moc konkrétní, stačí říct on a standard CPU a nechat odkaz}\filip{takhle ok?}\david{skvělé!}(details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
 % hence, motivace \algFG{} a popis
 This problem motivates the following simplification of the \algFO{} algorithm, the \algFG{} algorithm.
@@ -151,6 +151,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{algor}
 \martin{Uzávorkoval bych pořadí setminus v bodě 4. Takto formálně ok, ale připadá mi méně přehledné}
 \filip{Actually to nebylo formálně ok, ale teď už je. Jediný co tak je to teď takový ošklivý... vadí nám to? :D}
+\david{za mě je to fajn. Pokud se ti to hodně nelíbí, tak si $\pot N \setminus \left( \k \cup \hat{\s_*} \right)$ nějak označ}
 
 % analýza časové složitosti OG
 \begin{thm}[\algFG{} time complexity]
@@ -160,7 +161,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{thm}
 
 \begin{proof}
-  First, we sample $ \sigma $ games (we assume sampling of a single game takes $ 2^n $, i.e. constant time for each subset).
+  First, we sample $ \sigma $ games (we assume sampling of a single game takes \david{O?}$ 2^n $, i.e. constant time for each subset).
   The algorithm iterates over $ \tau $ timesteps. 
   In each timestep, we compute the argmin, which translates to going over all viable coalition structures, of which there are $ 2^n-\kappa $.
   For each subset, we compute the divergence in each sample, reaching $ \sigma \cdot \fce\divt{n} $.
@@ -168,7 +169,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best coalition structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
@@ -227,7 +228,7 @@ This is formalised in the following \namecref{thm:online-bound-offline}.
 
 % idea of oracle optimals
 To get a lower bound, let us get back to the motivation for the online problem.
-The idea was to spend a portion of the budget to get a better idea of the function, and then use this information to make a more informed decision about the values.
+The idea was to spend a portion of the budget to get a better \david{idea of a function je za mě meh formulace}idea of the function, and then use this information to make a more informed decision about the values.
 Using this intuition, we can clearly see that the best thing the principal can hope for is that the values she reveals tell her \emph{everything} about the function, and thus she can find the exact optimal coalition structure to minimize the divergence.
 To get a lower bound on the online problem, then, we can give the principal an oracle, which tells her all the values in advance, and she can pick the best coalition structure accordingly.
 
@@ -236,7 +237,7 @@ To get a lower bound on the online problem, then, we can give the principal an o
   For a given function $ f $, let \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
   \end{equation}
-  Then the \emph{oracle valuation} of $ \fdist $ is \[
+  Then the \emph{oracle valuation} of $ \fdist $ is \david{možná závorečky za expectation?}\[
     \oracle \fdist \deq \E_{f \sim \fdist} \divg \ell {\k_- \cup \s_f}.
   \]
 \end{defi}
@@ -259,7 +260,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
     \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
   \]
-  from the definition of $ \s_f $ (\cref{eq:def-sf}).
+  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\cref{eq:def-sf}).
   As such, the same can be said for the expected value over the trajectory, which is exactly the valuation of $ \pi^* $. \[
     \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
   \]
@@ -284,11 +285,11 @@ This yields the following algorithm.
 
 % comparison to FG
 The \algRO{} algorithm is almost identical to the \algFO{} algorithm.
-\filip{tady říct něco jako "rozdíl je v pořadí expectation a vybrání akce", nebo tak něco}\david{jop, bylo by fajn}\filip{pokusil jsem se o to. co ty na to?}
+\filip{tady říct něco jako "rozdíl je v pořadí expectation a vybrání akce", nebo tak něco}\david{jop, bylo by fajn}\filip{pokusil jsem se o to. co ty na to?}\david{dal bych odkaz na pseudokod Offline optimal. Jinak super}
 The difference between the two is the order in which we gather and evaluate the actions.
-In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and then average the \emph{resulting divergence}.
+In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and \david{only} then average the \emph{resulting divergence}.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
-That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
+That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.\david{nový odstavec?}
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
 
 \begin{algor}{\algRG{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
@@ -310,7 +311,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{}, in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again very clearly a lower bound on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+The resulting value of the oracle valuation is once again very clearly a lower bound\david{lower bound je zavádějící, protože lower divergence je lepší} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
@@ -325,32 +326,32 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 
 % oracle je teorie, ppo je praktický
 We have introduced the oracle approach to find a provable lower bound on the online solution.
-However, in practice, the oracle algorithms are infeasible, as having access to an oracle defeats the purpose in the first place.
-We thus turn to \emph{reinforcement learning} to find a solution of the online problem which is usable in practice.
+However, in practice, the oracle algorithms are infeasible, as having access to an oracle defeats the purpose\david{of what?} in the first place.
+\david{To approximate the solution of a online problem, }We thus turn to \emph{reinforcement learning} to find a solution of the online problem which is usable in practice.
 
 % PPO state space
-We employ the PPO algorithm.
+We employ the PPO algorithm \david{citace, je to dlouho od doby co se o tom mluvilo}.
 For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
-As the state space, we use a vector of size $ 2^n - \kappa $, where each element is a value of a subset, or zero if the value is unknown.
+As the state space, we use a vector of size $ 2^n - \kappa $\david{kappa je velikost minimální info? To už si ani nepamatuju, možná to připomeň}, where each element is a value of a subset, or zero if the value is unknown.
 This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
 The action space is the set of all unknown subsets.
 Notice that the action space changes depending on the currently known subsets.
-We handle this by using the so-called \emph{Maskable PPO} variant of the algorithm, where we mask the actions that are not available, and thus the agent cannot choose them.
+We handle this by using the so-called \emph{Maskable PPO} variant of the algorithm\david{tohle je jen jak se to jmenuje ve stable baselines. Řekl bych prostě že aplikujeme legal action mask}, where we mask the actions that are not available, and thus the agent cannot choose them.
 
 % state space grows exponentially, což není dobrý
-Assuming the size of the initial information $ \kappa $ is sub-exponential, the size of both the state and action space is exponential in the size of the ground set.
-This is not ideal, as for larger $ n $, the required number of training epochs increases quite quickly.
+Assuming the size of the initial information $ \kappa $\david{aha, trefil jsem se :D} is sub-exponential, the size of both the state and action space is exponential in the size of the ground set.
+This is not ideal, as for larger $ n $, the required number of training epochs increases quite quickly.\david{epochy jsou jedna věc, ale tohle i dělá problém té neuronce, protože musí najedou aproximovat mega velkej prostor. Použít nějakou speciální architekturu zajistí, že tahle aproximace bude omezená na nějakou podobu a mohlo by výrazně pomoct.}
 This is one of the directions for future work, to find a way to reduce the size of the state space, and thus make the training of the PPO algorithm more efficient.
 \filip{Je to takhle řečeno ok?}
 
 % reward
 We have not yet discussed the reward function.
-In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.
+In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}
 However, in order to make the training more stable, we have decided to alter the reward function.
 Instead, we give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
-This gives the agent more information about the action it has just taken, thus allowing it to learn faster.
+This gives the agent more information about the action it has just taken, thus allowing it to learn faster.\david{and in a more stable manner?}
 
 % PPO teda není online, ale něco jako online
 Consequently, the PPO algorithm does not approximate the online solution exactly.
@@ -371,5 +372,5 @@ We can only test the algorithm empirically, and compare it to the other approach
   \item supermodular
   \item shapley divergence je docela podobná l1 divergenci
   \item Largest Coalition heuristic + komentář o vysvětlení
-  \item FG je lepší než RG
+  \item FG je lepší než RG \david{co je sakra FG a RG? :D}
 \end{itemize}
