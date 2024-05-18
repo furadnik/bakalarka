@@ -267,7 +267,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
 \end{proof}
 
 % oracle optimal
-The advantage of this approach, compared to the online problem, is that now the domain is once again $ \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $, which is finite\david{stejný prblém jako výš, pro spojitý $\fdist$ není finite}\filip{Jedná se o to že množina přes kterou se dělá minimum ($ \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $) je finite, to je to čemu říkám "domain". možná lepší slovo?}\david{možná explicitně za domain napsat $2^N \setminus \k$?}\filip{přepsal jsem to, lepší?}\david{za mě je to teď supr}, and we can perform an exhaustive search over it.
+The advantage of this approach, compared to the online problem, is that now the domain is once again $ \left\{ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau \right\} $, which is finite, and we can perform an exhaustive search over it.
 This yields the following algorithm.
 
 % we have the same problem as with the offline optimal -- time, hence greedy
@@ -283,7 +283,9 @@ This yields the following algorithm.
 
 % comparison to FG
 The \algRO{} algorithm is almost identical to the \algFO{} algorithm.
-\filip{tady říct něco jako "rozdíl je v pořadí expectation a vybrání akce", nebo tak něco}\david{jop, bylo by fajn}
+\filip{tady říct něco jako "rozdíl je v pořadí expectation a vybrání akce", nebo tak něco}\david{jop, bylo by fajn}\filip{pokusil jsem se o to. co ty na to?}
+The difference between the two is the order in which we gather and evaluate the actions.
+In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and then average the \emph{resulting divergence}.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
 That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
@@ -303,28 +305,41 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
   \State $ \hat O \gets \frac{\hat O}{\sigma} $
 \end{algor}
 
-\filip{Nevím jak moc tady psát to co jsem psal u offline...}\david{možná stačí říct něco ve stylu, že bysme mohli dojít k podobným závěrům jako u offline?}\filip{souhlas}
-% TODO: RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
+% RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
+\algRG{} is once again almost identical to \algFG{}, in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
+The resulting value of the oracle valuation is once again very clearly a lower bound on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
-\filip{Říct ještě něco k tomu že vlastně vůbec nic neříkáme o greedy variantách oracle vs offline vs optimal?}\david{rozhodně to chce nějaké porovnání co je rozhodně lepší, co je neporovnatelný apod.}
 % TODO: greedy vs greedy neporovnatelný
+Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
+The \algRG{} algorithm is in fact incomparable to the online solution.
+Empirically, it is in most cases very close or even identical to \algRO{}, but we do have examples where the two differ significantly.
+Prehaps more surprisingly, we show that for very special choices of $ \ell $ and $ \fdist $, even \algFG{} yields better results than the \algRG{} algorithm.
+For more details, see the \nameref{sec:results}~\namecref{sec:results}.
+
 
 \subsection{Utilizing PPO}
 \label{sec:ppo}
 
-\begin{itemize}[ ]
-  \item define the state space
-  \item realize this is technically almost online optimal
-  \item garance nejsou
-\end{itemize}
+% TODO: oracle je teorie, ppo je praktický
+
+% TODO: PPO state space
+
+% TODO: state space grows exponentially, což není dobrý
+
+% TODO: reward
+
+% TODO: PPO teda není online, ale něco jako online
+
+% TODO: garance nejsou, proto testujeme empiricky
 
 \section{Results}
 \label{sec:results}
 
 \begin{itemize}[ ]
-  \item Metacentrum + technické věci + jak dlouho + články + škálovatelnost (časová složitost?)
+  \item Metacentrum + technické věci + jak dlouho + články
   \item factory
   \item supermodular
   \item shapley divergence je docela podobná l1 divergenci
   \item Largest Coalition heuristic + komentář o vysvětlení
+  \item FG je lepší než RG
 \end{itemize}
