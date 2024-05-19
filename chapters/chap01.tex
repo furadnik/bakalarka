@@ -360,7 +360,7 @@ By taking the minimum of the clipped and unclipped objective, we ensure that the
 This is crucial as, if we are unlucky, one policy update might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod
-\begin{algor}{PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
+\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
 	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
 	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:

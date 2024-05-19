@@ -24,7 +24,7 @@ Then, we choose the $ \s $ which gives the smallest average divergence.
 This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
 
 % pseudokód \algFO{}
-\begin{algor}{\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
+\begin{algor}{\label{alg:fo}\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
   \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.\martin{Neni vic language-agnostic rict array nez map?}\david{bych řekl právě naopak, ale znám jen python :)}\filip{Beru to tak že array je indexovanej číslama, mapa je indexovaná čímkoliv}
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
@@ -139,7 +139,7 @@ We start with an empty set, and in each step, we reveal the subset which gives t
 This is a greedy approach, and it is not guaranteed to give the optimal solution, but it is much faster in practice.
 
 % pseudokód \algFG{}
-\begin{algor}{\algFG{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
+\begin{algor}{\label{alg:fg}\algFG{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) greedy solution of the offline principal's problem.}
   \State $ G \gets $ sample $ \sigma $ samples of $ f \sim \fdist $.
   \State $ \hat{\s_*} \gets \emptyset $
@@ -284,12 +284,12 @@ This yields the following algorithm.
 \end{algor}
 
 % comparison to FG
-The \algRO{} algorithm is almost identical to the \algFO{} algorithm.
-\filip{tady říct něco jako "rozdíl je v pořadí expectation a vybrání akce", nebo tak něco}\david{jop, bylo by fajn}\filip{pokusil jsem se o to. co ty na to?}\david{dal bych odkaz na pseudokod Offline optimal. Jinak super}
+The \algRO{} algorithm is almost identical to the \algFO{} algorithm (\Cref{alg:fo}).
 The difference between the two is the order in which we gather and evaluate the actions.
-In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and \david{only} then average the \emph{resulting divergence}.
+In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and only then average the \emph{resulting} divergence.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
-That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.\david{nový odstavec?}
+That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
+
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
 
 \begin{algor}{\algRG{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
@@ -307,11 +307,9 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
   \State $ \hat O \gets \frac{\hat O}{\sigma} $
 \end{algor}
 
-\filip{všechno od tohohle dolů je nový}
-
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
-\algRG{} is once again almost identical to \algFG{}, in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again very clearly a lower bound\david{lower bound je zavádějící, protože lower divergence je lepší} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+\algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
+The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
@@ -325,33 +323,36 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 \label{sec:ppo}
 
 % oracle je teorie, ppo je praktický
+\filip{tenhle odstavec je novej}
 We have introduced the oracle approach to find a provable lower bound on the online solution.
-However, in practice, the oracle algorithms are infeasible, as having access to an oracle defeats the purpose\david{of what?} in the first place.
-\david{To approximate the solution of a online problem, }We thus turn to \emph{reinforcement learning} to find a solution of the online problem which is usable in practice.
+However, in practice, the oracle algorithms are infeasible, as assuming we have access to all the values defeats the purpose of our approach in the first place.
+To approximate the solution of a online problem which is usable in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
-We employ the PPO algorithm \david{citace, je to dlouho od doby co se o tom mluvilo}.
+We employ the PPO algorithm (\Cref{alg:ppo}) \david{citace, je to dlouho od doby co se o tom mluvilo}\filip{Stačí takhle jako ref do preliminaries?}.
 For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
-As the state space, we use a vector of size $ 2^n - \kappa $\david{kappa je velikost minimální info? To už si ani nepamatuju, možná to připomeň}, where each element is a value of a subset, or zero if the value is unknown.
+As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.
 This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
 The action space is the set of all unknown subsets.
 Notice that the action space changes depending on the currently known subsets.
-We handle this by using the so-called \emph{Maskable PPO} variant of the algorithm\david{tohle je jen jak se to jmenuje ve stable baselines. Řekl bych prostě že aplikujeme legal action mask}, where we mask the actions that are not available, and thus the agent cannot choose them.
+We handle this by \emph{masking} the actions that are not available, so the agent cannot choose them.
 
 % state space grows exponentially, což není dobrý
-Assuming the size of the initial information $ \kappa $\david{aha, trefil jsem se :D} is sub-exponential, the size of both the state and action space is exponential in the size of the ground set.
-This is not ideal, as for larger $ n $, the required number of training epochs increases quite quickly.\david{epochy jsou jedna věc, ale tohle i dělá problém té neuronce, protože musí najedou aproximovat mega velkej prostor. Použít nějakou speciální architekturu zajistí, že tahle aproximace bude omezená na nějakou podobu a mohlo by výrazně pomoct.}
-This is one of the directions for future work, to find a way to reduce the size of the state space, and thus make the training of the PPO algorithm more efficient.
+Assuming the size of the initial information $ \kappa $ is sub-exponential, the size of both the state and action space, and thus the size of the input and output of the neural network, is exponential in the size of the ground set $ n $.
+For larger $ n $, this makes the network struggle to make sense of all the information, increasing the number of epochs needed for training.
+One of the directions for future work is to find an architecture of the network which has the input and output encoded in such a way that its size becomes more managable, and thus the training is more stable as $ n $ increases.
+\david{epochy jsou jedna věc, ale tohle i dělá problém té neuronce, protože musí najedou aproximovat mega velkej prostor. Použít nějakou speciální architekturu zajistí, že tahle aproximace bude omezená na nějakou podobu a mohlo by výrazně pomoct.}\filip{jo tak jsem to chtěl napsat... přepsal jsem to, co ty na to teď?}
 \filip{Je to takhle řečeno ok?}
 
 % reward
 We have not yet discussed the reward function.
-In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}
-However, in order to make the training more stable, we have decided to alter the reward function.
-Instead, we give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
-This gives the agent more information about the action it has just taken, thus allowing it to learn faster.\david{and in a more stable manner?}
+In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}\filip{Co tohle:}
+This means that the agent receives reward all the way at the end, giving him very little information about the performance of a specific action, espetially for large $ \tau $.
+In order to make the training more stable, we have decided to alter the reward function.
+We give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
+This gives the agent more information about the action it has just taken, thus allowing it to learn faster, and in a more stable manner.
 
 % PPO teda není online, ale něco jako online
 Consequently, the PPO algorithm does not approximate the online solution exactly.
@@ -366,11 +367,46 @@ We can only test the algorithm empirically, and compare it to the other approach
 \section{Results}
 \label{sec:results}
 
-\begin{itemize}[ ]
-  \item Metacentrum + technické věci + jak dlouho + články
-  \item factory
-  \item supermodular
-  \item shapley divergence je docela podobná l1 divergenci
-  \item Largest Coalition heuristic + komentář o vysvětlení
-  \item FG je lepší než RG \david{co je sakra FG a RG? :D}
-\end{itemize}
+% TODO: section intro
+
+% TODO: Metacentrum technical info
+
+% TODO: experimenty jsou i z clankuu
+
+\subsection{Factory Game}
+
+% TODO: factory game class
+
+% TODO: explain the observed
+
+\subsection{Supermodular}
+
+% TODO: remind what supermodular is
+
+% TODO: explain the observed
+
+\subsection{L1 Norm}
+
+% TODO: ell = l_1
+
+% TODO: co to dělá
+
+\subsection{Largest Coalition Heuristic}
+
+% TODO: explain motivation
+
+% TODO: comment on performance
+
+% TODO: explain why
+
+\subsection{Greedy Isn't Optimal}
+
+% TODO: explain.. Own section necessary?
+
+\subsection{Offline Beats Oracle}
+
+% TODO: re-introduce what it's about
+
+% TODO: explain l-inf
+
+% TODO: explain why
