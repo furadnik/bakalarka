@@ -1,7 +1,7 @@
 \chapter{Tackling the Principal's Problems\filip{18.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
-\filip{subset system?}
+\filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}
 In this chapter, we first define the different approaches to solving, or approximately solving, the Online and Offline Principal's problems.
 We then examine the experimental results of those approaches.
 When describing the algorithms, we assume we have a distribution $ \fdist $ (given by the nature of the application) and a divergence function $ \ell $ (which we have chosen).
@@ -11,12 +11,10 @@ In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} a
 In this thesis, we extend the algorithms to a setting with a general divergence function and extend the intuition behind the definition of these algorithms.
 Further, we formally describe the time complexity of each algorithm, as it depends on the choice of the size of the budget, and we compare the solutions of these algorithms as they relate to one another, and to the Offline/Online principal's problems.
 
-% TODO: random
-
 \section{Solutions to the Offline Problem}
 
 % offline problém řešíme optimálně, jen aproximujeme E
-To reach an exact optimal solution to the Offline principal's problem (\david{see }\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
+To reach an exact optimal solution to the Offline principal's problem (\david{see }\filip{to nevím jestli chci. jinde to taky nemám. mám to dát všude?}\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
 This is sometimes feasible, but only for very small instances, with very specific and artificial distributions and divergence functions.
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
@@ -40,8 +38,8 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
-We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} \david{co takhle We will denote the time complexity of computing the divergence given by a specific $l$ as ...} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
-For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible coalition structure of size $ \tau $.
+We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} \david{co takhle We will denote the time complexity of computing the divergence given by a specific $l$ as ...}\filip{furt mi přijde jako že by hodně prospělo mít lepší jméno než divergence fn} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
+For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible subset system of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 We further assume that this is $ \fce{\Omega}{2^n} $, which is motivated by the fact that the divergence should take into account all the values of coalitions.
 This again holds for every considered divergence function, and it simplifies the resulting time complexity bound.
@@ -49,13 +47,14 @@ This again holds for every considered divergence function, and it simplifies the
 The last detail we need to address is the actual mechanics of sampling the function $ f_i \sim \fdist $.
 We will here assume that the time complexity of this operation is $ \fce{\O}{2^n} $.
 We can imagine that these values are pre-generated, and that we just load them into memory, or that we have an oracle that tells us the value for any coalition on demand in constant time.
-With this, we can prove the time complexity of the \algFO{} algorithm.
+With this, we can analyze the time complexity of the \algFO{} algorithm.
 
 \filip{je tohle theorem??}\david{spíš ne, lemma?}\filip{lemma mi evokuje jako že by to mělo být jako pomocný tvrzení k nějaký větě... proposition? možná zeptáme se mistra na názor?}
 \filip{fyi, všechno dávám zatím jako theoremy, a pak se domluvíme co s tím :) referencuju to všude pomocí cref, takže se to samo změní}
 \david{Proposition zní dobře. Taky se mi moc nelíbí to "prove", protože není ještě jasné co dokazuješ. Co třeba formalize?}
 \filip{Formalize se mi nelíbí :(}
 \david{tak co třeb study the time complexity?}
+\filip{změnil jsem to na anaylze, lepší?}
 \begin{thm}[\algFO{} time complexity]
   \label{thm:algfo-time-complexity}
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
@@ -64,8 +63,8 @@ With this, we can prove the time complexity of the \algFO{} algorithm.
 \end{thm}
 
 \begin{proof}
-  The algorithm iterates over $ \sigma $ samples, for each sample it computes the divergence for every possible coalition structure of size $ \tau $.
-  The number of possible coalition structures of size $ \tau $ is $ \binom{2^n-\kappa}{\tau} $.
+  The algorithm iterates over $ \sigma $ samples, for each sample it computes the divergence for every possible subset system of size $ \tau $.
+  The number of possible subset systems of size $ \tau $ is $ \binom{2^n-\kappa}{\tau} $.
   The time complexity of computing the divergence is $ \fce\divt{n} $.
   Therefore, the time complexity of the \algFO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-\kappa}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
@@ -76,7 +75,7 @@ Thus the computation can be parallelized, which significantly reduces the comput
 In our Python implementation we do in fact compute every sample in a parallel process, and we use \tprog{numpy} arrays to sum the results, which gives little overhead compared to the overall computation time.
 
 % časové odhady pro různé velikosti instance
-For a constant, small budget $ \tau $,\david{Tohle zní divně, co takhle "For a small constant budget t, ...} the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
+For a small, constant budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
 This is managable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - \kappa}{n}}$.
 If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
 
@@ -130,7 +129,7 @@ Then, the time complexity of the \algFO{} algorithm would be double exponential.
 
 In our experiments, we want to compare the \algFO{} algorithm for different choices of $ \tau $, so we do reach the double-exponential time complexity.
 For an illustration of double-exponential growth, consider computing the \algFO{} algorithm for all choices of $ \tau \in \left\{ 1, \ldots, 2^n-k \right\} $.
-Then for $ n=5 $, this process takes $ 30 $ hours on a CPU \martin{by hand/laptop/metacentrum?}\filip{Hmm, nevim jak moc se tomu tady chci věnovat... nestačí ten odkaz na Results?}\david{soulas s Mistrem, ale netřeba být moc konkrétní, stačí říct on a standard CPU a nechat odkaz}\filip{takhle ok?}\david{skvělé!}(details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
+Then for $ n=5 $, this process takes $ 30 $ hours on a CPU (details are discussed in the \nameref{sec:results}~\namecref{sec:results}), and for $ n=6 $, we estimate it would take over $ 100 $ years.
 
 % hence, motivace \algFG{} a popis
 This problem motivates the following simplification of the \algFO{} algorithm, the \algFG{} algorithm.
@@ -149,9 +148,6 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
   \EndIndent
   
 \end{algor}
-\martin{Uzávorkoval bych pořadí setminus v bodě 4. Takto formálně ok, ale připadá mi méně přehledné}
-\filip{Actually to nebylo formálně ok, ale teď už je. Jediný co tak je to teď takový ošklivý... vadí nám to? :D}
-\david{za mě je to fajn. Pokud se ti to hodně nelíbí, tak si $\pot N \setminus \left( \k \cup \hat{\s_*} \right)$ nějak označ}
 
 % analýza časové složitosti OG
 \begin{thm}[\algFG{} time complexity]
@@ -161,23 +157,23 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{thm}
 
 \begin{proof}
-  First, we sample $ \sigma $ games (we assume sampling of a single game takes \david{O?}$ 2^n $, i.e. constant time for each subset).
+  First, we sample $ \sigma $ games (we assume sampling of a single game takes $ \fce\O{2^n} $, i.e. constant time for each subset).
   The algorithm iterates over $ \tau $ timesteps. 
-  In each timestep, we compute the argmin, which translates to going over all viable coalition structures, of which there are $ 2^n-\kappa $.
+  In each timestep, we compute the argmin, which translates to going over all viable subset systems, of which there are $ 2^n-\kappa $.
   For each subset, we compute the divergence in each sample, reaching $ \sigma \cdot \fce\divt{n} $.
   Putting it all together, we get the required time complexity.
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}\filip{rozhodně ne xD}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
-One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best coalition structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
-We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best coalition structure in each timestep.
+One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset system, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
+We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best subset system in each timestep.
 This gives slightly bigger overhead, but it is still considerably faster than the \algFO{} algorithm, due to the far better overall time complexity.
 
 % k čemu to je vlastně?
-The offline principal's problem seeks to find a coalition structure that yields the best approximation of the underlying function, on average.
+The offline principal's problem seeks to find a subset system that yields the best approximation of the underlying function, on average.
 We study it with the hope that it gives us insight into what subsets are important for a given class of set functions.
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.
@@ -228,17 +224,17 @@ This is formalised in the following \namecref{thm:online-bound-offline}.
 
 % idea of oracle optimals
 To get a lower bound, let us get back to the motivation for the online problem.
-The idea was to spend a portion of the budget to get a better \david{idea of a function je za mě meh formulace}idea of the function, and then use this information to make a more informed decision about the values.
-Using this intuition, we can clearly see that the best thing the principal can hope for is that the values she reveals tell her \emph{everything} about the function, and thus she can find the exact optimal coalition structure to minimize the divergence.
-To get a lower bound on the online problem, then, we can give the principal an oracle, which tells her all the values in advance, and she can pick the best coalition structure accordingly.
+The idea was to spend a portion of the budget to get a more information about the function, and then use this information to make a more informed decision about which values to choose.
+Using this intuition, we can clearly see that the best thing the principal can hope for is that the values she reveals tell her \emph{everything} about the function, and thus she can find the exact optimal subset system to minimize the divergence.
+To get a lower bound on the online problem, then, we can give the principal an oracle, which tells her all the values in advance, and she can pick the best subset system accordingly.
 
 \begin{defi}[Oracle valuation]
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau \in \N $ a budget, and $ \k \supseteq \k_0 $ the initial information.
   For a given function $ f $, let \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
   \end{equation}
-  Then the \emph{oracle valuation} of $ \fdist $ is \david{možná závorečky za expectation?}\[
-    \oracle \fdist \deq \E_{f \sim \fdist} \divg \ell {\k_- \cup \s_f}.
+  Then the \emph{oracle valuation} of $ \fdist $ is \[
+    \oracle \fdist \deq \fceb{\E_{f \sim \fdist}} {\divg \ell {\k_- \cup \s_f}}.
   \]
 \end{defi}
 
@@ -250,7 +246,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $ a budget, and $ \k \supseteq \k_0 $ the initial information.
   Further, let $ \pi^* $ be the optimum of the corresponding \nameref{def:online-pp}.
   Then \[
-    \E_{f \sim \fdist} \val \tau \ell f \k {\pi^*} \geq \oracle \fdist.
+    \fceb{\E_{f \sim \fdist}} {\val \tau \ell f \k {\pi^*}} \geq \oracle \fdist.
   \]
 \end{thm}
 
@@ -260,7 +256,7 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
     \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
   \]
-  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\cref{eq:def-sf}).
+  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\filip{eeeh.. já nevim... ale ok}\Cref{eq:def-sf}).
   As such, the same can be said for the expected value over the trajectory, which is exactly the valuation of $ \pi^* $. \[
     \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
   \]
@@ -367,11 +363,22 @@ We can only test the algorithm empirically, and compare it to the other approach
 \section{Results}
 \label{sec:results}
 
-% TODO: section intro
+% section intro
+In this section, we show the experimental results of the above discussed algorithms.
+We compare them with a baseline called \algRand{}, where the principal chooses which subsets to reveal uniformly at random.
 
-% TODO: Metacentrum technical info
+% experimenty jsou i z clankuu
+We first show results utilizing the game-theoretic motivation, with the Utopian Gap (\Cref{def:gap}) as the divergence.
+These results are already published in \cite{uradnik2024reducing}, along with a very well-performing heuristic for uniform supermodular games.
+In this thesis, we extend these results for different divergence functions, utilizing the $ L_k $-norms.
+We compare these results to those with the Utopian Gap.
+Finally, we show some examples documenting properties of the divergence already discussed above.
+% TODO: zmínit workshopovej článek
 
-% TODO: experimenty jsou i z clankuu
+% Metacentrum technical info
+The code for conducting the experiments was written in Python~3.10 using stable\_baselines3~2.0 (\cite{stable-baselines3}), gymnasium~0.28 (\cite{towers_gymnasium_2023}) and pytorch~2.0 (\cite{Ansel_PyTorch_2_Faster_2024}), and is available at \cite{gitrepo}.
+We ran all experiments on a cluster with AMD~EPYC~7532~CPUs running at 2.4~GHz.
+When running the experiments, we utilized 15~cores and 12~GB of RAM.
 
 \subsection{Factory Game}
 
@@ -410,3 +417,4 @@ We can only test the algorithm empirically, and compare it to the other approach
 % TODO: explain l-inf
 
 % TODO: explain why
+
