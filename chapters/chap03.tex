@@ -1,4 +1,4 @@
-\chapter{Tackling the Principal's Problems\filip{18.5}}
+\chapter{Tackling the Principal's Problems\david{19.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 \filip{subset system?}
@@ -22,11 +22,19 @@ We use a different approach, replacing the exact expectation with an \emph{appro
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
 This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
+\david{Citovat tohle je podle mě správné a je to cool}
+% @article{bernoulli1713ars,
+%   title={Ars conjectandi, opus posthumum: accedit tractatus de seriebus infinitis, et epistola Gallic{\`e} scripta de ludo pilae reticularis},
+%   author={Bernoulli, Jakob},
+%   journal={(No Title)},
+%   year={1713}
+% }
+
 
 % pseudokód \algFO{}
 \begin{algor}{\label{alg:fo}\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
-  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.\martin{Neni vic language-agnostic rict array nez map?}\david{bych řekl právě naopak, ale znám jen python :)}\filip{Beru to tak že array je indexovanej číslama, mapa je indexovaná čímkoliv}
+  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.\martin{Neni vic language-agnostic rict array nez map?}\david{bych řekl právě naopak, ale znám jen python :)}\filip{Beru to tak že array je indexovanej číslama, mapa je indexovaná čímkoliv}\david{myslim, že mluvim i za Mistra když řeknu, že jestli jsi spoko se svou odpovědí, tak smaž naše komentáře. Je to tvoje bakalářka a my si to ještě nakonec celé stejne přečtem}
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
     \State $ f_i \sim \fdist $
     \Indent For $ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau $:
@@ -309,7 +317,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
@@ -325,13 +333,13 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 % oracle je teorie, ppo je praktický
 \filip{tenhle odstavec je novej}
 We have introduced the oracle approach to find a provable lower bound on the online solution.
-However, in practice, the oracle algorithms are infeasible, as assuming we have access to all the values defeats the purpose of our approach in the first place.
-To approximate the solution of a online problem which is usable in practice, we thus turn to \emph{reinforcement learning}.
+However, in practice, the oracle algorithms are infeasible, as \david{they are assuming / they assume?}assuming we have access to all the values defeats the purpose of our approach in the first place.\david{nebál bych se tuhle větu rozdělit a tenhle point vypíchnout}
+To approximate the solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?} in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
-We employ the PPO algorithm (\Cref{alg:ppo}) \david{citace, je to dlouho od doby co se o tom mluvilo}\filip{Stačí takhle jako ref do preliminaries?}.
+We employ the PPO algorithm (\Cref{alg:ppo}) \david{citace, je to dlouho od doby co se o tom mluvilo}\filip{Stačí takhle jako ref do preliminaries?}\david{yop, skvělé, možná bych dodal see Alg X}.
 For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
-As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.
+As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.\david{Tyjo chtěl jsem zrovna říct, že tohle je dobře protože naše values nejsou nula, ale to vůbec není pravda! Tohle bysme měli nějak vymakat ještě...}
 This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
@@ -345,10 +353,11 @@ For larger $ n $, this makes the network struggle to make sense of all the infor
 One of the directions for future work is to find an architecture of the network which has the input and output encoded in such a way that its size becomes more managable, and thus the training is more stable as $ n $ increases.
 \david{epochy jsou jedna věc, ale tohle i dělá problém té neuronce, protože musí najedou aproximovat mega velkej prostor. Použít nějakou speciální architekturu zajistí, že tahle aproximace bude omezená na nějakou podobu a mohlo by výrazně pomoct.}\filip{jo tak jsem to chtěl napsat... přepsal jsem to, co ty na to teď?}
 \filip{Je to takhle řečeno ok?}
+\david{za mě hezký}
 
 % reward
 We have not yet discussed the reward function.
-In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}\filip{Co tohle:}
+In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}\filip{Co tohle:}\david{super}
 This means that the agent receives reward all the way at the end, giving him very little information about the performance of a specific action, espetially for large $ \tau $.
 In order to make the training more stable, we have decided to alter the reward function.
 We give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
@@ -358,11 +367,12 @@ This gives the agent more information about the action it has just taken, thus a
 Consequently, the PPO algorithm does not approximate the online solution exactly.
 It is incentivized to reveal the subsets that minimize the divergence \textquote{along the way}, whereas the online problem is interested only in the final divergence.
 This might lead the agent to behave in a greedy way.
-However, as mentioned above, and as the experimental results show, the greedy approaches are generally very close to the optimum, and the PPO works well in practice.
+However, as mentioned above, and as the experimental results show, the greedy approaches are generally very close to the optimum, and the\david{and so PPO...?} PPO works well in practice.
 
 % garance nejsou, proto testujeme empiricky
 Unfortunately, since we are using deep neural networks to approximate the policy, we cannot give any guarantees about the quality of the solution.
 We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
+\david{Tohle není ani tak problém s neuronkou, i když ta jistě nepomáhá, ale prostě s PPO. PPO nemá garance najít optimální policy (je to protože nemusí nutně prohledat všechno a to ani v tabular settingu. Zatímco epsilon-greedy garantovaně projde všechnov nekonečném čase nekonečně-krát a tak se jeho Q-value dostane na správnou hodnotu)}
 
 \section{Results}
 \label{sec:results}
@@ -370,7 +380,7 @@ We can only test the algorithm empirically, and compare it to the other approach
 % TODO: section intro
 
 % TODO: Metacentrum technical info
-
+\david{Tohle bych dal jako sekci / paragraf?}
 % TODO: experimenty jsou i z clankuu
 
 \subsection{Factory Game}
@@ -404,7 +414,8 @@ We can only test the algorithm empirically, and compare it to the other approach
 % TODO: explain.. Own section necessary?
 
 \subsection{Offline Beats Oracle}
-
+\david{Možná spíš offline vs oracle?}
+\david{Co takhle nějaký obrázek btw? Bych by tam graf (fuj) s těma našima algoritmama a v jakym vztahu jsou jejich trajektorie. Dost z toho by ale bylo ale prázdný, kdybys uvažovat konečný počet nasamplovaných her...}
 % TODO: re-introduce what it's about
 
 % TODO: explain l-inf
