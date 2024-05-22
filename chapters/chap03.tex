@@ -1,4 +1,4 @@
-\chapter{Tackling the Principal's Problems\david{19.5}}
+\chapter{Tackling the Principal's Problems\filip{22.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 \filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}
@@ -19,7 +19,7 @@ This is sometimes feasible, but only for very small instances, with very specifi
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
-This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers.\filip{citace}
+This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers (\cite{Bernoulli1713}).\filip{citace}
 \david{Citovat tohle je podle mě správné a je to cool}
 % @article{bernoulli1713ars,
 %   title={Ars conjectandi, opus posthumum: accedit tractatus de seriebus infinitis, et epistola Gallic{\`e} scripta de ludo pilae reticularis},
@@ -27,12 +27,13 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 %   journal={(No Title)},
 %   year={1713}
 % }
+\filip{otázka je co přesně chceme citovat... ty navrhuješ to úplně první objevení, což je asi cool, ale na druhou stranu tady to asi není dokázaný v moderním pojetí psti... ale asi je fakt že my zase nepotřebujeme přesně definovat tohle zrovna...}
 
 
 % pseudokód \algFO{}
 \begin{algor}{\label{alg:fo}\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
-  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.\martin{Neni vic language-agnostic rict array nez map?}\david{bych řekl právě naopak, ale znám jen python :)}\filip{Beru to tak že array je indexovanej číslama, mapa je indexovaná čímkoliv}\david{myslim, že mluvim i za Mistra když řeknu, že jestli jsi spoko se svou odpovědí, tak smaž naše komentáře. Je to tvoje bakalářka a my si to ještě nakonec celé stejne přečtem}
+  \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
     \State $ f_i \sim \fdist $
     \Indent For $ \s \subseteq \pot{N} \setminus \k: \absolute{\s} = \tau $:
@@ -42,7 +43,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
   \State $ \hat{\s_*} \gets \argmin_{\s} D[\s] $
 \end{algor}
 \martin{Nezabere mi krok 3 ještě $2^n$ času, stejně jako Thm 11 (offline greedy time complexity)? Nebo bereš samplování z orákula a nepočítáš tam složitost? Pochopil jsem potom důkaz Thm11 špatně?}
-\filip{Dobrej point. Já tu tiše předpokládám, že $ \divt (n) $ je aspoň $ 2^n $... Přidal jsem to tam explicitně jako předpoklad.}
+\filip{Dobrej point. Já tu tiše předpokládám, že $ \divt (n) $ je aspoň $ 2^n $... Přidal jsem to tam explicitně jako předpoklad.. už ok?}
 
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
@@ -237,6 +238,7 @@ Using this intuition, we can clearly see that the best thing the principal can h
 To get a lower bound on the online problem, then, we can give the principal an oracle, which tells her all the values in advance, and she can pick the best subset system accordingly.
 
 \begin{defi}[Oracle valuation]
+  \label{def:oracle-valuation}
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau \in \N $ a budget, and $ \k \supseteq \k_0 $ the initial information.
   For a given function $ f $, let \begin{equation}\label{eq:def-sf}
     \s_f \deq \argmin_{\s \subseteq \pot N \setminus \k: \absolute{\s} = \tau} \divg \ell {\k_- \cup \s}.
@@ -278,7 +280,7 @@ This yields the following algorithm.
 
 % we have the same problem as with the offline optimal -- time, hence greedy
 \begin{algor}{\algRO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
-  {$ O $, the (approximate) value of the oracle valuation.}
+  {$ \hat O $, the (approximate) value of the oracle valuation (\Cref{def:oracle-valuation}).}
   \State $ \hat O \gets 0 $
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
     \State $ f \sim \fdist $
@@ -297,7 +299,7 @@ That is once again double exponential in the size of the ground set $ n $ for $ 
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
 
 \begin{algor}{\algRG{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
-  {$ \hat{O} $, the (approximate) value of the oracle valuation.}
+  {$ \hat{O} $, the (approximate) value of the oracle valuation (\Cref{def:oracle-valuation}).}
   \State $ \hat{O} \gets 0 $
   \Indent For $ i \in \left\{ 1, 2, \ldots, \sigma \right\} $:
   \State $ f_i \sim \fdist $
@@ -313,7 +315,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
@@ -327,15 +329,15 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 \label{sec:ppo}
 
 % oracle je teorie, ppo je praktický
-\filip{tenhle odstavec je novej}
 We have introduced the oracle approach to find a provable lower bound on the online solution.
-However, in practice, the oracle algorithms are infeasible, as \david{they are assuming / they assume?}assuming we have access to all the values defeats the purpose of our approach in the first place.\david{nebál bych se tuhle větu rozdělit a tenhle point vypíchnout}
-To approximate the solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?} in practice, we thus turn to \emph{reinforcement learning}.
+However, in practice, the oracle algorithms are infeasible.
+This is because they assume we have access to all the values, which defeats the purpose of our approach in the first place.
+To approximate the solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\filip{na schůzce} in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
-We employ the PPO algorithm (\Cref{alg:ppo}) \david{citace, je to dlouho od doby co se o tom mluvilo}\filip{Stačí takhle jako ref do preliminaries?}\david{yop, skvělé, možná bych dodal see Alg X}.
+We employ the PPO algorithm (\Cref{alg:ppo}).
 For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
-As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.\david{Tyjo chtěl jsem zrovna říct, že tohle je dobře protože naše values nejsou nula, ale to vůbec není pravda! Tohle bysme měli nějak vymakat ještě...}
+As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.\david{Tyjo chtěl jsem zrovna říct, že tohle je dobře protože naše values nejsou nula, ale to vůbec není pravda! Tohle bysme měli nějak vymakat ještě...}\filip{jo to mě napadlo už před tím, ale přijde mi že není asi nějakej dobrej způsob jak to tomu PPO sdělit :D možná -1? ale nechal jsem to být s tím že on může furt vybírat dobrý akce pomocí tý masky...}
 This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
@@ -347,13 +349,10 @@ We handle this by \emph{masking} the actions that are not available, so the agen
 Assuming the size of the initial information $ \kappa $ is sub-exponential, the size of both the state and action space, and thus the size of the input and output of the neural network, is exponential in the size of the ground set $ n $.
 For larger $ n $, this makes the network struggle to make sense of all the information, increasing the number of epochs needed for training.
 One of the directions for future work is to find an architecture of the network which has the input and output encoded in such a way that its size becomes more managable, and thus the training is more stable as $ n $ increases.
-\david{epochy jsou jedna věc, ale tohle i dělá problém té neuronce, protože musí najedou aproximovat mega velkej prostor. Použít nějakou speciální architekturu zajistí, že tahle aproximace bude omezená na nějakou podobu a mohlo by výrazně pomoct.}\filip{jo tak jsem to chtěl napsat... přepsal jsem to, co ty na to teď?}
-\filip{Je to takhle řečeno ok?}
-\david{za mě hezký}
 
 % reward
 We have not yet discussed the reward function.
-In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.\david{řekl bych, že tahle reward function je sakra sparse, hlavně pro velké tau.}\filip{Co tohle:}\david{super}
+In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset system, and it should be received after revealing the $ \tau $-th subset.
 This means that the agent receives reward all the way at the end, giving him very little information about the performance of a specific action, espetially for large $ \tau $.
 In order to make the training more stable, we have decided to alter the reward function.
 We give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset system.
@@ -392,9 +391,29 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 
 \subsection{Factory Game}
 
-% TODO: factory game class
+% factory game class
+The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
+\filip{citace?}
+
+\begin{defi}[Factory game]
+  Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
+  Then a \emph{factory game} has a characteristic function $ v_o $ defined as \[
+    \fce{v_o}{S} \deq \begin{cases}
+      \absolute{S} - 1 & \text{if $ o \in S $,} \\
+      0                & \text{otherwise.}
+    \end{cases}
+  \]
+\end{defi}
+
+We imagine that this is a very simple model of a factory, with $ n-1 $ equally productive workers, and one owner of the factory.
+If the owner is present in the coalition, the workers are allowed to work in the factory, each producing a value of $ 1 $.
+Otherwise, the workers cannot work, and thus produce nothing.
+
+The point of this example is not to precisely model a real-world situation.
+It is rather to have a simple class of finite games with very simple structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
 
 % TODO: explain the observed
+From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we can clearly\filip{lol} see that
 
 \subsection{Supermodular}
 
@@ -420,9 +439,12 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 
 % TODO: explain.. Own section necessary?
 
-\subsection{Offline Beats Oracle}
+\subsection{Offline vs Oracle}
 \david{Možná spíš offline vs oracle?}
+\filip{Uuuuh, faaajn, ale offline beats oracle mi přišlo chytlavější teda xD}
+
 \david{Co takhle nějaký obrázek btw? Bych by tam graf (fuj) s těma našima algoritmama a v jakym vztahu jsou jejich trajektorie. Dost z toho by ale bylo ale prázdný, kdybys uvažovat konečný počet nasamplovaných her...}
+\filip{Jo obrázků plánuju pár, hlavně teda do preliminaries, ale tady by se něco taky určitě dalo. Nevím přesně co máš na mysli tímhle, ale můžeme se o tom pobavit na schůzce, aspoň bude co dělat lol :D}
 % TODO: re-introduce what it's about
 
 % TODO: explain l-inf
