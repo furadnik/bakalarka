@@ -365,9 +365,10 @@ This might lead the agent to behave in a greedy way.
 However, as mentioned above, and as the experimental results show, the greedy approaches are generally very close to the optimum, and the\david{and so PPO...?} PPO works well in practice.
 
 % garance nejsou, proto testujeme empiricky
-Unfortunately, since we are using deep neural networks to approximate the policy, we cannot give any guarantees about the quality of the solution.
+Unfortunately, while PPO works very well in practice, it does not have any guarantees about the optimality of the solution.
 We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
 \david{Tohle není ani tak problém s neuronkou, i když ta jistě nepomáhá, ale prostě s PPO. PPO nemá garance najít optimální policy (je to protože nemusí nutně prohledat všechno a to ani v tabular settingu. Zatímco epsilon-greedy garantovaně projde všechnov nekonečném čase nekonečně-krát a tak se jeho Q-value dostane na správnou hodnotu)}
+\filip{Přepsáno. Není blbý to mít takhle negativní ten poslední paragraf? :D}
 
 \section{Results}
 \label{sec:results}
