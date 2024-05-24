@@ -1,4 +1,4 @@
-\chapter{Tackling the Principal's Problems\filip{22.5}}
+\chapter{Tackling the Principal's Problems\david{24.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 \filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}
@@ -14,7 +14,7 @@ Further, we formally describe the time complexity of each algorithm, as it depen
 \section{Solutions to the Offline Problem}
 
 % offline problém řešíme optimálně, jen aproximujeme E
-To reach an exact optimal solution to the Offline principal's problem (\david{see }\filip{to nevím jestli chci. jinde to taky nemám. mám to dát všude?}\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
+To reach an exact optimal solution to the Offline principal's problem (\david{see }\filip{to nevím jestli chci. jinde to taky nemám. mám to dát všude?}\david{za mě to zní víc jako součást té věty, takže líp. Ale je to ok i bez toho.}\Cref{def:offline-pp}), we would need to compute the expectation $ \fceb{\E_{f \sim \fdist}}{\divg\ell{\k_- \cup \s}} $.
 This is sometimes feasible, but only for very small instances, with very specific and artificial distributions and divergence functions.
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
@@ -64,6 +64,7 @@ With this, we can analyze the time complexity of the \algFO{} algorithm.
 \filip{Formalize se mi nelíbí :(}
 \david{tak co třeb study the time complexity?}
 \filip{změnil jsem to na anaylze, lepší?}
+\david{awesome}
 \begin{thm}[\algFO{} time complexity]
   \label{thm:algfo-time-complexity}
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
@@ -174,7 +175,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}\filip{rozhodně ne xD}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}\filip{rozhodně ne xD}\david{tak nic xD Jen tohle je těžký číst}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset system, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
@@ -315,7 +316,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}}\david{Ok, hele já nejsem proti téhle formulaci, jen říkám, že mě to zmátlo.} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
@@ -338,6 +339,7 @@ To approximate the solution of a online problem which is usable\david{tohle mi n
 We employ the PPO algorithm (\Cref{alg:ppo}).
 For more details about the algorithm, see the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries.
 As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.\david{Tyjo chtěl jsem zrovna říct, že tohle je dobře protože naše values nejsou nula, ale to vůbec není pravda! Tohle bysme měli nějak vymakat ještě...}\filip{jo to mě napadlo už před tím, ale přijde mi že není asi nějakej dobrej způsob jak to tomu PPO sdělit :D možná -1? ale nechal jsem to být s tím že on může furt vybírat dobrý akce pomocí tý masky...}
+\david{Zkusim se nad tim ještě zamyslet. Možná by se dalo udělat to, že všechny hodnoty uděláme striktně pozitivní tak, že normalizace všude přičte additivní 1. Ale nevim nevim, zamyslim se}
 This precisely captures the state space defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
@@ -369,6 +371,7 @@ Unfortunately, while PPO works very well in practice, it does not have any guara
 We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
 \david{Tohle není ani tak problém s neuronkou, i když ta jistě nepomáhá, ale prostě s PPO. PPO nemá garance najít optimální policy (je to protože nemusí nutně prohledat všechno a to ani v tabular settingu. Zatímco epsilon-greedy garantovaně projde všechnov nekonečném čase nekonečně-krát a tak se jeho Q-value dostane na správnou hodnotu)}
 \filip{Přepsáno. Není blbý to mít takhle negativní ten poslední paragraf? :D}
+\david{Za mě je to takhle super, negativitu bych klidně nechal :D}
 
 \section{Results}
 \label{sec:results}
@@ -389,12 +392,14 @@ Finally, we show some examples documenting properties of the divergence already 
 The code for conducting the experiments was written in Python~3.10 using stable\_baselines3~2.0 (\cite{stable-baselines3}), gymnasium~0.28 (\cite{towers_gymnasium_2023}) and pytorch~2.0 (\cite{Ansel_PyTorch_2_Faster_2024}), and is available at \cite{gitrepo}.
 We ran all experiments on a cluster with AMD~EPYC~7532~CPUs running at 2.4~GHz.
 When running the experiments, we utilized 15~cores and 12~GB of RAM.
+\david{možná za něco málo o tom jak dlouho to běhalo?}
 
 \subsection{Factory Game}
 
 % factory game class
 The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
 \filip{citace?}
+\david{može být a nemusí}
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -412,6 +417,7 @@ Otherwise, the workers cannot work, and thus produce nothing.
 
 The point of this example is not to precisely model a real-world situation.
 It is rather to have a simple class of finite games with very simple structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
+\david{tohle bych ještě pomasíroval, ale pěkný}
 
 % TODO: explain the observed
 From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we can clearly\filip{lol} see that
@@ -443,9 +449,11 @@ From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we ca
 \subsection{Offline vs Oracle}
 \david{Možná spíš offline vs oracle?}
 \filip{Uuuuh, faaajn, ale offline beats oracle mi přišlo chytlavější teda xD}
+\david{Jakože zní to cool, ale ten title pak naznačuje, že je to takhle vždycky}
 
 \david{Co takhle nějaký obrázek btw? Bych by tam graf (fuj) s těma našima algoritmama a v jakym vztahu jsou jejich trajektorie. Dost z toho by ale bylo ale prázdný, kdybys uvažovat konečný počet nasamplovaných her...}
 \filip{Jo obrázků plánuju pár, hlavně teda do preliminaries, ale tady by se něco taky určitě dalo. Nevím přesně co máš na mysli tímhle, ale můžeme se o tom pobavit na schůzce, aspoň bude co dělat lol :D}
+\david{skvělé!}
 % TODO: re-introduce what it's about
 
 % TODO: explain l-inf
