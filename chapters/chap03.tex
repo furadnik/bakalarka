@@ -1,4 +1,4 @@
-\chapter{Tackling the Principal's Problems\david{24.5}}
+\chapter{Tackling the Principal's Problems\filip{29.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
 \filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}
@@ -7,7 +7,7 @@ We then examine the experimental results of those approaches.
 When describing the algorithms, we assume we have a distribution $ \fdist $ (given by the nature of the application) and a divergence function $ \ell $ (which we have chosen).
 Later, when discussing the results, we compare the performance of the algorithms on different distributions and divergence functions.
 
-In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} and \algRG{} algorithms, which have already been introduced in \cite{uradnik2024reducing}.
+In the following two subsections, we describe the \algFO{}, \algFG{}, \algRO{} and \algRG{} algorithms, which have already been introduced by \cite{uradnik2024reducing}.
 In this thesis, we extend the algorithms to a setting with a general divergence function and extend the intuition behind the definition of these algorithms.
 Further, we formally describe the time complexity of each algorithm, as it depends on the choice of the size of the budget, and we compare the solutions of these algorithms as they relate to one another, and to the Offline/Online principal's problems.
 
@@ -19,7 +19,7 @@ This is sometimes feasible, but only for very small instances, with very specifi
 We use a different approach, replacing the exact expectation with an \emph{approximated} expectation $ \fceb{\EE_{f \sim \fdist}}{\divg \ell {\k_- \cup \s}} $, which we compute by sampling $ \sigma $ samples from the distribution $ \fdist $.
 For each sample, we compute the divergence $ \divg \ell {\k_- \cup \s} $ for every possible choice of $ \s $ and average the results.
 Then, we choose the $ \s $ which gives the smallest average divergence.
-This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers (\cite{Bernoulli1713}).\filip{citace}
+This approach doesn't guarantee the optimal solution, however, with $ \sigma $ large enough, the approximation converges to the optimal solution due to the law of large numbers \cite{Bernoulli1713}.\filip{citace}
 \david{Citovat tohle je podle mě správné a je to cool}
 % @article{bernoulli1713ars,
 %   title={Ars conjectandi, opus posthumum: accedit tractatus de seriebus infinitis, et epistola Gallic{\`e} scripta de ludo pilae reticularis},
@@ -333,7 +333,7 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 We have introduced the oracle approach to find a provable lower bound on the online solution.
 However, in practice, the oracle algorithms are infeasible.
 This is because they assume we have access to all the values, which defeats the purpose of our approach in the first place.
-To approximate the solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\filip{na schůzce} in practice, we thus turn to \emph{reinforcement learning}.
+To get a practical solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\filip{na schůzce} in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
 We employ the PPO algorithm (\Cref{alg:ppo}).
@@ -369,9 +369,6 @@ However, as mentioned above, and as the experimental results show, the greedy ap
 % garance nejsou, proto testujeme empiricky
 Unfortunately, while PPO works very well in practice, it does not have any guarantees about the optimality of the solution.
 We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
-\david{Tohle není ani tak problém s neuronkou, i když ta jistě nepomáhá, ale prostě s PPO. PPO nemá garance najít optimální policy (je to protože nemusí nutně prohledat všechno a to ani v tabular settingu. Zatímco epsilon-greedy garantovaně projde všechnov nekonečném čase nekonečně-krát a tak se jeho Q-value dostane na správnou hodnotu)}
-\filip{Přepsáno. Není blbý to mít takhle negativní ten poslední paragraf? :D}
-\david{Za mě je to takhle super, negativitu bych klidně nechal :D}
 
 \section{Results}
 \label{sec:results}
@@ -396,6 +393,15 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 
 \subsection{Factory Game}
 
+\begin{figure*}[t!]
+	\includegraphics[width=0.48\textwidth]{figures/factory5.pdf}
+	\includegraphics[width=0.48\textwidth]{figures/convex5.pdf}
+	\caption{
+    The utopian gap as a function of number of revealed coalitions on the {\tt factory}(5) (left), and {\tt supermodular}(5) (right) distributions of games \citep{uradnik2024reducing}.
+	}
+	\label{fig: exploitability over time}
+\end{figure*}
+
 % factory game class
 The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
 \filip{citace?}
@@ -419,14 +425,31 @@ The point of this example is not to precisely model a real-world situation.
 It is rather to have a simple class of finite games with very simple structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
 \david{tohle bych ještě pomasíroval, ale pěkný}
 
-% TODO: explain the observed
-From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we can clearly\filip{lol} see that
+% TODO: factory distribution
+
+% explain the observed
+From \Cref{fig: exploitability over time}~(left), we can see that all our proposed algorithms outperform the random approach, where each coaition is chosen uniformly at random from the as of yet unknown coalitions.
+Further, there is a noticable difference between the performance of the offline and oracle optimal algorithms.
+As expected, the PPO algorithm starts off identical to the offline algorithm, and, as it gains information about the specific game drawn from the distribution, it starts to behave close to the oracle algorithms.
+
+% TODO: greedy aint optimal
+Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
+Even though for the factory distribution, the greedy and optimal algorithms are close to each other, around step $ 5 $, the oracle optimal algorithm is in fact strictly better than its greedy counterpart.
+The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible factory games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}
 
 \subsection{Supermodular}
 
-% TODO: remind what supermodular is
+% remind what supermodular is
+The class of supermodular functions/games is videly studied in many fields, espetially in cooperative game theory.
+This leads us to investigating of what our Divergence, and Utopian Gap espetially, can tell us about the structure of this class.
+We study a uniform distribution of supermodular games on $ n $ players, with the value of the grand coalition $ N $ set to $ 1 $\filip{masirovat}, which we call \filip{TODO}.
+In our experiments, to generate a supermodular game uniformly at random, we have used the work of \filip{TODO}.
+The results of those experiments are presented in \Cref{fig: exploitability over time}~(right).
 
-% TODO: explain the observed
+% explain the observed
+To our surprise, our algorithms work remarkably well on the \filip{TODO} distribution, vastly outperforming the random approach, and all achieving over 99~\% of Gap reduction with just the budget of five coalitions.
+Also, interestingly, there is no difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the Gap.
+We investigate these findings further in \Cref{ssec:largest}.
 
 \subsection{L1 Norm}
 
@@ -436,15 +459,15 @@ From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we ca
 
 \subsection{Largest Coalition Heuristic}
 
+\label{ssec:largest}
+\filip{co dát tohle úplně na konec, ať je to jako happy end? :D}
+
 % TODO: explain motivation
 
 % TODO: comment on performance
 
 % TODO: explain why
 
-\subsection{Greedy Isn't Optimal}
-
-% TODO: explain.. Own section necessary?
 
 \subsection{Offline vs Oracle}
 \david{Možná spíš offline vs oracle?}
@@ -460,3 +483,4 @@ From figure \filip{ještě jsem se nedostal k tomu dát sem obrázky lol}, we ca
 
 % TODO: explain why
 
+\filip{schůzka: nevím kolik a na co tam chceme dát ty obrázky přes celou stránku}
