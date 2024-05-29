@@ -175,7 +175,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $\david{možná bych z toho vykuchal ty podstatné faktory?}\filip{nechápu. prostě zahodit ty ostatní faktory nejde, to pak nebude správně}\david{Ty furt s tou správností xD Nešlo by tomu říkat $O(2^{2^n})$?}\filip{rozhodně ne xD}\david{tak nic xD Jen tohle je těžký číst}, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset system, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
