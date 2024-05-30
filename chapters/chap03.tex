@@ -432,7 +432,7 @@ From \Cref{fig: exploitability over time}~(left), we can see that all our propos
 Further, there is a noticable difference between the performance of the offline and oracle optimal algorithms.
 As expected, the PPO algorithm starts off identical to the offline algorithm, and, as it gains information about the specific game drawn from the distribution, it starts to behave close to the oracle algorithms.
 
-% TODO: greedy aint optimal
+% greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
 Even though for the factory distribution, the greedy and optimal algorithms are close to each other, around step $ 5 $, the oracle optimal algorithm is in fact strictly better than its greedy counterpart.
 The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible factory games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}
@@ -451,11 +451,19 @@ To our surprise, our algorithms work remarkably well on the \filip{TODO} distrib
 Also, interestingly, there is no difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the Gap.
 We investigate these findings further in \Cref{ssec:largest}.
 
-\subsection{L1 Norm}
+\subsection{L Norms}
 
 % TODO: ell = l_1
+So far, we have seen how our algorithms behave through the lens of cooperative games, with Utopian Gap as the Divergence.
+In this chapter, we broaden the scope to general set functions.
+Now, instead of being interested in the ambiguity of the Shapley value (which is what the Gap measures), we will use the more generally used $ L_k $-norms as the Divergence function $ \ell $.
+The Divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the Divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.
 
 % TODO: co to dělá
+We have conducted the experiments with the $ L_1 $ and $ L_2 $ norms, as those are the most commonly used and with a clear and natural interpretation.\filip{tohle "interpretation" vysvětlit dál, nebo odcitovat?}
+The results of those experiments on the factory and supermodular distributions are presented in \Cref{fig:l12}.
+Perhaps surprisingly, the results are very similar to those with the Utopian Gap.
+\filip{nevim co dál k tomuhle}
 
 \subsection{Largest Coalition Heuristic}
 
