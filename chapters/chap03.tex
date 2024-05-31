@@ -1,7 +1,7 @@
 \chapter{Tackling the Principal's Problems\filip{29.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
-\filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}
+\filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}\martin{Za mě obě varianty ok.}
 In this chapter, we first define the different approaches to solving, or approximately solving, the Online and Offline Principal's problems.
 We then examine the experimental results of those approaches.
 When describing the algorithms, we assume we have a distribution $ \fdist $ (given by the nature of the application) and a divergence function $ \ell $ (which we have chosen).
@@ -43,7 +43,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
   \State $ \hat{\s_*} \gets \argmin_{\s} D[\s] $
 \end{algor}
 \martin{Nezabere mi krok 3 ještě $2^n$ času, stejně jako Thm 11 (offline greedy time complexity)? Nebo bereš samplování z orákula a nepočítáš tam složitost? Pochopil jsem potom důkaz Thm11 špatně?}
-\filip{Dobrej point. Já tu tiše předpokládám, že $ \divt (n) $ je aspoň $ 2^n $... Přidal jsem to tam explicitně jako předpoklad.. už ok?}
+\filip{Dobrej point. Já tu tiše předpokládám, že $ \divt (n) $ je aspoň $ 2^n $... Přidal jsem to tam explicitně jako předpoklad.. už ok?} \martin{Už jsem zapomněl, co mi tu vadilo, takže asi ok. =D}
 
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
@@ -195,7 +195,7 @@ This can be overcome by either approximating the distribution, and computing the
 When solving the \nameref{def:offline-pp}, we perform an exhaustive search over the domain, or the set of all possible subsets.
 Though this is double-exponential in the number of players in the worst case, it is at least finite.
 In contrast, a solution of the \nameref{def:online-pp} (\Cref{def:online-pp}) is a \emph{policy}, a function that maps the current state to a distribution over the next actions, minimizing the final expected divergence.
-The domain of the online problem then is the set of all policies, which is uncounably infinite, and due to that fact, an exhaustive search becomes infeasible.
+The domain of the online problem then is the set of all policies, which is uncounably \martin{uncountably} infinite, and due to that fact, an exhaustive search becomes infeasible.
 
 Instead of finding a solution to the online problem, in this section, we strive to at least bound its optimum.
 An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, since the offline solition can be seen as a policy where the online information is just ignored.
@@ -267,12 +267,12 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
     \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
   \]
-  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\filip{eeeh.. já nevim... ale ok}\Cref{eq:def-sf}).
-  As such, the same can be said for the expected value over the trajectory, which is exactly the valuation of $ \pi^* $. \[
+  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\filip{eeeh.. já nevim... ale ok}\martin{Já Eq. nemám rád, preferuji (3.1)), ale viděl jsem i Eq.}\Cref{eq:def-sf}).
+  As such, the same can be said for the expected value over the trajectory \martin{trajectories? Jako dává mi smysl říct to i to, asi.}, which is exactly the valuation of $ \pi^* $. \[
     \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
   \]
   This holds for every $ f $, so it must also hold in expectation over $ \fdist $, which is what we wanted to prove.
-  \filip{Je tohle dost OK co se formalismu týče? (Otázka hlavně na Mistra, promiň Davide :D)}\david{za mě je to až moc fotmální. Celý ten statement je podle mě triviální...}
+  \filip{Je tohle dost OK co se formalismu týče? (Otázka hlavně na Mistra, promiň Davide :D)}\david{za mě je to až moc fotmální. Celý ten statement je podle mě triviální...}\martin{Za mě takto dostatečné.}
 \end{proof}
 
 % oracle optimal
@@ -316,7 +316,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}}\david{Ok, hele já nejsem proti téhle formulaci, jen říkám, že mě to zmátlo.} on the valuation of \algRO{}, as here the subset systems considered here for the optimal valuation are a subset of those considered in \algRO{}.
+The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}}\david{Ok, hele já nejsem proti téhle formulaci, jen říkám, že mě to zmátlo.} on the valuation of \algRO{}, as here the subset systems considered here \martin{dvakrát here} for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
