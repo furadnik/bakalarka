@@ -453,7 +453,7 @@ We investigate these findings further in \Cref{ssec:largest}.
 
 \subsection{L Norms}
 
-% TODO: ell = l_1
+% ell = l_1
 So far, we have seen how our algorithms behave through the lens of cooperative games, with Utopian Gap as the Divergence.
 In this chapter, we broaden the scope to general set functions.
 Now, instead of being interested in the ambiguity of the Shapley value (which is what the Gap measures), we will use the more generally used $ L_k $-norms as the Divergence function $ \ell $.
@@ -470,12 +470,21 @@ Perhaps surprisingly, the results are very similar to those with the Utopian Gap
 \label{ssec:largest}
 \filip{co dát tohle úplně na konec, ať je to jako happy end? :D}
 
-% TODO: explain motivation
+% explain motivation
+In the previous sections, we have seen that our methods work remarkably well on the uniform supermodular distribution for $ n=5 $.
+Furthermore, all the algorithms end up choosing the same actions: revealing all the subsets\footnote{or coalitions, but I will stick to the more general set function terminology in this section} of size $ n-1 $.
+After those are revealed, the Divergence decreases by about 99 \% (depending on the choice of $ \ell $).
+This lead us to propose the heuristic we call the Largest Coalitions, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
 
-% TODO: comment on performance
+% comment on performance
+\Cref{fig:largest} shows the performance of this heuristic with the Utopian Gap, and the $ L_1 $-Divergence for increasing $ n $.
+In order to make the results comparable, we normalize the results by the initial Divergence (Gap), i.e. when $ \k = \k_0 $.
+Unfortunately, we cannot compare the heuristic to the performance of the optimal algorithms, as that is computationally expensive, so we instead compare it only with the Random strategy.
 
 % TODO: explain why
-
+Surprisingly, while the normalized Divergence increases for the Random strategy as $ n $ grows, for our Largest Coalitions heuristic it stays the same, or even decreases, as \Cref{fig:largest} shows.
+To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution, and we have found that the values decrease exponentially with the size of the subset.
+This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.\filip{Jak moc to tu chci vysvětlovat?}
 
 \subsection{Offline vs Oracle}
 \david{Možná spíš offline vs oracle?}
@@ -485,9 +494,18 @@ Perhaps surprisingly, the results are very similar to those with the Utopian Gap
 \david{Co takhle nějaký obrázek btw? Bych by tam graf (fuj) s těma našima algoritmama a v jakym vztahu jsou jejich trajektorie. Dost z toho by ale bylo ale prázdný, kdybys uvažovat konečný počet nasamplovaných her...}
 \filip{Jo obrázků plánuju pár, hlavně teda do preliminaries, ale tady by se něco taky určitě dalo. Nevím přesně co máš na mysli tímhle, ale můžeme se o tom pobavit na schůzce, aspoň bude co dělat lol :D}
 \david{skvělé!}
-% TODO: re-introduce what it's about
+
+% re-introduce what it's about
+In the above sections, we have proven many statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
+The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
+One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
+This has been the case in all the figures we have seen so far.
+However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
+Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
+  \fce {L_\infty} x \deq \max_i x_i.
+\]
 
 % TODO: explain why
 
