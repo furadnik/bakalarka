@@ -1,7 +1,7 @@
 \chapter{Tackling the Principal's Problems\filip{29.5}}
 
 \filip{Používám "subset" pro $ S \subseteq N $. Co mám používat pro $ \s \subseteq \pot N $? Zatím používám coalition structure, protože tak se tomu říká v CGT. Ale jak v set funkcích zatím nevím. Subset structure? to by kdyžtak chtělo asi definovat někde}\david{Subset structure se mi líbí, ale možná Mistr bude mít i lepší název. Každopádně souhlas, stojí to rozhodně za definici, někde v preliminaries?}\filip{OK, sounds good. Počkáme ještě co Mistr k tomu}
-\filip{Tak jsem přešel na subset system, ale moc se mi to nelíbí... Mistře?}\martin{Za mě obě varianty ok.}
+\filip{Tak jsem přešel na subset structure, ale moc se mi to nelíbí... Mistře?}\martin{Za mě obě varianty ok.}
 In this chapter, we first define the different approaches to solving, or approximately solving, the Online and Offline Principal's problems.
 We then examine the experimental results of those approaches.
 When describing the algorithms, we assume we have a distribution $ \fdist $ (given by the nature of the application) and a divergence function $ \ell $ (which we have chosen).
@@ -48,7 +48,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
 We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} \david{co takhle We will denote the time complexity of computing the divergence given by a specific $l$ as ...}\filip{furt mi přijde jako že by hodně prospělo mít lepší jméno než divergence fn} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
-For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible subset system of size $ \tau $.
+For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible subset structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 We further assume that this is $ \fce{\Omega}{2^n} $, which is motivated by the fact that the divergence should take into account all the values of coalitions.
 This again holds for every considered divergence function, and it simplifies the resulting time complexity bound.
@@ -73,8 +73,8 @@ With this, we can analyze the time complexity of the \algFO{} algorithm.
 \end{thm}
 
 \begin{proof}
-  The algorithm iterates over $ \sigma $ samples, for each sample it computes the divergence for every possible subset system of size $ \tau $.
-  The number of possible subset systems of size $ \tau $ is $ \binom{2^n-\kappa}{\tau} $.
+  The algorithm iterates over $ \sigma $ samples, for each sample it computes the divergence for every possible subset structure of size $ \tau $.
+  The number of possible subset structures of size $ \tau $ is $ \binom{2^n-\kappa}{\tau} $.
   The time complexity of computing the divergence is $ \fce\divt{n} $.
   Therefore, the time complexity of the \algFO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-\kappa}{\tau} \cdot \fce\divt{n}} $.
 \end{proof}
@@ -169,7 +169,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \begin{proof}
   First, we sample $ \sigma $ games (we assume sampling of a single game takes $ \fce\O{2^n} $, i.e. constant time for each subset).
   The algorithm iterates over $ \tau $ timesteps. 
-  In each timestep, we compute the argmin, which translates to going over all viable subset systems, of which there are $ 2^n-\kappa $.
+  In each timestep, we compute the argmin, which translates to going over all viable subset structures, of which there are $ 2^n-\kappa $.
   For each subset, we compute the divergence in each sample, reaching $ \sigma \cdot \fce\divt{n} $.
   Putting it all together, we get the required time complexity.
 \end{proof}
@@ -178,12 +178,12 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
-One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset system, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
-We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best subset system in each timestep.
+One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
+We can still parallelize the computation of divergences for each sample, but we have to synchronize the computation of the best subset structure in each timestep.
 This gives slightly bigger overhead, but it is still considerably faster than the \algFO{} algorithm, due to the far better overall time complexity.
 
 % k čemu to je vlastně?
-The offline principal's problem seeks to find a subset system that yields the best approximation of the underlying function, on average.
+The offline principal's problem seeks to find a subset structure that yields the best approximation of the underlying function, on average.
 We study it with the hope that it gives us insight into what subsets are important for a given class of set functions.
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.
@@ -205,7 +205,7 @@ This is formalised in the following \namecref{thm:online-bound-offline}.
 \begin{thm}[Offline bounds online]
   \label{thm:online-bound-offline}
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $ a budget, and $ \k \supseteq \k_0 $ the initial information.
-  Further, let $ \s^* $ be the optimal subset system of the corresponding \nameref{def:offline-pp} and $ \pi^* $ be the optimal policy of the corresponding \nameref{def:online-pp}.
+  Further, let $ \s^* $ be the optimal subset structure of the corresponding \nameref{def:offline-pp} and $ \pi^* $ be the optimal policy of the corresponding \nameref{def:online-pp}.
   Then \[
     \E_{f \sim \fdist} \val \tau \ell f \k {\pi^*} \leq \E_{f \sim \fdist} \divg \ell {\k_- \cup \s^*},
   \]

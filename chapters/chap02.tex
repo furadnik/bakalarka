@@ -129,23 +129,28 @@ For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote 
 This is exactly the $ L_k $-lenght of the longest diagonal in the hyperrectangle defined by the values of the upper and lower functions,
 when viewed as $ 2^n $-dimensional vectors.\david{tohle by asi chtělo ještě rozepsat a říct jak tenhle rectangle nemusí obsahovat jen extenze atd.}
 
-\subsection{Utopian Gap}
+% TODO: properties of divg? aspoň to že je monotonně klesající
+
+
+\subsection{Utopian Gap\filip{31.5}}
 
 The divergence is a generalization of the so-called \emph{utopian gap} we have introduced in \cite{uradnik2024reducing}.
-It has an interpretation in cooperative game theory, where the upper and lower functions are bounds on the characteristic function $ v $ of a cooperative game.
-There, we want to split the value of $ \fce{v}{N} $ fairly among the players, using the Shapley value.
+The motivation for the utopian gap stems from cooperative game theory.
+In that context, the upper and lower functions are bounds on the characteristic function $ v $ of some cooperative game.
+We want to split the value of $ \fce{v}{N} $ fairly among the players using the Shapley value.
 However, the Shapley value requires all the values of $ v $ to be known.
 
+\filip{odsud dolů je to přepsaný}
 One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $ (we assume it is known that $ v $ is superadditive).
-However, then each player has an incentive to choose the function which gives him the highest payoff, and without knowing the true value of $ v $,
-there is no way to tell which choice is the most reasonable.
-Hence the utopian gap defined to measure the difference between the players' choices, and the real value of $ v $.
+However, without knowing the true value of $ v $, there is no way to tell which choice is the most reasonable.
+Each player then chooses the function which gives him the highest payoff, let us call it $ v_i $, and demands the payoff of $ \shapley[i] {v_i} $.
+The utopian gap measures the difference between what the players collectively demand, and what is available to give out.
 
 \begin{defi}[Utopian gap]
   \label{def:gap}
   Let $ \left( N, \k, v \right) $ be an incomplete cooperative game.
-  The \emph{utopian gap} of a cooperative game $ v $ is \[
-    \dist v \deq \sum_{i \in N} \shapley[i] {v_i} - \fce{v}{N},
+  The \emph{(cumulative) utopian gap} of a cooperative game $ v $ is \[
+    \gap v \deq \sum_{i \in N} \shapley[i] {v_i} - \fce{v}{N},
   \]
   where $ v_i $ is the \emph{utopian game} of player $ i $, defined as \[
     \fce{v_i}{S} \deq \begin{cases}
@@ -155,9 +160,35 @@ Hence the utopian gap defined to measure the difference between the players' cho
   \]
 \end{defi}
 
-\david{ukázat jak to souvisí s divergencí (aka Mistrovo lemma) a tím pádem že to má hezké vlastnosti?}
+% v_i je definovaná správně
+First, notice that the definition of $ v_i $ is phrased differently than what we discussed in the motivation above.
+It is not at all obvious at first that this $ v_i $ should maximize player $ i $'s profit.
+However, it becomes clear when one remembers that the Shapley value is a weighted sum of the differences $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $ for all $ S \subseteq N \setminus \left\{ i \right\} $, so the former quantity we aim to maximize, while the latter is to be minimized.
+This statement was first given by \cite{uradnik2024reducing} as follows.
 
-% TODO: properties of UG? aspoň to že je monotonně klesající
+\begin{lemma}[\cite{uradnik2024reducing}, Proposition 3.4]
+  Let $ \left( N, \k, v \right) $ be a superadditive incomplete game.
+  Then the utopian gap is \[
+    \gap v = \sum_{i \in N}^{} \shapley[i] {v_i} - \fce{v}{N} = \sum_{S \subseteq N}^{} \alpha_S \beta_\k^S - \fce{v}{N},
+  \]
+  where $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
+\end{lemma}
+
+% TODO: Mistrovo lemma že gap je divergence
+% \david{ukázat jak to souvisí s divergencí (aka Mistrovo lemma) a tím pádem že to má hezké vlastnosti?}
+Interestingly, this statement further offers a connection between the gap and our divergence, which we formalize thusly.
+
+\begin{prop}[Gap is divergence]
+  Let $ \left( N, \k, v \right) $ be a superadditive incomplete game.
+  Then it holds \[
+    \gap v = \divg[v] {\ell_g}\k,
+  \]
+  where \[
+    \fce{\ell_g}{\uf v, \lf v} \deq \sum_{S \subseteq N}^{} \alpha_S \beta_\k^S - \fce{v}{N},
+  \]
+  further $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
+\end{prop}
+\filip{tohle je konec úprav. Tohle proposition nevím jestli sem dávat takhle extra, nebo jen říct "z toho vidíme že gap je divergence"}
 
 \section{Principal's Problems}
 
