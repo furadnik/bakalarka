@@ -267,12 +267,12 @@ The oracle valuation is exactly the lower bound we described above, as the follo
   For each trajectory $ S_1, \ldots, S_\tau $, the following holds \[
     \divg \ell {\k_- \cup \left\{ S_1, \ldots, S_\tau \right\}} \geq \divg \ell {\k_- \cup \s_f},
   \]
-  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\filip{eeeh.. já nevim... ale ok}\martin{Já Eq. nemám rád, preferuji (3.1)), ale viděl jsem i Eq.}\Cref{eq:def-sf}).
-  As such, the same can be said for the expected value over the trajectory \martin{trajectories? Jako dává mi smysl říct to i to, asi.}, which is exactly the valuation of $ \pi^* $. \[
+  from the definition of $ \s_f $ (\david{když píšeš Theorem XY, dal bych i Eq. Z}\filip{eeeh.. já nevim... ale ok}\martin{Já Eq. nemám rád, preferuji (3.1)), ale viděl jsem i Eq.}\david{Tady se původně jednalo (jestli si to pamatuju dobře) o velké písmeno. Nejsem proti Equation.}\Cref{eq:def-sf}).
+  As such, the same can be said for the expected value over the trajectory \martin{trajectories? Jako dává mi smysl říct to i to, asi.}\david{Hmm nevim tyjo, taky mi přijde obojí ok. Asi trajectory je trochu lepší, protože to množné číslo může někoho zmást co přesně je tam víckrát (gra, víc algoritmů atd.)?}, which is exactly the valuation of $ \pi^* $. \[
     \val \tau \ell f \k {\pi^*} \geq \divg \ell {\k_- \cup \s_f}.
   \]
   This holds for every $ f $, so it must also hold in expectation over $ \fdist $, which is what we wanted to prove.
-  \filip{Je tohle dost OK co se formalismu týče? (Otázka hlavně na Mistra, promiň Davide :D)}\david{za mě je to až moc fotmální. Celý ten statement je podle mě triviální...}\martin{Za mě takto dostatečné.}
+  \filip{Je tohle dost OK co se formalismu týče? (Otázka hlavně na Mistra, promiň Davide :D)}\david{za mě je to až moc fotmální. Celý ten statement je podle mě triviální...}\martin{Za mě takto dostatečné.}\david{Jupí! :D}
 \end{proof}
 
 % oracle optimal
@@ -333,7 +333,7 @@ For more details, see the \nameref{sec:results}~\namecref{sec:results}.
 We have introduced the oracle approach to find a provable lower bound on the online solution.
 However, in practice, the oracle algorithms are infeasible.
 This is because they assume we have access to all the values, which defeats the purpose of our approach in the first place.
-To get a practical solution of a online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\filip{na schůzce} in practice, we thus turn to \emph{reinforcement learning}.
+To get a practical solution of a \martin{an} online problem which is usable\david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\filip{na schůzce}\martin{vyřešte to, zní to divně} in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
 We employ the PPO algorithm (\Cref{alg:ppo}).
@@ -370,7 +370,7 @@ However, as mentioned above, and as the experimental results show, the greedy ap
 Unfortunately, while PPO works very well in practice, it does not have any guarantees about the optimality of the solution.
 We can only test the algorithm empirically, and compare it to the other approaches, to see how well it performs.
 
-\section{Results}
+\section{Results\david{Co z tohohle udělat chapter?}}
 \label{sec:results}
 
 % section intro
@@ -428,27 +428,27 @@ It is rather to have a simple class of finite games with very simple structure, 
 % TODO: factory distribution
 
 % explain the observed
-From \Cref{fig: exploitability over time}~(left), we can see that all our proposed algorithms outperform the random approach, where each coaition is chosen uniformly at random from the as of yet unknown coalitions.
-Further, there is a noticable difference between the performance of the offline and oracle optimal algorithms.
-As expected, the PPO algorithm starts off identical to the offline algorithm, and, as it gains information about the specific game drawn from the distribution, it starts to behave close to the oracle algorithms.
+From \Cref{fig: exploitability over time}~(left), we can see that all our proposed algorithms outperform the random approach, where each coaition\david{coalition} is chosen uniformly at random from the as of yet unknown coalitions.
+Further, there is a noticable\david{noticeable} difference between the performance of the offline and oracle optimal algorithms.
+As expected, the PPO algorithm starts off identical\david{tohle je dost silný slovo} to the offline algorithm, and, as it gains information about the specific game drawn from the distribution, it starts to behave close to the oracle algorithms.\david{tohle větu bych rozdělil na dvě a explicitně vypíchnul, že je lepší než offline a blíží se k oracle}
 
 % greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
-Even though for the factory distribution, the greedy and optimal algorithms are close to each other, around step $ 5 $, the oracle optimal algorithm is in fact strictly better than its greedy counterpart.
-The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible factory games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}
+Even though for the factory distribution, the greedy and optimal algorithms are close to each other, around step $ 5 $\david{$t=5$?}, the oracle optimal\david{proč ne to divný písmo?} algorithm is in fact strictly better than its greedy counterpart.
+The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible factory games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}\david{jn}
 
 \subsection{Supermodular}
 
 % remind what supermodular is
-The class of supermodular functions/games is videly studied in many fields, espetially in cooperative game theory.
-This leads us to investigating of what our Divergence, and Utopian Gap espetially, can tell us about the structure of this class.
-We study a uniform distribution of supermodular games on $ n $ players, with the value of the grand coalition $ N $ set to $ 1 $\filip{masirovat}, which we call $ \supermodular $.
+The class of supermodular functions/games is videly\david{widely} studied in many fields, espetially\david{especially} in cooperative game theory.
+This leads us to investigating of what our Divergence, and Utopian Gap espetially\david{especially}, can tell us about the structure of this class.
+We study a uniform distribution of \david{monotone?} supermodular games on $ n $ players, with the value of the grand coalition $ N $ set to $ 1 $\filip{masirovat}\david{Jn, tohle je horši než poslední masáž}, which we call $ \supermodular $.
 In our experiments, to generate a supermodular game uniformly at random, we have used the work of \filip{TODO}.
 The results of those experiments are presented in \Cref{fig: exploitability over time}~(right).
 
 % explain the observed
-To our surprise, our algorithms work remarkably well on the $ \supermodular $ distribution, vastly outperforming the random approach, and all achieving over 99~\% of Gap reduction with just the budget of five coalitions.
-Also, interestingly, there is no difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the Gap.
+To our surprise, our algorithms work remarkably well on the $ \supermodular $ distribution, vastly outperforming the random approach, and all achieving over 99~\% of Gap reduction with just the budget of five\david{tohle už je pro $n=5$} coalitions.
+Also, interestingly, there is no\david{moc silné slovo} difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the Gap.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \subsection{$ L_k $ Norms}
@@ -456,35 +456,38 @@ We investigate these findings further in \Cref{ssec:largest}.
 % ell = l_1
 So far, we have seen how our algorithms behave through the lens of cooperative games, with Utopian Gap as the Divergence.
 In this chapter, we broaden the scope to general set functions.
-Now, instead of being interested in the ambiguity of the Shapley value (which is what the Gap measures), we will use the more generally used $ L_k $-norms as the Divergence function $ \ell $.
-The Divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the Divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.
+Now, instead of being interested in the ambiguity of the Shapley value (which is what the Gap measures), we will use the more generally used\david{2x use} $ L_k $-norms as the Divergence function $ \ell $.
+The Divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the Divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.\david{Co takhle tohle otočit - the divergence measures the l..., see section XY for details? To tvoje trochu zní jako "vím, že si to už nepamatuješ, tak ti to zopakuju jako debilovi" :D}
 
 % TODO: co to dělá
-We have conducted the experiments with the $ L_1 $ and $ L_2 $ norms, as those are the most commonly used and with a clear and natural interpretation.\filip{tohle "interpretation" vysvětlit dál, nebo odcitovat?}
-The results of those experiments on the factory and supermodular distributions are presented in \Cref{fig:l12}.
+We have conducted the experiments with the $ L_1 $ and $ L_2 $ norms, as those are the most commonly used and with a clear and natural interpretation.\filip{tohle "interpretation" vysvětlit dál, nebo odcitovat?}\david{Za mě asi není třeba. Můžeš říct, že čekáme, že nevidíme důvod, proč se naše závěry nebudou vztahovat na vyšší normy, krom té nekonečné.}
+The results of those experiments on the factory and supermodular\david{proč ne divný písmo?} distributions are presented\david{shown?} in \Cref{fig:l12}.
 Perhaps surprisingly, the results are very similar to those with the Utopian Gap.
 \filip{nevim co dál k tomuhle}
+\david{můžeš se odkázat na Mistrovo lemma o vztahu divergence a gapu. Z toho pak plyne, že zjevně až tak nezáleží na těch hodnotách "koalic střední velikosti"? Ale já myslel, že na factory ten náš přístup moc nefungoval ne?}
 
 \subsection{Largest Coalition Heuristic}
 
 \label{ssec:largest}
 \filip{co dát tohle úplně na konec, ať je to jako happy end? :D}
+\david{jako klidně :D}
 
 % explain motivation
 In the previous sections, we have seen that our methods work remarkably well on the uniform supermodular distribution for $ n=5 $.
-Furthermore, all the algorithms end up choosing the same actions: revealing all the subsets\footnote{or coalitions, but I will stick to the more general set function terminology in this section} of size $ n-1 $.
+Furthermore, all the algorithms end up choosing the same actions: revealing all the subsets\footnote{\david{tohle by měla být věta, tj velké písmeno a tečka} or coalitions, but I will stick to the more general set function terminology in this section} of size $ n-1 $.
 After those are revealed, the Divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 This lead us to propose the heuristic we call the Largest Coalitions, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
+\david{Co takhle tohle podat jinak. Řekněme, že chceme vědět co je zajímavé na struktuře nějaké třídy set fcí. Ale co takhle otázka jako vůbec znamená? Jak to zjistit? Jeden způsob je ten náš - vezmeš tu třídu, použiješ naše algoritmy a podíváš se to to dělá. Jeden případ, kdy je ta strategie mega hezky interpretovatelná je supermodular, kdy je fakt jednoduchá. No a teď to zkusíš generalizovat tam, kam se žádný počítač nikdy nedostane. A hele, ono to dělá něco lepšího!}
 
 % comment on performance
 \Cref{fig:largest} shows the performance of this heuristic with the Utopian Gap, and the $ L_1 $-Divergence for increasing $ n $.
 In order to make the results comparable, we normalize the results by the initial Divergence (Gap), i.e. when $ \k = \k_0 $.
-Unfortunately, we cannot compare the heuristic to the performance of the optimal algorithms, as that is computationally expensive, so we instead compare it only with the Random strategy.
+Unfortunately, we cannot compare the heuristic to the performance of the optimal algorithms, as that is computationally expensive, so we instead compare it only with the Random strategy.\david{možná zas odkaz na komplexitu optimal algorithmu?}
 
 % TODO: explain why
-Surprisingly, while the normalized Divergence increases for the Random strategy as $ n $ grows, for our Largest Coalitions heuristic it stays the same, or even decreases, as \Cref{fig:largest} shows.
-To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution, and we have found that the values decrease exponentially with the size of the subset.
-This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.\filip{Jak moc to tu chci vysvětlovat?}
+Surprisingly, while the normalized Divergence increases for the Random strategy as $ n $ grows, for our Largest Coalitions heuristic it stays the same, or even decreases\david{tečka, zbytek navíc}, as \Cref{fig:largest} shows.
+To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution,\david{tečka?} and we have found that the values decrease exponentially\david{je tohle fakt pravda? není to prostě že se zmenšujou rychle?} with the size of the subset.
+This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.\filip{Jak moc to tu chci vysvětlovat?}\david{podle mě nechceš.}
 
 \subsection{Offline vs Oracle}
 % TODO: offline beats oracle?
@@ -493,10 +496,10 @@ This explains the good performance of our heuristic, as choosing large subsets l
 % \david{Jakože zní to cool, ale ten title pak naznačuje, že je to takhle vždycky}
 
 % re-introduce what it's about
-In the above sections, we have proven many statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
+In the above sections, we have proven many\david{various? tohle je zas trochu silné slovo možná} statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
 One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
-This has been the case in all the figures we have seen so far.
+This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
@@ -507,3 +510,4 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 % TODO: explain why
 
 \filip{schůzka: nevím kolik a na co tam chceme dát ty obrázky přes celou stránku}
+\david{Jn, ať to nepůsobí jako spam. Ale minimálně nějaký se tam hodí mi přijde. Mohlo by se na ně odkázat v té sekci o Largest Coalitions.}
