@@ -297,7 +297,7 @@ This brings us to the \algRG{} algorithm, which is a greedy approximation of the
 
 % RG je jako FG -- čas, prostor, všechno, a tím pádem skvělé
 \algRG{} is once again almost identical to \algFG{} (\Cref{alg:fg}), in the same way that the optimal variants were, hence we can use the same reasoning to approximate time complexity.
-The resulting value of the oracle valuation is once again clearly an upper bound\david{lower bound je zavádějící, protože lower divergence je lepší}\filip{ajo, má být upper bound ne? jakože celá fráze je upper bound on the valuation of ..., to je ok ne?}\david{když co je valuation? Víš co, já jsem zvyklý uvažovat o rewardech (jsem holt optimista). Pesimisti mají rádi lossy a tak by jim upper bound přišel asi víc fajn. Ale pro mě víc je lepší... :D Takže za mě ok, když řekneš přesně co je valuace. Nebo můžeš celou věc říct nějak nezávisle typu "the greedy algorithm is clearly outperformed by the optimal"}\filip{no ne, "valuation" je prostě to co vrací ty algoritmy. v definici toho algoritmu mám že vrací approximate value of the oracle valuation. To je něco co má svojí definici -- \Cref{def:oracle-valuation}}\david{Ok, hele já nejsem proti téhle formulaci, jen říkám, že mě to zmátlo.} on the valuation of \algRO{}, as the subset structures considered here for the optimal valuation are a subset of those considered in \algRO{}.
+Further, \algRG{} is again clearly outperformed by \algRO{}, as the subset structures considered here for the optimal valuation are a subset of those considered in \algRO{}.
 
 % greedy vs greedy neporovnatelný
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.

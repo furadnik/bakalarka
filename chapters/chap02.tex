@@ -8,7 +8,6 @@ However, as there are many of them, the characteristic function $ v $ is huge, r
 
 Without the knowledge of all the values in $ v $, they will not be able to compute the Shapley value.
 This gives rise to \emph{ambiguity} in the distribution of earnings -- a player may claim he's more valuable to the grand coalition than he actually is, requiring a bigger share of the profit.
-% TODO: fix cite -- special characters
 \cite{uradnik2024reducing} have proposed a framework where the players select a portion of coalitions for which to reveal the values, such that the ambiguity is minimized.
 In this thesis, we are extending this framework, both in theoretical and practical aspects, most notably by introducing the more general set functions.
 
@@ -132,7 +131,7 @@ when viewed as $ 2^n $-dimensional vectors.\david{tohle by asi chtělo ještě r
 % TODO: properties of divg? aspoň to že je monotonně klesající
 
 
-\subsection{Utopian Gap\filip{31.5}}
+\subsection{Utopian Gap}
 
 The divergence is a generalization of the so-called \emph{utopian gap} we have introduced in \cite{uradnik2024reducing}.
 The motivation for the utopian gap stems from cooperative game theory.
@@ -229,11 +228,7 @@ We call this approach the \emph{online principal's problem}, as the principal ut
 % formal def
 The formal definition of the online principal's problem is a bit more involved.
 Unlike the offline problem, here the solution will be a \emph{policy} $ \pi $, according to which the principal will choose the next values to reveal, based on the values she has already seen.
-This input of the policy are the known subsets $ \k $, their corresponding values of $ f $, and the remaining budget, or the number of steps left, $ \tau $
-\david{This policy takes as input the know values and the remaining steps?}
-\filip{To není úplně přesný žejo, protože ona potřebuje i ty hodnoty...}
-\david{Tohle nechápu, není "known value" přesně to, že dostaneš ty hodnoty?}
-.
+This input of the policy are the known subsets $ \k $, their corresponding values of $ f $, and the remaining budget $ \tau $.
 To quantify the performance of a policy, we define a \emph{policy valuation function}.
 
 % TODO: \filip{Můžeme zjednodušit tu policy tím že nejdřív zadefinujeme ten state space...}
@@ -274,3 +269,10 @@ Having $ \tau $ as a part of the state is crutial for the policy, as (intuitivel
 
 
 \david{říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?}
+\filip{tohle je nový}
+Finally, let us briefly mention the relationship between the online and the offline problems, which we will expand on in \Cref{chap:pp}.
+In special cases, they become the same problem, for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has learned.
+In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
+This is clear from the discussion above the definition of the online problem.
+If the online information does not help in any way, the online policy can simply mimic the solution of the offline problem, and reach the same expected divergence.
+For a more rigurous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.

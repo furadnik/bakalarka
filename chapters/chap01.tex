@@ -13,11 +13,8 @@ matroid theory, game theory utility functions and countless others. % TODO: cita
 	A \emph{set function} on the set $ N $ is any function $ f: \pot N \to \R $.
 \end{defi}
 
-Though the definition of a set function consideres a general finite set $ N $, in this thesis,
-we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
-This simplification is common in the literature,  % TODO: citace; jinak, proste jsou izomorfni
-as it allows us to be more concrete when discussing set functions, while
-the results we show can be easily generalized to the case of a general finite set $ N $.
+Though the definition of a set function consideres a general finite set $ N $, in this thesis, we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
+This definition is equivalent to that over a general finite set.
 
 % k čemu jsou
 For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represet a \emph{utility} an agent receives from obtaining a subset of the goods.
@@ -37,12 +34,8 @@ One of the most natural and commonly observed of such properties is \emph{monoto
 
 % ukázat na utilitě
 In our example of a set function representing utility, assuming the utility of each good by itself is non-negative, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of an agent.
-% TODO: ne vždycky
-
-% superadditivita
 Another very common and natural property of many set functions is \emph{superadditivity}.
 
-% TODO: jak to udělat s tím že máme i subadditivitu? -- nejdriv super, pak note: sub
 \begin{defi}[Superadditivity]
 	A set function $ f: \pot N \to \R $ is \emph{superadditive} if \[
 		\left( \forall S, T \subseteq N; S \cap T = \emptyset \right)\quad \fce{f}{S \cup T} \geq \fce{f}{S} + \fce{f}{T}.
@@ -62,21 +55,10 @@ In other words, a set is at least as valuable as the sum of its parts.
 % TODO: proč je supermodularita sexy
 % TODO: hrozně sexy struktura
 
-% submodularita
-\begin{defi}[Submodularity]
-	A set function $ f: \pot N \to \R $ is \emph{submodular} if \[
-		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \leq \fce{f}{S} + \fce{f}{T}.
-	\]
-\end{defi}
-% TODO: vztah se supermodularitou
-% TODO: proč submodularita je taky sexy
-% TODO: greedy algoritmy a matroidy
-
 % třídy funkcí
 When discussing set functions with certain properties, it is often useful to consider \emph{classes} of set functions with those properties.
 We will denote $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes of all set functions on the set $ N $ that are additive, superadditive, and supermodular (sometimes also called \emph{convex}), respectively.
 
-% TODO: capitalization?
 \section{Cooperative Game Theory}
 
 % co je to kooperativní teorie her
@@ -91,7 +73,7 @@ The goal of cooperative game theory is to study the \emph{stability} of the form
 \end{defi}
 
 When discussing coalitions, we usually use the terms \emph{grand coalition} for the coalition of all players $ N $, and \emph{singletons} for coalitions containing a single player.
-
+Further, for a set of coalitions $ \s \subseteq \pot N $, we use the term \emph{coalition structure}.
 % TODO: vztah se set functs
 From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
 
@@ -125,8 +107,8 @@ The payoff of players is described by a payoff vector.
 \end{defi}
 
 For simplicity, we usually shorten the notation of sum over the values of the payoff vector.
-For a general coalition $ S \subseteq N $, we denote \[
-	\fce{x}{S} \deq \sum_{i \in S}^{} x_i. % TODO: tohle lip: pouzivame rozsireni setfunkci bla bla; also, dat vic na zacatek?
+For a general coalition $ S \subseteq N $ and a payoff vector $ x \in \R^n $, we denote \[
+	\fce{x}{S} \deq \sum_{i \in S}^{} x_i.
 \]
 % efficiency
 In this thesis, we will only consider efficient payoff vectors, as we want to distribute the entire value of the grand coalitions.
@@ -201,14 +183,7 @@ RL is an extensive field, which shall be discussed in this thesis only to the ex
 Similarly, we do not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information, for example \cite{sutton2018reinforcement,bengio2017deep}.
 
-% % co to je
-% Machine learning refers to a field of Computer Science, where we study algorithms that aren't explicitly designed to perform a specific task, but rather are programmed to learn the expected behavior by analyzing data.
-% Online learning is a subfield of machine learning, where an \emph{agent} interacts with a black-box \emph{environment}, and receives \emph{feedback} on its chosen actions.
-% Online learning is a general model, which can be used to model many different situations, including those with multiple agents.
-% However, in this thesis, we focus on the online learning of a single agent.
-
 % agent+environment
-% TODO: používám tady "game", což by chtělo někde nahoře zmínit co je, nebo to změnit na jiné slovo
 Let us first formally define the model used when discussing RL.
 The environment is a black box to the agent, which holds some \emph{state}.
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
@@ -222,12 +197,13 @@ Note that in the definition of the Markov decision process, we further require a
 	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
 		\item $ \actions $ is a non-empty set of \emph{actions},
 		\item $ \states $ is a non-empty set of \emph{states},
-		\item $ \initial \in \dist \states $ is the \emph{initial state distribution},\filip{přidal jsem initial state, snad jsem to všude změnil}
+		\item $ \initial \in \dist \states $ is the \emph{initial state distribution},
 		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
 		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
 		\item $ \gamma \in \left[ 0,1 \right] $ is the \emph{discount factor}.
 	\end{enumerate}
 \end{defi}
+
 % TODO: daviduv oblibeny obrazek
 
 The agent starts in an initial state $ s_0 \sim \initial $.
@@ -240,8 +216,6 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
 \end{defi}
 
-% TODO: \filip{Co dát aspoň část tohohle odstavce až pod def returnu?}
-% \david{jakože klidně, přijde mi to takhle dobrý. Já rád omáčku před definicí}
 As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
 However, formally, the agent plays indefinitely.
@@ -249,7 +223,7 @@ To make the total expected cumulative reward finite, we discount the future rewa
 This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
 To capture environments with a finite horizon of $ T $ steps, we set the rewards for times $ t > T $ to zero.
 
-% TODO: vysvětlivka co znamená \E_\pi
+% return
 \begin{defi}[Return]
 	Let $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ be a MDP.
 	The agent starts in $ s_0 \sim \initial $, chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=1}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
@@ -258,8 +232,12 @@ To capture environments with a finite horizon of $ T $ steps, we set the rewards
 	\]
 \end{defi}
 
+\filip{nové(částečně)}
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
 When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, and the transition function with the policy in each step.
+Note that the expectation is formally done over an infinite number of actions according to the policy $ \pi $.
+It is sometimes useful to explicitly state the policy in the notation.
+For that, we will use the notation $ \fceb{\E_\pi}{\return_0} $, which is common in RL literature, and it signals that the actions chosen in the return are chosen according to $ \pi $.
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
 It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
@@ -322,10 +300,7 @@ If the advantage is positive, it suggests the agent should play $ a_t $ \emph{mo
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
 After the training, we drop all the gathered rewards, and move to the next iteration.
 
-% TODO: proto chceme ty neuronky
-
 % critic dělá tohle, minimalizuje tohle
-% TODO: return by měl mít nějaký index říkající z jaké policy vyšel
 Let us now discuss the details of the actor and the critic.
 The critic is trained to minimize the following loss \[
 	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
@@ -355,7 +330,6 @@ Hence, the objective of the actor is defined followingly \begin{align*}
 \[
 \]
 The hyperparameter $ \varepsilon $ is used to control the amount of clipping, and thus the maximum rate of change of the policy in each iteration, along with the stability of the learning process.
-% In CITACE, the authors suggest the choice of $ \varepsilon = 0.2 $.\david{dal bych spíš jako footnote, jinak to je takový výstřel do tmy.}\filip{a nebo zahodit? :P} % TODO: citace
 By taking the minimum of the clipped and unclipped objective, we ensure that the loss is clipped from only one direction.
 This is crucial as, if we are unlucky, one policy update might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
@@ -378,7 +352,7 @@ We have already mentioned that we require an algorithm which works well with con
 PPO operates on an \emph{on-policy} basis, meaning thath the critic always learns from data generated by the current policy of the actor.
 This is in contrast to \emph{off-policy} algorithms, which can utilize rewards gathered in previous iterations under previous policies to train the new policy.
 On-policy algorithms generally maintain better learning stability since the critic isn't influenced by outdated rewards.
-\filip{co tahle následující věta? může být?}\david{sounds good}
+\filip{co tahle následující věta? může být?}
 Conversely, off-policy algorithms are more data efficient, as utilizing old trajectories reduces the need to gather as many new ones.\filip{citace}\david{něco zkusim najít}
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
@@ -388,137 +362,3 @@ The gathering of trajectories is typically performed on CPUs, which are readily 
 \filip{Zatím jsem ve stádiu rozhodování co s tímhle... To co jsi napsal by vydalo tak ještě na dva odstavce lol, to zas nemusím mít o tolik delší bakalářku než Julie, ten název stačí xD}\david{Ok, to já myslel, že cíl je tady jasnej :D Ale ok, za mě klidně může být i jen tohle, i když to s tím policy gradientem bych minimálně krátce zmínil. Jde to podle mě ve 2-4 větách.}\filip{FYI: Julie má cca 32}
 \filip{Rád bych sem napsal něco o té loss, ale pobavíme se o tom nejdřív na schůzce, co přesně.}
 These properties make PPO a good choice for various problems, including the one we are interested in, as described in \Cref{sec:ppo}.
-
-% \section{Regret Minimization}
-% \filip{tohle přepsat nebo smazat idk}
-
-% % cil RM
-% Regret minimization is a technique used in online learning, where the agent tries to pick a strategy, that would have been good in hindsight.
-% By hindsight, we mean that the agent compares itself other sequences of strategies he could have chosen, and tries to minimize the difference between the losses he experienced, and the losses the best sequence of strategies would have experienced.
-
-% The formal setup of regret minimization differs in a few aspects from the general online learning setup given in \Cref{def:mdp}.
-% Let us first define the setup for a single-state environment, and then we will generalize it to the multi-state case.
-
-% \begin{defi}[Regret minimization environment]
-% 	A \emph{regret minimization environment} is a tuple $ \left( \actions, \ls \right) $, where \begin{enumerate}[ ]
-% 		\item $ \actions $ is a non-empty set of \emph{actions},
-% 		\item $ \vec \ls: \dist \actions \to \R^n $ is the \emph{loss function}.
-% 	\end{enumerate}
-% \end{defi}
-
-% Notice that unlike \Cref{def:mdp}, where we had to choose one action at each step,
-% here we choose a distribution over the actions, and receive a per-action loss, based on that distribution.
-% This gives us extra information about \textquote{which action costs us the most}.
-% Note however that this doesn't mean that the action with lowest loss is the best action to choose.
-% Take for example the case of rock, paper, scissors.
-% If we supply a uniform distribution, we will receive a per-action loss of $ \frac{1}{3} $ for each action.
-% However, if we only played scissors, for example, we would suddenly always receive a loss of $ 1 $ on it!
-% \filip{Nejsem si jistej jestli ten example vyzněl tak jak měl xD}
-
-% % experienced loss
-% To quantify the loss received by the agent, we will compute the expected value of the per-action loss, given the distribution chosen by the agent.
-
-% \begin{defi}[Experienced loss]
-% 	Let $ \vec{\ls} $ be a per-action loss received by the agent when playing $ \pi \in \dist \actions $.
-% 	The \emph{experienced loss} of the agent is \[
-% 		\vec\xl \deq \E_{\pi} \left[ \sum_{i=1}^{n} \pi_i \ls_i \right].
-% 	\]
-% \end{defi}
-
-% The new definition of the loss function also leads to a new definition of the cumulative loss.
-
-% \begin{defi}[Cumulative loss, regret]
-% 	Suppose the agent received losses $ \vls^1, \dots, \vls^T $.
-% 	Then the \emph{cumulative loss} of the agent is \[
-% 		\vcxl^T \deq \sum_{t=1}^{T} \vls^t.
-% 	\]
-% \end{defi}
-
-
-% We would now like to compare our agent against some \emph{comparison set} $ \algs $ of online algorithms.
-% An online algorithm can be thought of as a function $ \alg $, which maps a sequence of already received losses to a distribution over the actions.
-% To properly quantify this, we will define so-called \emph{regret} for a general comparison set $ \algs $, and later discuss behavior of regret for specific comparison sets.
-
-% % regret
-% \begin{defi}[Regret]
-% 	Let $ \algs $ be a comparison set.
-% 	Let $ \vls^1, \dots, \vls^T $ be a sequence of losses received by the agent, playing a sequence of strategies $ \pi^1, \dots, \pi^T $.
-% 	Then the \emph{regret} of the agent after $ T $ steps, with respect to $ \algs $, is \[
-% 		R^T_{\algs} \deq \cxl^T  - \min_{\alg \in \algs} \cxl^T_{\alg},
-% 	\]
-% 	where $ \cxl^T_{\alg} $ is the cumulative experienced loss of the algorithm $ \alg $ computed from the losses $ \vls^i $ received by the agent.
-% \end{defi}
-
-% % předpokládáme že losses zůstanou stejné
-% % TODO: někde popsat že vektory jsou tučně
-% Let us emphesize that experienced losses of the algorithms from $ \algs $ are computed from $ \vls^1, \dots, \vls^T $.
-% This means, that those aren't the losses the algorithms would have actually experienced, had they been played instead of the agent, as the loss $ \vls^i $ depended on the the distribution $ \pi^i $ chosen by the agent.
-% Consider the simple adversarial example, where the loss $ \ls_i $ is $ 1 $ for all actions with non-zero probability, and $ 0 $ otherwise.
-% Suppose that the agent chooses action $ 1 $ with probability $ 1 $, and an algorithm $ \alg $ chooses action $ 2 $ instead.
-% Then the experienced loss of the agent is $ 1 $, while the experienced loss of $ \alg $, as seen from the definition of regret, is $ 0 $, even though, had we followed $ \alg $, we would have experienced loss $ 1 $, too.
-% % TODO: upřsenit tenhle příklad
-% % \david{Tomu konci nerozumím. Loss akce 2 je 0 ne? Takže regret k té akci je 1.}
-% % \filip{Přesně tak. Já tam akorát mluvím o loss. Chci tam vysvětlit že když počítám $\cxl^T_{\alg} $, tak to není to samý jako co by dostal ten algoritmus kdyby reálně hrál.}
-% % \david{Aha, už chápu. To je určitě fajn point vypíchnout, ale trochu se to ztrácí v téhle formulaci.}
-
-% We won't want to compare against all possible algorithms, because among them, there will be one that always guesses the best action, which will lead to the lowest possible loss.
-% For an adversarial environment, this is impossible to compare against.
-% % TODO: přeformulovat
-% % \david{Tohle není pravda - porovnat se můžeš, akorát takovýhle regret nejde minimilizovat proti libovolnému black-boxu. Tohle diskuzi bych odložil po definici regretu.}
-
-% % swap regret, internal, external?
-% Let us now mention different types of regret, meaning different comparison sets $ \algs $, along with their properties.
-% The first and probably most studied type of regret is the \emph{external regret}.
-% Many times in literature, when the term \emph{regret} is used without any further specification, it is meant to be the external regret.\david{Přesně z tohohle důvodu bych používal instantaneous / cumulative regret. Jen regret je možná moc vágní, kor takhle na začátku v refinicích.}
-% It is defined on the comparison set $ \algs_\actions \deq \left\{ \alg_a \suchthat a \in \actions \right\} $, where $ \alg_a $ is the algorithm that always chooses action $ a $.
-% The external regret analyzes what would have happened, had the agent chosen a single action, and stuck with it for the entire game.\david{Tady game není jasné co vůbec je. Možná bych tomu online procesu říkal nějak úplně jinak, ale nenapadá mě dobré jméno.}
-% The formula can be simplified to \[
-% 		R^T_{\algs_\actions} = \cxl^T - \min_{a \in \actions} \cl^T_a.
-% 	\]
-
-% For stronger comparison sets, we will use algorithms which are derived from the strategy of the agent, but modify it using \emph{modification rules}.
-% A modification rule is any function $ F: \actions \to \actions $, and the resulting algorithm $ \alg_F $ looks at the strategy $ \pi $ of the agent, and plays $ \pi' $, defined as \[
-% 	\pi'_a \deq \sum_{i: F(i) = a} \pi_i.
-% \]
-% Consider the example of a modification rule $ F_{i,j} $, which respects the strategy of the agent, but always plays action $ j $ instead of action $ i $.
-% Formally: \[
-% 	\fce{F_{i,j}}{k} = \begin{cases}
-% 		j & \text{if } k = i, \\
-% 		k & \text{otherwise.}
-% 	\end{cases}
-% \]
-% % TODO: víc popsat?
-% The regret with respect to the comparison set $ \left\{ \alg_{F_{i,j}} \suchthat i,j \in \actions \right\} $ is called the \emph{internal regret}.
-% Even more generally, if we consider a comparison set with all possible modification rules, we get the \emph{swap regret}.
-% % TODO: vlastnosti regretů?
-
-% % regret minimizer
-% Now that we have a way to measure how well the agent is doing, we need to find a way to adapt the strategy of the agent, so that the regret is minimized.
-% Ideally, we would like to find a strategy, which keeps regret $ 0 $, but as we have already seen with the adversarial example, that is in general impossible.
-% Instead, we will try to find a strategy, which keeps the regret as small as possible.
-% More specifically, we are aiming for a strategy, which keeps the regret sublinear in $ T $, that is, $ R^T_{\algs} = \fce{o}{T} $.
-
-% \begin{defi}[ ]
-% 	Let $ \algs $ be a comparison set.
-% 	An agent is an \emph{$ \algs $-regret minimizer}, if its $ \algs $-regret satisfies \[
-% 		R^T_\algs = \fce{o}{T}.
-% 	\]
-% \end{defi}
-% Once again, when talking about a regret minimizer without any further specification, we mean an external regret minimizer.
-% External regret is special, because there are algorithms that can provably achieve sublinear regret, and we will discuss them in further sections.
-% % TODO: Balko thm 2.55.
-% % TODO: proč sub-lineární regret je cool
-
-% % TODO: příklady regret minimizerů?
-
-% % TODO: sequence form game
-
-% % TODO: predictive regret?
-
-% % TODO: příklad (asi ten s deštníkama?)
-% We can imagine that the function comes from a distribution of functions.
-% This distribution is unknown to the agent, though gathers information about it from the losses he receives as he plays the game.
-
-
-% % TODO: minimalizovat regret a maximalizovat reward je to stejné proti "oblivious environment" (to je to, kde bereš gradient loss podle policy jako 0)
-% % TODO: RM sublin regret, ale ne minimalizace:
