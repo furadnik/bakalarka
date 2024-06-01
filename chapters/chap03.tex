@@ -58,19 +58,12 @@ We will here assume that the time complexity of this operation is $ \fce{\O}{2^n
 We can imagine that these values are pre-generated, and that we just load them into memory, or that we have an oracle that tells us the value for any coalition on demand in constant time.
 With this, we can analyze the time complexity of the \algFO{} algorithm.
 
-\filip{je tohle theorem??}\david{spíš ne, lemma?}\filip{lemma mi evokuje jako že by to mělo být jako pomocný tvrzení k nějaký větě... proposition? možná zeptáme se mistra na názor?}
-\filip{fyi, všechno dávám zatím jako theoremy, a pak se domluvíme co s tím :) referencuju to všude pomocí cref, takže se to samo změní}
-\david{Proposition zní dobře. Taky se mi moc nelíbí to "prove", protože není ještě jasné co dokazuješ. Co třeba formalize?}
-\filip{Formalize se mi nelíbí :(}
-\david{tak co třeb study the time complexity?}
-\filip{změnil jsem to na anaylze, lepší?}
-\david{awesome}
-\begin{thm}[\algFO{} time complexity]
+\begin{prop}[\algFO{} time complexity]
   \label{thm:algfo-time-complexity}
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
   Let $ \fce\divt{n} $ be the time complexity of computing the divergence, $ \fce{\divt}{n} \in \fce{\Omega}{2^n} $.
   Then the time complexity of the \algFO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-\kappa}{\tau} \cdot \fce\divt{n}} $.
-\end{thm}
+\end{prop}
 
 \begin{proof}
   The algorithm iterates over $ \sigma $ samples, for each sample it computes the divergence for every possible subset structure of size $ \tau $.
@@ -89,11 +82,11 @@ For a small, constant budget $ \tau $, the time complexity of the \algFO{} algor
 This is managable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - \kappa}{n}}$.
 If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
 
-\begin{thm}[ ]
+\begin{prop}[ ]
   \label{thm:algfo-time-complexity-poly-tau}
   Suppose the size of the initial information $ \kappa $ is $ \fce{\Theta}{n} $, and the budget $ \tau $ is $ \fce{\Theta}{n^c} $.
   Then the time complexity of the \algFO{} algorithm is $ \sigma \cdot \fce\divt{n} \cdot 2^{\fce{\Theta}{n^{c+1}}}$.
-\end{thm}
+\end{prop}
 
 
 \begin{proof}
@@ -121,11 +114,11 @@ If we wanted to have $ \tau $ even bigger than polynomial in $ n $, the time com
 This would happen for example if we wanted to reveal a half of the ground set, meaning $ \tau = \frac{2^n - \kappa}{2} $.
 Then, the time complexity of the \algFO{} algorithm would be double exponential.
 
-\begin{thm}[ ]
+\begin{prop}[ ]
   \label{thm:algfo-time-complexity-double-exp}
   Suppose the initial information is $ \k_0 $, and $ \tau = 2^{n-1} $.
   Then the time complexity of the \algFO{} algorithm is $ \fce{\Theta}{2^{2^n} \cdot 2^{-\frac{3n}{2}} \cdot \fce\divt{n} \cdot \sigma} $.
-\end{thm}
+\end{prop}
 
 \begin{proof}
   To prove this \namecref{thm:algfo-time-complexity-double-exp}, we will once again use the result of \Cref{thm:algfo-time-complexity}, along with the Stirling approximation of the binomial coefficient \[
@@ -160,11 +153,11 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{algor}
 
 % analýza časové složitosti OG
-\begin{thm}[\algFG{} time complexity]
+\begin{prop}[\algFG{} time complexity]
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
   Then the time complexity of the \algFG{} algorithm is $ \fce\Theta{\sigma \cdot \left( 2^n-\kappa \right)\cdot\tau \cdot \fce\divt{n}} $.
-\end{thm}
+\end{prop}
 
 \begin{proof}
   First, we sample $ \sigma $ games (we assume sampling of a single game takes $ \fce\O{2^n} $, i.e. constant time for each subset).
@@ -202,7 +195,7 @@ An upper bound on the divergence of the optimal policy is the divergence of the 
 This is formalised in the following \namecref{thm:online-bound-offline}.
 
 % offline bounds online
-\begin{thm}[Offline bounds online]
+\begin{prop}[Offline bounds online]
   \label{thm:online-bound-offline}
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $ a budget, and $ \k \supseteq \k_0 $ the initial information.
   Further, let $ \s^* $ be the optimal subset structure of the corresponding \nameref{def:offline-pp} and $ \pi^* $ be the optimal policy of the corresponding \nameref{def:online-pp}.
@@ -210,7 +203,7 @@ This is formalised in the following \namecref{thm:online-bound-offline}.
     \E_{f \sim \fdist} \val \tau \ell f \k {\pi^*} \leq \E_{f \sim \fdist} \divg \ell {\k_- \cup \s^*},
   \]
   where $ \val \tau \ell f \k {\pi^*} $ is the policy valuation, as defined in \Cref{def:online-pv}.
-\end{thm}
+\end{prop}
 
 \begin{proof}
   We will construct a policy $ \pi^o $, which copies the offline solution $ \s^* $.
@@ -252,14 +245,14 @@ To get a lower bound on the online problem, then, we can give the principal an o
 % oracle bounds online
 The oracle valuation is exactly the lower bound we described above, as the following \namecref{thm:online-bound-oracle} shows.
 
-\begin{thm}[Oracle bounds online]
+\begin{prop}[Oracle bounds online]
   \label{thm:online-bound-oracle}
   Let $ \fdist $ be a distribution, $ \ell $ a divergence function, $ \tau $ a budget, and $ \k \supseteq \k_0 $ the initial information.
   Further, let $ \pi^* $ be the optimum of the corresponding \nameref{def:online-pp}.
   Then \[
     \fceb{\E_{f \sim \fdist}} {\val \tau \ell f \k {\pi^*}} \geq \oracle \fdist.
   \]
-\end{thm}
+\end{prop}
 
 \begin{proof}
   Let us fix one $ f \sim \fdist $.
