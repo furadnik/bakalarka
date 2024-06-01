@@ -103,10 +103,11 @@ However, this is not possible, as the dimension of the set changes based on the 
 This leads us to measuring the distance between the upper and lower functions, using an arbitrary function $ \ell $.
 The most obvious choice of $ \ell $ is some norm, as norms are well studied, well understood and have nice properties.
 However, we state the following definition for an arbitrary $ \ell $, and we will see an example of $ \ell $ which is not a norm, but which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
+% restrikce na \ell?
+\filip{tady jsem přidal tyhle věci:}
+We do not put explicit restrictions on $ \ell $, but we will assume in this thesis that the value of $ \ell $ decreases as the size of $ \k $ increases.
+Note that this does hold for the norms, as increasing $ \k $ means reducing the size of the $ \cSuperadditive $-extensions, thus decreasing the distance between the upper and lower functions.
 
-% TODO: restrikce na \ell?
-% \filip{Nechceme nějak dát restrikci na $ \ell $? Možná to není potřeba vzhledem k tomu že ve všech výsledcích pak stejně bude už nějaká konkrétní $ \ell $?} \david{Kdybys to chtěl natáhnout, tak to určitě není spatný místo. Jinak bych to spíš okecal, že třeba chceš asi nulovost když dostaneš jen jednu extension. A řekl bych, že v sekcích X,Y se zabejváme konkrétníma příkladama.}
-% TODO: \david{Je $\funcs$ zavedené značení?} -- definovat!
 \begin{defi}[Divergence]
   Let $ f $ be a superadditive set function, and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
   Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $.
@@ -114,6 +115,7 @@ However, we state the following definition for an arbitrary $ \ell $, and we wil
     \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
   \]
 \end{defi}
+
 % TODO: $ \ell $ pak nazýváme "divergence function"
 
 Notice that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $.
@@ -173,8 +175,7 @@ This statement was first given by \cite{uradnik2024reducing} as follows.
   where $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
 \end{lemma}
 
-% TODO: Mistrovo lemma že gap je divergence
-% \david{ukázat jak to souvisí s divergencí (aka Mistrovo lemma) a tím pádem že to má hezké vlastnosti?}
+% Mistrovo lemma že gap je divergence
 Interestingly, this statement further offers a connection between the gap and our divergence, which we formalize thusly.
 
 \begin{prop}[Gap is divergence]
@@ -209,9 +210,6 @@ This leads to the definition of the \emph{offline principal's problem}.
     \s = \argmin_{\substack{\abs{\s} = \tau \\ \s \subseteq \pot N \setminus \k }} \E_{f \sim \fdist} \left[ \divg \ell {\k_- \cup \s} \right].
   \]
 \end{defi}
-
-% TODO: okomentovat rozdíl mezi online a offline, a že to nevadí, protože divergence je monotonně klesající:
-% \filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
 
 This is an approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
 However, there is an approach which leads to a potentially lower value of the divergence.
@@ -267,10 +265,17 @@ Having $ \tau $ as a part of the state is crutial for the policy, as (intuitivel
   and outputs a probability distribution over $ \pot N \setminus \k $, such that $ \E_{f \sim \fdist} \val \tau \ell f \k \pi $ is minimal.
 \end{defi}
 
+\filip{odsud dolů nový}
+% okomentovat rozdíl mezi online a offline, a že to nevadí, protože divergence je monotonně klesající:
+% \filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
+Notice that there is a slight difference in the definition of the online and offline problems in terms of how many subsets end up being revealed.
+In the definition of the offline problem, we say that the resulting subset structure $ \k^* $ must be of size $ \tau $.
+However, here, we do not explicitly forbid the policy to choose the same subset twice.
+We need not forbid it, as the divergence as we have defined it is non-increasing with the size of $ \k $.
+This means that choosing to reveal a subset twice (essentially decreasing the budget by 1) is never beneficial.
 
-\david{říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?}
-\filip{tohle je nový}
-Finally, let us briefly mention the relationship between the online and the offline problems, which we will expand on in \Cref{chap:pp}.
+% \david{říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?}
+Finally, let us briefly mention the relationship between solutions of the online and the offline problems, which we will expand upon in \Cref{chap:pp}.
 In special cases, they become the same problem, for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has learned.
 In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
 This is clear from the discussion above the definition of the online problem.
