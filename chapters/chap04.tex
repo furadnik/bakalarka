@@ -28,7 +28,7 @@ Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we 
 % factory game class
 The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
 \filip{citace?}
-\david{može být a nemusí}
+\david{ukradli jsme to z wiki, takže bych to asi necitoval :D https://en.wikipedia.org/wiki/Shapley_value}
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -56,6 +56,7 @@ It is rather to have a simple class of finite games with very simple structure, 
 	\includegraphics[width=0.48\textwidth]{figures/convex5.pdf}
 	\caption{
 		The utopian gap as a function of number of revealed coalitions on the $ \factory[5] $ (left), and $ \supermodular[5] $ (right) distributions of games \citep{uradnik2024reducing}.
+  \david{co takhle ty obrázky zvětšit, nebo minimálně jejich popisky?}
 	}
 	\label{fig: exploitability over time}
 \end{figure*}
@@ -67,7 +68,7 @@ As expected, the PPO algorithm starts off close to the offline algorithm, and as
 
 % greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
-Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $\david{$t=5$?}\filip{uuuh, dal jsem $ \tau=5 $, ale není to spíš matoucí?}, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
+Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $\david{$t=5$?}\filip{uuuh, dal jsem $ \tau=5 $, ale není to spíš matoucí?}\david{sure}, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
 The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible $ \factory[5] $ games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}\david{jn}
 
 \section{Supermodular}
@@ -100,6 +101,7 @@ Perhaps surprisingly, the results are very similar to those with the Utopian Gap
 \filip{nevim co dál k tomuhle}
 \david{můžeš se odkázat na Mistrovo lemma o vztahu divergence a gapu. Z toho pak plyne, že zjevně až tak nezáleží na těch hodnotách "koalic střední velikosti"? Ale já myslel, že na factory ten náš přístup moc nefungoval ne?}
 \filip{factory je s l1 divergencí skoro stejná jako s Gapem, jen trochu výš}
+\david{tak proč to nepublikujem? :D Chtěli jsme ty divný XOS fce?}
 
 \section{Offline vs Oracle}
 % TODO: offline beats oracle?

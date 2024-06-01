@@ -144,8 +144,8 @@ However, the Shapley value requires all the values of $ v $ to be known.
 \filip{odsud dolů je to přepsaný}
 One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $ (we assume it is known that $ v $ is superadditive).
 However, without knowing the true value of $ v $, there is no way to tell which choice is the most reasonable.
-Each player then chooses the function which gives him the highest payoff, let us call it $ v_i $, and demands the payoff of $ \shapley[i] {v_i} $.
-The utopian gap measures the difference between what the players collectively demand, and what is available to give out.
+Each player then\david{is thus incentivised to choose?} chooses the function which gives him the highest payoff,\david{tečka} let us call it $ v_i $, and demands the payoff of $ \shapley[i] {v_i} $.
+The utopian gap measures the difference between what the players collectively demand, and what is available to give out.\david{Co tohle víc rozvést - třeba něco ve stylu, že sice nevíme kolik má každý opravdu dostat, ale protože Shapley je efficient, víme kolik mají dostat dohromady.}
 
 \begin{defi}[Utopian gap]
   \label{def:gap}
@@ -174,12 +174,13 @@ This statement was first given by \cite{uradnik2024reducing} as follows.
   \]
   where $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
 \end{lemma}
+\david{moc krásné!}
 
 % Mistrovo lemma že gap je divergence
 Interestingly, this statement further offers a connection between the gap and our divergence, which we formalize thusly.
 
 \begin{prop}[Gap is divergence]
-  Let $ \left( N, \k, v \right) $ be a superadditive incomplete game.
+  Let $ \left( N, \k, v \right) $ be a superadditive incomplete \david{cooperative?} game.
   Then it holds \[
     \gap v = \divg[v] {\ell_g}\k,
   \]
@@ -189,6 +190,7 @@ Interestingly, this statement further offers a connection between the gap and ou
   further $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
 \end{prop}
 \filip{tohle je konec úprav. Tohle proposition nevím jestli sem dávat takhle extra, nebo jen říct "z toho vidíme že gap je divergence"}
+\david{tohle bych řekl, neboli je to jen vážená l1 norma.}
 
 \section{Principal's Problems}
 
