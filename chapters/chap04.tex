@@ -22,17 +22,20 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 \filip{lepší název? ale asi dává smysl mít tuhle sekci zvlášť, ne?}
 \david{spíš bych tomu říkal experimental domains. Ale není pak supermodular tady součást?}
 \filip{ano, je, více méně tady mělo být všechno co má ten graf stejnej jako factory, tj divergence vs budget. takže zatím factory, supermod, a pak případně další}
+\david{jo super, já jen že supermodular byla sekce, takže ne podsekce tohohle}
 
 
-In this section, we explore different distributions and see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
+In this section, we explore different distributions\david{of what} and\david{to?} see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
 As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential for sufficienty large $ \tau $.
-For this reason, we only present here the results for $ n=5 $, for which the optimal algorithms took 30 hours to compute.
+For this reason, we only present here\david{here?} the results for $ n=5 $, for which the optimal algorithms took \david{approx} 30 hours to compute.
 Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute the optimal algorithms for all choices of $ \tau $, it would require over 100 years with our current setup.
+\david{možná teda přidáš něco o greepy. V tom případě to sem připiš}
 
-We here show the performance of our algorithms with the utopian gap as divergence, because it has a nice interpretation in cooperative game theory.
+We here show\david{tohle mi nedává smysl. Kde?} the performance of our algorithms with the utopian gap as divergence, because it has a nice\david{bleh} interpretation in cooperative game theory.
 We further show the performance with the $ L_1 $ and $ L_2 $ norms as divergence functions.
 These are very general, not tied to a specific application, and they have a geometric interpretation which ties them to the original motivation of the divergence -- to measure the size of the set of extensions.
 See \Cref{sec:divergence} for more details.
+\david{proč ne $L_5$?}
 
 \subsection{Factory Game}
 
@@ -44,7 +47,7 @@ The first setting where we run our experiments is a class of cooperative games w
 \david{nope, měli jsme s tím probém i v tom aamas článku}
 \filip{fuck, a co něco jako:}
 This is a very simple example, taken from Wikipedia lol
-\filip{přesná formulace je ještě WIP}
+\filip{přesná formulace je ještě WIP}\david{tohle bych radši ani nezminoval :D}
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -57,15 +60,15 @@ This is a very simple example, taken from Wikipedia lol
 \end{defi}
 
 We imagine that this is a very simple model of a factory, with $ n-1 $ equally productive workers, and one owner of the factory.
-If the owner is present in the coalition, the workers are allowed to work in the factory, each producing a value of $ 1 $.
+If the owner is present in the coalition, the workers are allowed\david{možná spíš have a place to work?} to work in the factory, each producing a value of $ 1 $.
 Otherwise, the workers cannot work, and thus produce nothing.
 
 The point of this example is not to precisely model a real-world situation.
-It is rather to have a simple class of finite games with very simple structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
+It is rather to have\david{Rather, we want} a simple class of finite games with very simple\david{2x simple} structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
 \david{tohle bych ještě pomasíroval, ale pěkný}
 
 % factory distribution
-For a given $ n $, there are $ n $ different factory games, each with a different owner.
+For a given $ n $\david{$\in\mathbb{N}$}, there are $ n $ different factory games, each with a different owner.
 When running the experiments, we choose $ \fdist $ to be a uniform distribution on these $ n $ games, which we call $ \factory $.
 \Cref{fig:factory} shows the results of our experiments for $ n=5 $ as a function of the budget $ \tau $, for different choices of divergence functions.
 
@@ -78,39 +81,41 @@ When running the experiments, we choose $ \fdist $ to be a uniform distribution 
 
 
 % explain the observed
-We can see that no matter the divergence function, all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
-Further, there is a noticeable difference between the performance of the offline and oracle optimal algorithms.
+We can see that\david{čárka podle mě} no matter the divergence function, all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
+Further, there is a noticeable difference between the performance of the offline and oracle optimal\david{proč ne divný písmo?} algorithms.\david{tohle je celkem nic neříkající věta, možná by se dala přeformulovat a stejný počet slov by mohl říkat víc - např co je lepší}
 As expected, the PPO algorithm starts off close to the offline algorithm.
-As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticeably beats the offline algorithms, and becomes close to the oracle algorithms.
+As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticeably beats\david{outperforms} the offline algorithms, and becomes\david{approaches} close to the oracle algorithms.
 
 % comparison of divergence functions
 \filip{tady by se dalo zmínit že je to graph game, kdybychom to pak definovali někde}
+\david{souhlas, to řekni. ML bude mít radost :D}
 Now, let us compare the utopian gap and the $ L_1 $-divergence.
 % TODO: finish rewrite
 \filip{čekám na experimenty, tady chybí odstavec :) ale jinak ten dalsí je zmasirovanej}
 
 % greedy aint optimal
-Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
+Another question we can answer\david{Let us now focus on the gap between the greedy and optimal algorithms?} from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
 Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
 This extends to the offline algorithms as well, as shown in \Cref{fig: fixed owner factory}, where we change the factory distribution to always yield the game with player 1 as the factory owner.
 This distribution has support size of 1, and thus the offline algorithms become identical to the oracle algorithms.
 \filip{masirovano. co ty na to?}
+\david{tady chceš dát ten příklad kdy greedy není optimal? V tomhle případě bych rovnou začal s tím fixed ownerem, je to snadnější.}
 
 \subsection{Supermodular}
 \label{sec:supermodular}
 
 % remind what supermodular is
-The class of supermodular functions is widely studied in many fields, most notably in economy cooperative game theory.
-It has a very rich structure, and many interesting properties \filip{citace?}.
-Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.
+The class of supermodular functions is widely studied in many fields, most notably in economy\david{tady asi chybí čárka?} cooperative game theory.\david{citace?}
+It has a very rich structure, and many interesting properties \filip{citace?}\david{Mistr určitě něco bude znát}.
+Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.\david{ta poslední část je navíc ne?}
 We call this distribution $ \supermodular $.
-We sample from this distribution effectively thanks to the work of \filip{TODO}.
+We sample from this distribution effectively thanks to the work of \filip{TODO}.\david{There is an efficient algorithm for sampling from such a distribution [...]}
 The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermodular}.
 
 % explain the observed
-To our surprise, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, regardless of the choice of divergence, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of gap reduction with just the budget of five coalitions.
-Further, there is very little difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the gap.
-The actions taken by the algorithms are in \Cref{fig:supermod_coals}, where we see that the majority of the decline happens due to revealing the largest coalitions.
+To our surprise\david{Surprisingly, nikoho nezajímá co nás překvapilo :D}, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, regardless of the choice of divergence\david{tohle je hodně silné a možná i nepravdivé v inf normě ne?}, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of gap reduction with just the budget of five coalitions.\david{tahle věta by šla klidně rozdělit na 3 :D}
+Further, there is very little difference between the algorithms themselves\david{our algorithms exhibit very similar performance}, suggesting that knowledge of the specific function drawn from the distribution does not \david{too much nebo tak něco} help when decreasing the gap.
+\david{To illustrate the strategy used by each algorithm, ...}The actions taken by the algorithms are in \Cref{fig:supermod_coals}, where we see that the majority of the decline happens due to revealing the largest coalitions.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \section{Offline vs Oracle}
