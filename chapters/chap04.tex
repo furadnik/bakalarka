@@ -18,12 +18,16 @@ The code for conducting the experiments was written in Python~3.10 using \texttt
 We ran all experiments on a cluster with AMD~EPYC~7532~CPUs running at 2.4~GHz.
 When running the experiments, we utilized 15~cores and 12~GB of RAM.
 
-In our experiments, we compare all the algorithms with one another for specific choices of the distribution $ \fdist $ and the divergence function $ \ell $.
-However, as we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential for sufficienty large $ \tau $.
-For this reason, we only present the results for $ n=5 $, for which the optimal algorithms took 30 hours to compute.
+\section{Exploration of Distributions}
+\filip{lepší název? ale asi dává smysl mít tuhle sekci zvlášť, ne?}
+
+
+In this section, we explore different distributions and see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
+As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential for sufficienty large $ \tau $.
+For this reason, we only present here the results for $ n=5 $, for which the optimal algorithms took 30 hours to compute.
 Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute the optimal algorithms for all choices of $ \tau $, it would require over 100 years with our current setup.
 
-\section{Factory Game}
+\subsection{Factory Game}
 
 % factory game class
 The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
@@ -50,22 +54,28 @@ It is rather to have a simple class of finite games with very simple structure, 
 \david{tohle bych ještě pomasíroval, ale pěkný}
 
 % TODO: factory distribution
-
+For a given $ n $, there are $ n $ different factory games, each with a different owner.
+When running the experiments, we choose $ \fdist $ to be a uniform distribution on these $ n $ games, which we call $ \factory $.
+\Cref{fig:factory} shows the results of our experiments for $ n=5 $ as a function of the budget $ \tau $, for different choices of divergence functions.
 
 \begin{figure*}[t!]
 	\includegraphics[width=0.48\textwidth]{figures/factory5.pdf}
-	\includegraphics[width=0.48\textwidth]{figures/convex5.pdf}
-	\caption{
-		The utopian gap as a function of number of revealed coalitions on the $ \factory[5] $ (left), and $ \supermodular[5] $ (right) distributions of games \citep{uradnik2024reducing}.
-  \david{co takhle ty obrázky zvětšit, nebo minimálně jejich popisky?}
-	}
-	\label{fig: exploitability over time}
+	\includegraphics[width=0.48\textwidth]{figures/l1_factory5.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence. }
+	\label{fig:factory}
 \end{figure*}
 
+
 % explain the observed
-From \Cref{fig: exploitability over time}~(left), we can see that all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
+We can see that no matter the divergence function, all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
 Further, there is a noticeable difference between the performance of the offline and oracle optimal algorithms.
-As expected, the PPO algorithm starts off close to the offline algorithm, and as it gains information about the specific game drawn from the distribution, it starts to behave close to the oracle algorithms.\david{tohle větu bych rozdělil na dvě a explicitně vypíchnul, že je lepší než offline a blíží se k oracle}
+As expected, the PPO algorithm starts off close to the offline algorithm.
+As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticably beats the offline algorithms, and becomes close to the oracle algorithms.
+
+% comparison of divergence functions
+Now, let us compare the utopian gap and the $ L_1 $-divergence.
+% TODO: finish rewrite
+\filip{začal jsem rewrite, všechno dolu odsud bude ještě změněný určitě}
 
 % greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
