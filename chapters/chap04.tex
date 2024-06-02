@@ -113,21 +113,6 @@ Further, there is very little difference between the algorithms themselves, sugg
 The actions taken by the algorithms are in \Cref{fig:supermod_coals}, where we see that the majority of the decline happens due to revealing the largest coalitions.
 We investigate these findings further in \Cref{ssec:largest}.
 
-% ell = l_1
-So far, we have seen how our algorithms behave through the lens of cooperative games, with utopian gap as the divergence.
-In this chapter, we broaden the scope to general set functions.
-Now, instead of being interested in the ambiguity of the Shapley value (which is what the gap measures), we examine the most often used $ L_k $-norms as the divergence function $ \ell $.
-The divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.\david{Co takhle tohle otočit - the divergence measures the l..., see section XY for details? To tvoje trochu zní jako "vím, že si to už nepamatuješ, tak ti to zopakuju jako debilovi" :D}
-
-% TODO: co to dělá
-We have conducted the experiments with the $ L_1 $ and $ L_2 $ norms, as those are the most commonly used and with a clear and natural interpretation.\filip{tohle "interpretation" vysvětlit dál, nebo odcitovat?}\david{Za mě asi není třeba. Můžeš říct, že čekáme, že nevidíme důvod, proč se naše závěry nebudou vztahovat na vyšší normy, krom té nekonečné.}
-The results of those experiments on the $ \factory[5] $ and $ \supermodular[5] $ distributions are shown in \Cref{fig:l12}.
-Perhaps surprisingly, the results are very similar to those with the utopian gap.
-\filip{nevim co dál k tomuhle}
-\david{můžeš se odkázat na Mistrovo lemma o vztahu divergence a gapu. Z toho pak plyne, že zjevně až tak nezáleží na těch hodnotách "koalic střední velikosti"? Ale já myslel, že na factory ten náš přístup moc nefungoval ne?}
-\filip{factory je s l1 divergencí skoro stejná jako s gapem, jen trochu výš}
-\david{tak proč to nepublikujem? :D Chtěli jsme ty divný XOS fce?}
-
 \section{Offline vs Oracle}
 
 % TODO: offline beats oracle?
@@ -159,22 +144,24 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 The main motivation of this thesis is to find out which subsets/coalitions are in some sense the most important for a given distribution of set functions.
 To do this for any given distribution of superadditive set functions, we have devised the algorithms described in \Cref{chap:pp}.
 For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.
-\david{sem nový osdtavec a říct, že ilustrujeme tenhle přístup na supermodular}
-In this section, we further look at the $ \supermodular $ distribution, where our algorithms all performed well, while behaving all in the same way -- first choosing the $ n $ largest subsets.
-After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).\david{tohle by ještě šlo pomasírovat}
+
+\filip{menší masáž odsud do konce}
+In this section, we further investigate at the $ \supermodular $ distribution, and we hypothesize about the generalization of what we have seen in our experiments for larger $ n $.
+We have previously seen (\Cref{sec:supermodular}) that all algorithms perform well, while behaving all in the same way -- first choosing the $ n $ largest subsets.
+After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 
 % comment on performance
 This suggests that the \textquote{most important subsets} for the supermodular functions, at least in terms of the divergence, are in fact the largest subsets, in addition to the minimal information $ \k_0 $.
-Hence, we propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
-Unfortunately, due to the time complexity of the optimal algorithms, we cannot compare the heuristic to them\david{tohle by mělo být někde jinde ve větě ne?} for larger $ n $.
-Instead, we compare it only with the \algRand{} strategy.
+We thus propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
+Unfortunately, we cannot compare this heuristic to the optimal algorithms for $ n > 5 $,  due to their time complexity (\Cref{thm:algfo-time-complexity-poly-tau}).
+We hence compare it only with the \algRand{} strategy.
 \Cref{fig:largest} shows the performance of this heuristic as a function of $ n $, with the utopian gap and the $ L_1 $-divergence.
-In order to make the results comparable, we normalize the results by the initial divergence (gap), i.e. when $ \k = \k_0 $.
+In order to make the results comparable, we normalize the results by the initial divergence (gap), i. e. when $ \k = \k_0 $.
 
 % explain why
-Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.\david{tohle ještě neformálně přeformuluj. In other words, while a random subset carries less information as $n$ grows, the largest subsets get more important. A nový odstavec}
+Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
+In other words, while a random subset structure of size $ n $ carries \textquote{less information} as $n$ grows, the largest subsets get \textquote{more important} (again, in terms of the divergence).
+
 To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution.
 We have found that the values decrease by several orders with the size of the subset.
 This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.
-\filip{co tohle? co dál sem?}
-\david{možná něco o té koncentraci, ale chce to říct opatrně jako spekulaci. Možná to nestojí za to.}
