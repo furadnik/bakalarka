@@ -6,10 +6,10 @@ In this chapter, we show the experimental results of the above discussed algorit
 We compare them with a baseline called \algRand{}, where the principal chooses which subsets to reveal uniformly at random from the as of yet unrevealed subsets.
 
 % experimenty jsou i z clankuu
-We first show results utilizing the game-theoretic motivation, with the Utopian Gap (\Cref{def:gap}) as the divergence.
+We first show results utilizing the game-theoretic motivation, with the utopian gap (\Cref{def:gap}) as the divergence.
 These results are already published by \cite{uradnik2024reducing}, along with a very well-performing heuristic for uniform supermodular games.
 In this thesis, we extend these results for different divergence functions, utilizing the $ L_k $-norms.
-We compare these results to those with the Utopian Gap.
+We compare these results to those with the utopian gap.
 Finally, we show some examples documenting properties of the divergence already discussed above.
 % TODO: zmínit workshopovej článek
 
@@ -28,7 +28,8 @@ Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we 
 % factory game class
 The first setting where we run our experiments is a class of cooperative games we call the \emph{factory games}.
 \filip{citace?}
-\david{ukradli jsme to z wiki, takže bych to asi necitoval :D https://en.wikipedia.org/wiki/Shapley_value}
+\david{ukradli jsme to z wiki, takže bych to asi necitoval :D}
+\filip{a neni nejakej originalnejsi zdroj?}
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -68,42 +69,43 @@ As expected, the PPO algorithm starts off close to the offline algorithm, and as
 
 % greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
-Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $\david{$t=5$?}\filip{uuuh, dal jsem $ \tau=5 $, ale není to spíš matoucí?}\david{sure}, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
+Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
 The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible $ \factory[5] $ games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}\david{jn}
 
 \section{Supermodular}
 
 % remind what supermodular is
 The class of supermodular functions/games is widely studied in many fields, most notably in cooperative game theory.
-This leads us to investigating of what our Divergence, and Utopian Gap especially, can tell us about the structure of this class.
+This leads us to investigating of what our divergence, and utopian gap especially, can tell us about the structure of this class.
 We study a uniform distribution of monotone supermodular games on $ n $ players, with the value of the grand coalition $ N $ set to $ 1 $\filip{masirovat}\david{Jn, tohle je horši než poslední masáž}, which we call $ \supermodular $.
 In our experiments, to generate a supermodular game uniformly at random, we have used the work of \filip{TODO}.
 The results of those experiments for $ n=5 $ are presented in \Cref{fig: exploitability over time}~(right).
 
 % explain the observed
-To our surprise, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of Gap reduction with just the budget of five coalitions.
-Also, interestingly, there is little difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the Gap.
+To our surprise, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of gap reduction with just the budget of five coalitions.
+Also, interestingly, there is little difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the gap.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \section{$ L_k $ Norms}
-\filip{jinak}
+% TODO: jinak
 
 % ell = l_1
-So far, we have seen how our algorithms behave through the lens of cooperative games, with Utopian Gap as the Divergence.
+So far, we have seen how our algorithms behave through the lens of cooperative games, with utopian gap as the divergence.
 In this chapter, we broaden the scope to general set functions.
-Now, instead of being interested in the ambiguity of the Shapley value (which is what the Gap measures), we examine the most often used $ L_k $-norms as the Divergence function $ \ell $.
-The Divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the Divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.\david{Co takhle tohle otočit - the divergence measures the l..., see section XY for details? To tvoje trochu zní jako "vím, že si to už nepamatuješ, tak ti to zopakuju jako debilovi" :D}
+Now, instead of being interested in the ambiguity of the Shapley value (which is what the gap measures), we examine the most often used $ L_k $-norms as the divergence function $ \ell $.
+The divergence function and the intuition behind it was described in detail in \Cref{sec:divergence}, but as a reminder to the reader, the divergence is an $ \ell $-norm of the difference between the upper and the lower functions $ \uf f $ and $ \lf f $.\david{Co takhle tohle otočit - the divergence measures the l..., see section XY for details? To tvoje trochu zní jako "vím, že si to už nepamatuješ, tak ti to zopakuju jako debilovi" :D}
 
 % TODO: co to dělá
 We have conducted the experiments with the $ L_1 $ and $ L_2 $ norms, as those are the most commonly used and with a clear and natural interpretation.\filip{tohle "interpretation" vysvětlit dál, nebo odcitovat?}\david{Za mě asi není třeba. Můžeš říct, že čekáme, že nevidíme důvod, proč se naše závěry nebudou vztahovat na vyšší normy, krom té nekonečné.}
 The results of those experiments on the $ \factory[5] $ and $ \supermodular[5] $ distributions are shown in \Cref{fig:l12}.
-Perhaps surprisingly, the results are very similar to those with the Utopian Gap.
+Perhaps surprisingly, the results are very similar to those with the utopian gap.
 \filip{nevim co dál k tomuhle}
 \david{můžeš se odkázat na Mistrovo lemma o vztahu divergence a gapu. Z toho pak plyne, že zjevně až tak nezáleží na těch hodnotách "koalic střední velikosti"? Ale já myslel, že na factory ten náš přístup moc nefungoval ne?}
-\filip{factory je s l1 divergencí skoro stejná jako s Gapem, jen trochu výš}
+\filip{factory je s l1 divergencí skoro stejná jako s gapem, jen trochu výš}
 \david{tak proč to nepublikujem? :D Chtěli jsme ty divný XOS fce?}
 
 \section{Offline vs Oracle}
+
 % TODO: offline beats oracle?
 % \david{Možná spíš offline vs oracle?}
 % \filip{Uuuuh, faaajn, ale offline beats oracle mi přišlo chytlavější teda xD}
@@ -113,7 +115,7 @@ Perhaps surprisingly, the results are very similar to those with the Utopian Gap
 In \Cref{chap:pp}, we have proven various statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
 One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
-This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}
+This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
@@ -135,17 +137,17 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 % explain motivation
 In the previous sections, we have seen that our methods work remarkably well on the uniform supermodular distribution for $ n=5 $.
 Furthermore, all the algorithms end up choosing the same actions: revealing all the subsets\footnote{Or coalitions, but I will stick to the more general set function terminology in this section.} of size $ n-1 $.
-After those are revealed, the Divergence decreases by about 99 \% (depending on the choice of $ \ell $).
+After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 This leads us to propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
 \david{Co takhle tohle podat jinak. Řekněme, že chceme vědět co je zajímavé na struktuře nějaké třídy set fcí. Ale co takhle otázka jako vůbec znamená? Jak to zjistit? Jeden způsob je ten náš - vezmeš tu třídu, použiješ naše algoritmy a podíváš se to to dělá. Jeden případ, kdy je ta strategie mega hezky interpretovatelná je supermodular, kdy je fakt jednoduchá. No a teď to zkusíš generalizovat tam, kam se žádný počítač nikdy nedostane. A hele, ono to dělá něco lepšího!}
 
 % comment on performance
-\Cref{fig:largest} shows the performance of this heuristic with the Utopian Gap, and the $ L_1 $-Divergence for increasing $ n $.
-In order to make the results comparable, we normalize the results by the initial Divergence (Gap), i.e. when $ \k = \k_0 $.
+\Cref{fig:largest} shows the performance of this heuristic with the utopian gap, and the $ L_1 $-divergence for increasing $ n $.
+In order to make the results comparable, we normalize the results by the initial divergence (gap), i.e. when $ \k = \k_0 $.
 Unfortunately, we cannot compare the heuristic to the performance of the optimal algorithms, as that is computationally expensive, so we instead compare it only with the \algRand{} strategy.\david{možná zas odkaz na komplexitu optimal algorithmu?}
 
 % TODO: explain why
-Surprisingly, while the normalized Divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases\david{tečka, zbytek navíc}, as \Cref{fig:largest} shows.
+Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
 To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution,\david{tečka?} and we have found that the values decrease exponentially\david{je tohle fakt pravda? není to prostě že se zmenšujou rychle?}\filip{no takhle, pro těch 5 hráčů je to fakt vždycky cca o 3 řády co si pamatuju, ale možná není dobrej nápad psát to takhle globálně} with the size of the subset.
 This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.\filip{Jak moc to tu chci vysvětlovat?}\david{podle mě nechceš.}
-\filip{schůzka: Divergence a Utopian Gap velkým?}
+\filip{schůzka: divergence a utopian gap velkým?}

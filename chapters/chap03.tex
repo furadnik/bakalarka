@@ -314,12 +314,11 @@ For more details, see \Cref{chap:results}.
 We have introduced the oracle approach to find a provable lower bound on the online solution.
 However, in practice, the oracle algorithms are infeasible.
 This is because they assume we have access to all the values, which defeats the purpose of our approach in the first place.
-To get a solution of the online problem which is applicable \david{tohle mi nedává smysl, spíš něco jako "while being able to use it in practice"?}\martin{vyřešte to, zní to divně}\filip{co takhle?}\martin{yes} in practice, we thus turn to \emph{reinforcement learning}.
+To get a solution of the online problem which is applicable in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
 We employ the PPO algorithm, which we have described in detail in the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries (\Cref{sec:prel-ppo}).
-As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.\david{Tyjo chtěl jsem zrovna říct, že tohle je dobře protože naše values nejsou nula, ale to vůbec není pravda! Tohle bysme měli nějak vymakat ještě...}\filip{jo to mě napadlo už před tím, ale přijde mi že není asi nějakej dobrej způsob jak to tomu PPO sdělit :D možná -1? ale nechal jsem to být s tím že on může furt vybírat dobrý akce pomocí tý masky...}
-\david{Zkusim se nad tim ještě zamyslet. Možná by se dalo udělat to, že všechny hodnoty uděláme striktně pozitivní tak, že normalizace všude přičte additivní 1. Ale nevim nevim, zamyslim se}
+As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.
 This captures the state space as defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 
 % maskable ppo
