@@ -235,14 +235,14 @@ To capture environments with a finite horizon of $ T $ steps, we set the rewards
 
 \filip{nové(částečně)}
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
-When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, and the transition function with the policy in each step.
-Note that the expectation is formally done over an infinite number of actions according to the policy $ \pi $.
+When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, and the transition function with the policy in each step.\david{tohle by se dalo říct líp, že je to jak ta transition, tak policy}
+Note that the expectation is formally done over an infinite number of actions according to the policy $ \pi $.\david{co tohle znamená? Zní mi to jakože musíš mít nekonečně dlouhý trajektorie? Nebo prostě že dostaneš tu exp v limitě nekonečně mnoha samplů? Pokud to druhé, není to pravda vždycky? Každopádně je to matoucí}
 It is sometimes useful to explicitly state the policy in the notation.
-For that, we will use the notation $ \fceb{\E_\pi}{\return_0} $, which is common in RL literature, and it signals that the actions chosen in the return are chosen according to $ \pi $.
+For that, we will use the notation $ \fceb{\E_\pi}{\return_0} $, which is common in RL literature, and it signals that the actions chosen in the return are chosen according to $ \pi $.\david{actions in the return je divný, klidně bych ten konec smazal, neříká nic navíc}
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
-It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $.
-Further, it makes the agent prefer immediate rewards over future rewards, which sometimes helps the training algorithms to converge faster, as is discussed below.
+It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left( 0,1 \right) $\david{$\gamma$ byla v definici nahoře z [0,1], udělej to konzistentně.}.
+Further, it makes the agent prefer immediate rewards over future rewards, which sometimes helps the training algorithms to converge faster\david{spíš bych řekl víc stabilně?}, as is discussed below.
 
 We further want to quantify the performance of a policy in a given state.
 
@@ -271,9 +271,9 @@ This is crucial in learning, when deciding how to alter a policy to maximize the
 \label{sec:prel-ppo}
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
-There are many reinforcement learning algorithms, each with its own strengths and weaknesses.
-In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm. % TODO: citace
-PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments. % TODO: citacee
+There are many reinforcement learning algorithms, each with its\david{their?} own strengths and weaknesses.
+In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm.\david{https://arxiv.org/abs/1707.06347} % TODO: citace
+PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments. \david{https://arxiv.org/abs/1909.07528, https://arxiv.org/abs/1912.06680, https://proceedings.neurips.cc/paper_files/paper/2022/file/b1efde53be364a73914f58805a001731-Paper-Conference.pdf}% TODO: citacee
 Importantly for our purposes, PPO is able to work with continuous state spaces, which is required in our application.%
 \footnote{This is not specific to PPO, but rather to the fact that we are using neural networks.}
 
@@ -281,7 +281,7 @@ Importantly for our purposes, PPO is able to work with continuous state spaces, 
 Let us now delve into the specifics of the PPO algorithm.
 PPO belongs to a family of so-called actor-critic algorithms.
 % PPO uses an actor-critic architecture.
-It uses two deep neural networks, the \emph{actor} and the \emph{critic}.
+It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\david{jakoby tohle není pravda, ppo jde dělat tabular. Měl bys říct něco ve stylu že používá dvě fce, který jsou typicky aproximovaný neuronkou}
 % The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
 The actor tries to learn a policy $ \pi $ which maximizes the expected return,
 while the critic seeks to approximate the value $ \fce \stval s $ of each state $ s $ encountered when following the policy $\pi$.
@@ -292,14 +292,14 @@ We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí t
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
-In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.\david{z té poslední části by se dala udělat samostatná věta a říct, že tohle stojí za tou snadností věci paralelizovat?}
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
 The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
 If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward then expected, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
-After the training, we drop all the gathered rewards, and move to the next iteration.
+After the training\david{iteration?}, we drop all the gathered rewards, and move to the next iteration\david{and collect a new set of trajectories using the current policy?}.
 
 % critic dělá tohle, minimalizuje tohle
 Let us now discuss the details of the actor and the critic.
@@ -307,7 +307,7 @@ The critic is trained to minimize the following loss \[
 	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
 \]
 where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all trajectories in the current iteration.
-This loss results in the critic estimating the value of the state $ s_t $ as close as possible.
+This loss results\david{forces?} in the critic estimating the value of the state $ s_t $ as close as possible.
 
 % actor dělá tohle, minimalizuje tohle,
 The actor is trying to learn the policy which maximizes the expected return.
@@ -317,8 +317,8 @@ Observe that one way to express this is as maximizing (over the parameters $ \th
 \]
 where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
 
-However, if we were to maximize this objective directly, with multiple gradient-descent updates, the policy would change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
-To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low} in one iteration.
+However, if we were to maximize this objective directly, with multiple gradient-descent\david{není tady spíš ascent?} updates, the policy would\david{might} change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
+To prevent this, we want to \emph{clip} the loss, so it cannot become \emph{too low}\david{proč ty emph tady?} in one iteration.
 Hence, the objective of the actor is defined followingly \begin{align*}
 	\lossactor &\deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
 	\text{where }
@@ -335,8 +335,8 @@ By taking the minimum of the clipped and unclipped objective, we ensure that the
 This is crucial as, if we are unlucky, one policy update might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod
-\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
-	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.}
+\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style\david{nechceš tohle hodit na začátek stránky?}}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
+	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.\david{proč má vůbec critic hat a ctor ne?}}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
 	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
 		\State Gather rewards for $ R $ trajectories using the current policy $ \actor $.
@@ -352,7 +352,7 @@ Finally, let us mention the differences between PPO and other RL algorithms.
 We have already mentioned that we require an algorithm which works well with continuous state spaces, however, this is not specific to PPO, but rather to the fact that we are using neural networks for the policy \citep{journals/nature/MnihKSRVBGRFOPB15}.
 PPO operates on an \emph{on-policy} basis, meaning that the critic always learns from data generated by the current policy of the actor.
 This is in contrast to \emph{off-policy} algorithms, which can utilize rewards gathered in previous iterations under previous policies to train the new policy.
-On-policy algorithms generally maintain better learning stability since the critic isn't influenced by outdated rewards.
+On-policy algorithms generally maintain better learning stability since the critic isn't influenced by outdated rewards\david{trajectories?}.
 Conversely, off-policy algorithms are more data efficient, as utilizing old trajectories reduces the need to gather as many new ones.\filip{citace}\david{něco zkusim najít}\david{tohle zní celkem dobře? https://arxiv.org/abs/2305.18443}
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
@@ -360,7 +360,7 @@ The gathering of trajectories is typically performed on CPUs, which are readily 
 \filip{Co tohle? Určitě by to šlo rozepsat ale nevim jestli to chceme.}
 Another popular choice is the REINFORCE algorithm with baseline \filip{citace}.
 PPO differs from it mainly in the loss of the actor -- REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described above.
-While the loss used by REINFORCE has greater theoretical support, the loss used by PPO works better empirically, allowing faster convergence and more stable learning.
+While the loss used by REINFORCE has greater theoretical support\david{tohle není pravda za mě. Spíš se snaží optimalizovat jiné věci}, the loss used by PPO works better empirically, allowing faster convergence and more stable learning.
 \filip{Uuuuuh, myslíš tím že proč je ta $ \lossactor $ tak "divná" (oproti tomu logaritmu jako je u REINFORCE s baseline)? Nebo zmínit vůbec to že to vlastně jde i bez kritika, jako nějakej $ \varepsilon $-greedy?}\david{To jsou všechno věci, co by se tady daly okecat. Rozhodně bych vyzdvihnul to log-loss, protože ta je unikátní pro PPO. Ale ty ostatní věci můžeš taky. Otázka je, jak moc to vlastně chceme - pro představení PPO stačí vlastně co je nad tímhle odstavcem.}
 \filip{Zatím jsem ve stádiu rozhodování co s tímhle... To co jsi napsal by vydalo tak ještě na dva odstavce lol, to zas nemusím mít o tolik delší bakalářku než Julie, ten název stačí xD}\david{Ok, to já myslel, že cíl je tady jasnej :D Ale ok, za mě klidně může být i jen tohle, i když to s tím policy gradientem bych minimálně krátce zmínil. Jde to podle mě ve 2-4 větách.}\filip{FYI: Julie má cca 32}
 \filip{Rád bych sem napsal něco o té loss, ale pobavíme se o tom nejdřív na schůzce, co přesně.}
