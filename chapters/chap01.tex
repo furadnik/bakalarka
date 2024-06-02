@@ -288,15 +288,15 @@ while the critic seeks to approximate the value $ \fce \stval s $ of each state 
 The critic's prediction is used to guide the actor when training.
 
 % jak se učí PPO
-We will denote the critic by $ \critic $\david{tyjo teď se mi vůbec nelíbí to, že se to bude plést s tou policy. Co třeba $\hat{v}(\cdot|\phi)$?}\filip{hele rozleželo se mi to, a zase bych to nechal takhle... přijde mi že je to relativně jasný}\david{jako relativně, ale zkus to schválně dát přečíst třeba Julii. My už víme o co jde a bavíme se o tom dlouho.}\filip{Dal jsem jí to, počkáme co odpoví}, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+We will denote the critic by $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
 Before defining their respective losses, let us mention how the training process works on a high level.
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
 In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment, each time using the actor's current strategy, possibly in parallel.
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
-The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $)?.
-If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward then expected, and if it is negative, it is probably best to play it \emph{less often}.
+The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward than expected, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
 After the training, we drop all the gathered rewards, and move to the next iteration.

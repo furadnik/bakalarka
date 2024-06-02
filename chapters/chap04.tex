@@ -11,7 +11,7 @@ These results are already published by \cite{uradnik2024reducing}, along with a 
 In this thesis, we extend these results for different divergence functions, utilizing the $ L_k $-norms.
 We compare these results to those with the utopian gap.
 Finally, we show some examples documenting properties of the divergence already discussed above.
-% TODO: zmínit workshopovej článek
+Some of the results concerning norms were already submitted to the OptLearnMAS workshop \filip{citace? chceme toto?}.
 
 % Metacentrum technical info
 The code for conducting the experiments was written in Python~3.10 using \texttt{stable\_baselines3}~2.0 \citep{stable-baselines3}, \texttt{gymnasium}~0.28 \citep{towers_gymnasium_2023} and \texttt{pytorch}~2.0 \citep{Ansel_PyTorch_2_Faster_2024}, and is available at Github \citep{gitrepo}.
@@ -53,7 +53,7 @@ The point of this example is not to precisely model a real-world situation.
 It is rather to have a simple class of finite games with very simple structure, which are superadditive, and on which we can thus run our algorithms and see what they do.
 \david{tohle bych ještě pomasíroval, ale pěkný}
 
-% TODO: factory distribution
+% factory distribution
 For a given $ n $, there are $ n $ different factory games, each with a different owner.
 When running the experiments, we choose $ \fdist $ to be a uniform distribution on these $ n $ games, which we call $ \factory $.
 \Cref{fig:factory} shows the results of our experiments for $ n=5 $ as a function of the budget $ \tau $, for different choices of divergence functions.
@@ -73,6 +73,7 @@ As expected, the PPO algorithm starts off close to the offline algorithm.
 As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticably beats the offline algorithms, and becomes close to the oracle algorithms.
 
 % comparison of divergence functions
+\filip{tady by se dalo zmínit že je to graph game, kdybychom to pak definovali někde}
 Now, let us compare the utopian gap and the $ L_1 $-divergence.
 % TODO: finish rewrite
 \filip{začal jsem rewrite, všechno dolu odsud bude ještě změněný určitě}
@@ -83,6 +84,7 @@ Even though for the $ \factory[5] $ distribution, the greedy and optimal algorit
 The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible $ \factory[5] $ games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}\david{jn}
 
 \section{Supermodular}
+\label{sec:supermodular}
 
 % remind what supermodular is
 The class of supermodular functions/games is widely studied in many fields, most notably in cooperative game theory.
@@ -139,25 +141,26 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 \david{Jn, ať to nepůsobí jako spam. Ale minimálně nějaký se tam hodí mi přijde. Mohlo by se na ně odkázat v té sekci o Largest Coalitions.}
 
 \section{Largest Coalition Heuristic}
-
 \label{ssec:largest}
-\filip{co dát tohle úplně na konec, ať je to jako happy end? :D}
-\david{jako klidně :D}
 
 % explain motivation
-In the previous sections, we have seen that our methods work remarkably well on the uniform supermodular distribution for $ n=5 $.
-Furthermore, all the algorithms end up choosing the same actions: revealing all the subsets\footnote{Or coalitions, but I will stick to the more general set function terminology in this section.} of size $ n-1 $.
+The main motivation of this thesis is to find out which subsets/coalitions are in some sense the most important for a given distribution of set functions.
+To do this for any given distribution of superadditive set functions, we have devised the algorithms described in \Cref{chap:pp}.
+For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.
+In this section, we further look at the $ \supermodular $ distribution, where our algorithms all performed well, while behaving all in the same way -- first choosing the $ n $ largest subsets.
 After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
-This leads us to propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
-\david{Co takhle tohle podat jinak. Řekněme, že chceme vědět co je zajímavé na struktuře nějaké třídy set fcí. Ale co takhle otázka jako vůbec znamená? Jak to zjistit? Jeden způsob je ten náš - vezmeš tu třídu, použiješ naše algoritmy a podíváš se to to dělá. Jeden případ, kdy je ta strategie mega hezky interpretovatelná je supermodular, kdy je fakt jednoduchá. No a teď to zkusíš generalizovat tam, kam se žádný počítač nikdy nedostane. A hele, ono to dělá něco lepšího!}
 
 % comment on performance
-\Cref{fig:largest} shows the performance of this heuristic with the utopian gap, and the $ L_1 $-divergence for increasing $ n $.
+This suggests that the \textquote{most important subsets} for the supermodular functions, at least in terms of the divergence, are in fact the largest subsets, in addition to the minimal information $ \k_0 $.
+Hence, we propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
+Unfortunately, due to the time complexity of the optimal algorithms, we cannot compare the heuristic to them for larger $ n $.
+Instead, we compare it only with the \algRand{} strategy.
+\Cref{fig:largest} shows the performance of this heuristic as a function of $ n $, with the utopian gap and the $ L_1 $-divergence.
 In order to make the results comparable, we normalize the results by the initial divergence (gap), i.e. when $ \k = \k_0 $.
-Unfortunately, we cannot compare the heuristic to the performance of the optimal algorithms, as that is computationally expensive, so we instead compare it only with the \algRand{} strategy.\david{možná zas odkaz na komplexitu optimal algorithmu?}
 
-% TODO: explain why
+% explain why
 Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
-To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution,\david{tečka?} and we have found that the values decrease exponentially\david{je tohle fakt pravda? není to prostě že se zmenšujou rychle?}\filip{no takhle, pro těch 5 hráčů je to fakt vždycky cca o 3 řády co si pamatuju, ale možná není dobrej nápad psát to takhle globálně} with the size of the subset.
-This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.\filip{Jak moc to tu chci vysvětlovat?}\david{podle mě nechceš.}
-\filip{schůzka: divergence a utopian gap velkým?}
+To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution.
+We have found that the values decrease by several orders with the size of the subset.
+This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.
+\filip{co tohle? co dál sem?}
