@@ -272,8 +272,8 @@ This is crucial in learning, when deciding how to alter a policy to maximize the
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
 There are many reinforcement learning algorithms, each with its\david{their?} own strengths and weaknesses.
-In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm.\david{https://arxiv.org/abs/1707.06347} % TODO: citace
-PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments. \david{https://arxiv.org/abs/1909.07528, https://arxiv.org/abs/1912.06680, https://proceedings.neurips.cc/paper_files/paper/2022/file/b1efde53be364a73914f58805a001731-Paper-Conference.pdf}% TODO: citacee
+In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm \citep{schulman2017proximal}.
+PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments \citep{conf/nips/Ouyang0JAWMZASR22,Berner2019Dota2W,conf/iclr/BakerKMWPMM20}.
 Importantly for our purposes, PPO is able to work with continuous state spaces, which is required in our application.%
 \footnote{This is not specific to PPO, but rather to the fact that we are using neural networks.}
 

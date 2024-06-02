@@ -21,12 +21,18 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 \section{Exploration of Distributions}
 \filip{lepší název? ale asi dává smysl mít tuhle sekci zvlášť, ne?}
 \david{spíš bych tomu říkal experimental domains. Ale není pak supermodular tady součást?}
+\filip{ano, je, více méně tady mělo být všechno co má ten graf stejnej jako factory, tj divergence vs budget. takže zatím factory, supermod, a pak případně další}
 
 
 In this section, we explore different distributions and see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
 As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential for sufficienty large $ \tau $.
 For this reason, we only present here the results for $ n=5 $, for which the optimal algorithms took 30 hours to compute.
 Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute the optimal algorithms for all choices of $ \tau $, it would require over 100 years with our current setup.
+
+We here show the performance of our algorithms with the utopian gap as divergence, because it has a nice interpretation in cooperative game theory.
+We further show the performance with the $ L_1 $ and $ L_2 $ norms as divergence functions.
+These are very general, not tied to a specific application, and they have a geometric interpretation which ties them to the original motivation of the divergence -- to measure the size of the set of extensions.
+See \Cref{sec:divergence} for more details.
 
 \subsection{Factory Game}
 
@@ -36,6 +42,9 @@ The first setting where we run our experiments is a class of cooperative games w
 \david{ukradli jsme to z wiki, takže bych to asi necitoval :D}
 \filip{a neni nejakej originalnejsi zdroj?}
 \david{nope, měli jsme s tím probém i v tom aamas článku}
+\filip{fuck, a co něco jako:}
+This is a very simple example, taken from Wikipedia lol
+\filip{přesná formulace je ještě WIP}
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -72,36 +81,37 @@ When running the experiments, we choose $ \fdist $ to be a uniform distribution 
 We can see that no matter the divergence function, all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
 Further, there is a noticeable difference between the performance of the offline and oracle optimal algorithms.
 As expected, the PPO algorithm starts off close to the offline algorithm.
-As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticably beats the offline algorithms, and becomes close to the oracle algorithms.
+As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticeably beats the offline algorithms, and becomes close to the oracle algorithms.
 
 % comparison of divergence functions
 \filip{tady by se dalo zmínit že je to graph game, kdybychom to pak definovali někde}
 Now, let us compare the utopian gap and the $ L_1 $-divergence.
 % TODO: finish rewrite
-\filip{začal jsem rewrite, všechno dolu odsud bude ještě změněný určitě}
+\filip{čekám na experimenty, tady chybí odstavec :) ale jinak ten dalsí je zmasirovanej}
 
 % greedy aint optimal
 Another question we can answer from \Cref{fig: exploitability over time} is that of optimality of the greedy approach.
 Even though for the $ \factory[5] $ distribution, the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $, the \algRO{} algorithm is in fact strictly better than its greedy counterpart.
-The same can be said for the offline algorithms, as, if we ran them on a distribution over only one of the possible $ \factory[5] $ games, the oracle algorithms would perform exactly the same, and the offline algorithms would be identical to oracle, as is always the case with distributions with supports of size 1.\filip{masirovat}\david{jn}
+This extends to the offline algorithms as well, as shown in \Cref{fig: fixed owner factory}, where we change the factory distribution to always yield the game with player 1 as the factory owner.
+This distribution has support size of 1, and thus the offline algorithms become identical to the oracle algorithms.
+\filip{masirovano. co ty na to?}
 
-\section{Supermodular}
+\subsection{Supermodular}
 \label{sec:supermodular}
 
 % remind what supermodular is
-The class of supermodular functions/games is widely studied in many fields, most notably in cooperative game theory.
-This leads us to investigating of what our divergence, and utopian gap especially, can tell us about the structure of this class.
-We study a uniform distribution of monotone supermodular games on $ n $ players, with the value of the grand coalition $ N $ set to $ 1 $\filip{masirovat}\david{Jn, tohle je horši než poslední masáž}, which we call $ \supermodular $.
-In our experiments, to generate a supermodular game uniformly at random, we have used the work of \filip{TODO}.
-The results of those experiments for $ n=5 $ are presented in \Cref{fig: exploitability over time}~(right).
+The class of supermodular functions is widely studied in many fields, most notably in economy cooperative game theory.
+It has a very rich structure, and many interesting properties \filip{citace?}.
+Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.
+We call this distribution $ \supermodular $.
+We sample from this distribution effectively thanks to the work of \filip{TODO}.
+The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermodular}.
 
 % explain the observed
-To our surprise, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of gap reduction with just the budget of five coalitions.
-Also, interestingly, there is little difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the gap.
+To our surprise, our algorithms work remarkably well on the $ \supermodular[5] $ distribution, regardless of the choice of divergence, vastly outperforming the \algRand{} approach, and all achieving over 99~\% of gap reduction with just the budget of five coalitions.
+Further, there is very little difference between the algorithms themselves, suggesting that knowledge of the specific function drawn from the distribution does not help when decreasing the gap.
+The actions taken by the algorithms are in \Cref{fig:supermod_coals}, where we see that the majority of the decline happens due to revealing the largest coalitions.
 We investigate these findings further in \Cref{ssec:largest}.
-
-\section{$ L_k $ Norms}
-% TODO: jinak
 
 % ell = l_1
 So far, we have seen how our algorithms behave through the lens of cooperative games, with utopian gap as the divergence.
