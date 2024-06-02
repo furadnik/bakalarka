@@ -159,20 +159,22 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 The main motivation of this thesis is to find out which subsets/coalitions are in some sense the most important for a given distribution of set functions.
 To do this for any given distribution of superadditive set functions, we have devised the algorithms described in \Cref{chap:pp}.
 For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.
+\david{sem nový osdtavec a říct, že ilustrujeme tenhle přístup na supermodular}
 In this section, we further look at the $ \supermodular $ distribution, where our algorithms all performed well, while behaving all in the same way -- first choosing the $ n $ largest subsets.
-After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
+After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).\david{tohle by ještě šlo pomasírovat}
 
 % comment on performance
 This suggests that the \textquote{most important subsets} for the supermodular functions, at least in terms of the divergence, are in fact the largest subsets, in addition to the minimal information $ \k_0 $.
 Hence, we propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
-Unfortunately, due to the time complexity of the optimal algorithms, we cannot compare the heuristic to them for larger $ n $.
+Unfortunately, due to the time complexity of the optimal algorithms, we cannot compare the heuristic to them\david{tohle by mělo být někde jinde ve větě ne?} for larger $ n $.
 Instead, we compare it only with the \algRand{} strategy.
 \Cref{fig:largest} shows the performance of this heuristic as a function of $ n $, with the utopian gap and the $ L_1 $-divergence.
 In order to make the results comparable, we normalize the results by the initial divergence (gap), i.e. when $ \k = \k_0 $.
 
 % explain why
-Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
+Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.\david{tohle ještě neformálně přeformuluj. In other words, while a random subset carries less information as $n$ grows, the largest subsets get more important. A nový odstavec}
 To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution.
 We have found that the values decrease by several orders with the size of the subset.
 This explains the good performance of our heuristic, as choosing large subsets limits the upper superadditive bounds of the smaller subsets the most.
 \filip{co tohle? co dál sem?}
+\david{možná něco o té koncentraci, ale chce to říct opatrně jako spekulaci. Možná to nestojí za to.}
