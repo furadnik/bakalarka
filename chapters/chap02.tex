@@ -20,10 +20,10 @@ First, let us formalize the set functions with incomplete information.
   An \emph{incomplete set function} is $ \left( f, \k \right) $, where $ \k \subseteq \pot N $ are the \emph{known values} of the set function.
 \end{defi}
 
-% TODO: jak se liší od partial set funcs
 Notice that the $ f $ in the pair $ \left( f, \k \right) $ is still the \emph{complete} set function.
 We are just restricting ourselves to using only the values from $ \k $ in computations.
-This may seem unnatural at first, but it will help us in subsequent definitions.
+This is in contrast to the field of \emph{partial set functions}, where the \textquote{incomplete} function is truly defined as $ \hat f: \k \to \R $.\filip{TODO: citace}
+We have decided to use our definition with complete $ f $, as this allows us to \emph{add} subsets to $ \k $, without the need to alter $ f $ itself to get another correct incomplete set function.
 
 \begin{defi}[$ \C $-extension]
   Let $ \C $ be a class of set functions, and let $ \left( f, \k \right) $ be an incomplete set function, such that $ f \in \C $.
@@ -32,7 +32,6 @@ This may seem unnatural at first, but it will help us in subsequent definitions.
   \]
   The class of all $ \C $-extensions of $ \left( f,\k \right) $ is denoted by $ \fce{\C}{f, \k} $.
 \end{defi}
-% TODO: tady možná říct že tohle už asi někdy někoho napadlo
 
 By assuming that $ f \in \C $, the $ \C $-extensions are a class containing every viable candidate for $ f $ -- it doesn't contradict anything we know about $ f $.
 The set $ \fce{\C}{f, \k} $ is non-empty, as $ f $ is always a $ \C $-extension of itself, by the assumption of $ f \in \C $.
