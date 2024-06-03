@@ -36,7 +36,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 
 % analýza časové složitosti
 The time complexity of the \algFO{} algorithm is dependent not only on the size of the problem $ n $, but also on the choice of parameters, namely the number of samples $ \sigma $ and the computation of divergence, which depends on $ \ell $.
-We will denote the time complexity of computing the divergence for the specific divergence\martin{dvakrát divergence}\filip{jedno je divergence a druhý divergence function}\david{souhlas s oběma, i když asi víc s Filipem :D Taky se mi zdá, že by to šlo přeformulovat.}\filip{Jako možná by bylo fajn vymyslet lepší název pro $ \ell $ než "divergence function"...} \david{co takhle We will denote the time complexity of computing the divergence given by a specific $l$ as ...}\filip{furt mi přijde jako že by hodně prospělo mít lepší jméno než divergence fn} function $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
+We will denote the time complexity of computing the divergence for the specific choice of $ \ell $ as $ \fce\divt{n} $, a function of $ n $, the size of the ground set.
 For simplicity, we will assume that the time complexity of computing the divergence is the same for every possible subset structure of size $ \tau $.
 This simplifies the notation, and it holds for every divergence function we consider in this thesis.
 We further assume that this is $ \fce{\Omega}{2^n} $, which is motivated by the fact that the divergence should take into account all the values of coalitions.
