@@ -56,7 +56,7 @@ In other words, a set is at least as valuable as the sum of its parts.
 
 % proč je supermodularita sexy
 Supermodularity is widely studied in various fields, most notably in cooperative game theory (which we will discuss below) and economics.
-It gives rise to many nice properties, supermodular functions are thought to have a very rich structure.\filip{TODO: citace a případně přepsat?}
+It gives rise to many nice properties, supermodular functions are thought to have a very rich structure.\filip{TODO: citace a případně přepsat?}\david{pomasíroval bych. Citace se hodí i za to jak se to pužívá v ekonomice a coop GT}
 The supermodularity property is, assuming $ \fce{f}{\emptyset} = 0 $, a stronger condition than superadditivity, as the following proposition shows.
 
 % supermodularita => superadditivita
@@ -81,8 +81,8 @@ We will denote $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classe
 \section{Cooperative Game Theory}
 
 % co je to kooperativní teorie her
-Cooperative game theory is a field of mathematics that studies situations in which agents can form cooperating groups, called \emph{coalitions}.
-These coalitions receive a \emph{payoff} from the game, which is then somehow divided among the agents in the coalition.
+Cooperative game theory is a field of mathematics that studies situations in which agents can form cooperating groups, called \emph{coalitions}.\david{tohle by šlo poštouchat. Rozdělit na dvě vety 1) CGT studuje kooperaci 2) v tomhle modelu tvoří lidi koalice, který maj hodnotu?}
+These coalitions receive a \emph{payoff} from the game, which is then somehow divided among the agents in the coalition.\david{tohle je zmatečný}
 The goal of cooperative game theory is to study the \emph{stability} of the formed coalitions, and the \emph{distribution} of the payoff among the agents.
 
 % definice kooperativní hry
@@ -93,11 +93,11 @@ The goal of cooperative game theory is to study the \emph{stability} of the form
 
 When discussing coalitions, we usually use the terms \emph{grand coalition} for the coalition of all players $ N $, and \emph{singletons} for coalitions containing a single player.
 Further, for a set of coalitions $ \s \subseteq \pot N $, we use the term \emph{coalition structure}.
-\filip{TODO: chci tam tuhle větu vůbec dávat:}
+\filip{TODO: chci tam tuhle větu vůbec dávat:}\david{za mě určitě}
 From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
 
 % payoff vector
-In cooperative game theory, we usually assume that the grand coalition has formed, i.e. all the players are cooperating, then we discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players, and then investigate whether the formed coalition is stable, or not.
+In cooperative game theory, we usually assume that the grand coalition has formed, i.e. all the players are cooperating, then we discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players, and then investigate whether the formed coalition is stable, or not.\david{rozsekat na víc vět?}
 The payoff of players is described by a payoff vector.
 
 \begin{defi}[Payoff vector]
@@ -113,8 +113,8 @@ For a general coalition $ S \subseteq N $ and a payoff vector $ x \in \R^n $, we
 	\fce{x}{S} \deq \sum_{i \in S}^{} x_i.
 \]
 % efficiency
-In this thesis, we will only consider efficient payoff vectors, as we want to distribute the entire value of the grand coalitions.
-Other notions of distribution where the payoff vector needn't be efficient is sometimes studied, but we will not discuss them here. % TODO: citace
+In this thesis, we will only consider efficient payoff vectors, as we want to distribute the entire value of the grand coalitions.\david{tohle opodstatnění nic neříká mi přijde. Klidně bych ho vynechal}
+Other notions of distribution where the payoff vector needn't be efficient is\david{are} sometimes studied, but we will not discuss them here.\david{jako nevim jestli nás tohle vůbec trápí} % TODO: citace
 
 % solution concept
 We are interested in studying payoff vectors with certain properties, such as fairness, stability, etc.
@@ -126,14 +126,14 @@ Formally
 \end{defi}
 
 % masirovat
-There are solution concepts, most notably for us the Shapley value, which map each game to exactly one vector.
+There are solution concepts, most notably for us the Shapley value, which map each game to exactly one vector.\david{Shapleyho zmínit až potom?}
 We call these \emph{single-point solution concepts}.
 In such cases, for simplicity of notation, we simply alter their signature to $ f: \games n \to \R^n $.
-This is in contrast with so-called \emph{multi-point solution concepts}, which give results of varying size.
+This is in contrast with so-called \emph{multi-point solution concepts}, which give results of varying size.\david{"size" je divný}
 
-The first important solution concept we will mention here is the \emph{core}.
-The core the payoff vectors, which encourage stability of the grand coalition.
-In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, the players don't have incentive to leave the grand coalition.
+The first important solution concept we will mention here is the \emph{core}.\david{citace}
+The core the payoff vectors, which encourage stability of the grand coalition.\david{wtf?}
+In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, the players\david{no player} don't have incentive to leave the grand coalition.
 
 \begin{defi}[Core]
 	The \emph{core} is a multi-point solution concept defined as \[
@@ -141,12 +141,12 @@ In other words, when distributing $ \fce{v}{N} $ according to a payoff vector fr
 	\]
 \end{defi}
 
-If the core of a game is empty, it tells us that no matter how we distribute the value of $ \fce{v}{N} $, there will always be a set of players that would be better off leaving the grand coalition, so it is unstable, and thus (assuming perfect rationality of the players), it won't form.
+If the core of a game is empty, it tells us that no matter how we distribute the value of $ \fce{v}{N} $, there will always be a set of players that would be better off leaving the grand coalition, so it is unstable, and thus (assuming perfect rationality of the players), it won't form.\david{tenhle odstavec je jedna věta - rozděl klidně na 3 :D}
 
 % shapley
 However, the core doesn't consider the fairness of the distribution.
-For that, we would like another solution concept, that would divide the value of the grand coalition proportionally to the contributions of each player.
-By contributions, we mean the extra value the coalition generates, when a player joins. Formally, for $ i \in N $ and $ S \subseteq N \setminus \left\{ i \right\} $, the contribution of $ i $ to $ S $ is $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $.
+For that, we would like\david{would like zní divně} another solution concept, that would divide the value of the grand coalition proportionally to the contributions of each player.
+By contributions, we mean the extra value the coalition generates, when a player joins. Formally, for $ i \in N $ and $ S \subseteq N \setminus \left\{ i \right\} $, the contribution of $ i $ to $ S $ is $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $.\david{Shapley je vážená kombinace těchhle faktorů, kde váha zachycuje pravděpodobnost nalezení $S$ na začátku náhodného uspořádání $N$?}
 
 \begin{defi}[Shapley value]
 	The \emph{Shapley value} is a single-point solution concept defined as \[
@@ -177,7 +177,7 @@ However, the Shapley value is generally accepted as fair, as it satisfies many n
 % RL je způsob jak udělat agenta
 Reinforcement learning (RL) is a technique for designing \emph{agents} which learn to perform tasks.
 The agent interacts with an environment, and receives feedback in the form of rewards.
-The goal of the agent is to learn a policy that maximizes the expected future reward.
+The goal of the agent is to learn a policy\david{(or a way to choose actions) which...} that maximizes the expected future reward.
 \emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
 % my budeme dělat jen trochu RL
@@ -189,7 +189,7 @@ The reader is encouraged to look deeper into the literature for more information
 Let us first formally define the model used when discussing RL.
 The environment is a black box to the agent, which holds some \emph{state}.
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
-and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action (the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
+and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action \david{závorku do footnotu?}(the reward also possibly depends on the \emph{outcome} of the action, i.e. the new state).
 The goal of the agent is to maximize the cumulative reward received over time.
 We will formalize this as a \emph{Markov decision process}.
 Note that in the definition of the Markov decision process, we further require a \emph{discount factor} $ \gamma $, which will be discussed later.
@@ -209,7 +209,7 @@ Note that in the definition of the Markov decision process, we further require a
 % TODO: daviduv oblibeny obrazek
 
 The agent starts in an initial state $ s_0 \sim \initial $.
-At each step $ t $, the he chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+At each step $ t $, the he\david{?} chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
 To formalize the agent, we define a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
 
@@ -220,7 +220,7 @@ To formalize the agent, we define a \emph{policy}, which is a function that give
 
 As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
 We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
-However, formally, the agent plays indefinitely.
+However, formally, the agent \david{may} plays indefinitely.
 To make the total expected cumulative reward finite, we discount the future rewards exponentially, by a factor of $ \gamma^t $.\footnote{This gives a finite sum, assuming $ \gamma < 1 $ and the rewards are bounded.}
 This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
 To capture environments with a finite horizon of $ T $ steps, we set the rewards for times $ t > T $ to zero.
@@ -236,12 +236,12 @@ To capture environments with a finite horizon of $ T $ steps, we set the rewards
 
 Since the transition function and the policy are stochastic, the states, actions, and rewards, and thus the return, are random variables.
 When constructing a policy, our goal will be to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, the transition function, and the policy in each step.
-Note that the expectation is formally computed over an infinite number of actions according to the policy $ \pi $, since the sum in the definition of $ \return \tau $ goes to infinity.\david{co tohle znamená? Zní mi to jakože musíš mít nekonečně dlouhý trajektorie? Nebo prostě že dostaneš tu exp v limitě nekonečně mnoha samplů? Pokud to druhé, není to pravda vždycky? Každopádně je to matoucí}\filip{první. přepsáno, lepší?}
+Note that the expectation is formally computed over an infinite number of actions according to the policy $ \pi $, since the sum in the definition of $ \return \tau $\david{index není index} goes to infinity.\david{co tohle znamená? Zní mi to jakože musíš mít nekonečně dlouhý trajektorie? Nebo prostě že dostaneš tu exp v limitě nekonečně mnoha samplů? Pokud to druhé, není to pravda vždycky? Každopádně je to matoucí}\filip{první. přepsáno, lepší?}\david{jako už chápu cos chtěl říct, ale nevim jestli je to třeba říkat}
 It is sometimes useful to explicitly state the policy in the notation.
 For that, we will use the notation $ \fceb{\E_\pi}{\return_0} $, which is common in RL literature, and it signals that the actions chosen when computing the return are corresponding to the policy $ \pi $.
 
 The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
-It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left[ 0,1 \right) $ (note that for $ \gamma = 1 $, it need not converge, yet it is still useful when we know that our episodes are always finite)\david{$\gamma$ byla v definici nahoře z [0,1], udělej to konzistentně.}\filip{dopsána závorka. myšleno tak že definovaný je to nějak, a konverguje to pro něco jinýho}.
+It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left[ 0,1 \right) $ (note that for $ \gamma = 1 $, it need not converge, yet it is still useful when we know that our episodes are always finite)\david{$\gamma$ byla v definici nahoře z [0,1], udělej to konzistentně.}\filip{dopsána závorka. myšleno tak že definovaný je to nějak, a konverguje to pro něco jinýho}.\david{meh meh, je to furt torchu zmatečný. Co se na to vypašlat a rovnou do definice hodit )?}
 Further, it makes the agent prefer immediate rewards over future rewards, which sometimes helps the training algorithms to be more stable in certain environments, as is discussed below.
 
 We further want to quantify the performance of a policy in a given state.
@@ -258,12 +258,12 @@ Finally, let us define the value of choosing an action in a state.
 
 \begin{defi}[Action-state value]
 	Suppose the agent takes steps in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
-	The \emph{action-state value} of a state $ s $ and an action $ a $ is \[
+	The \emph{action-state value} of a state $ s $ and an action $ a $\david{$\in\mathcal{A} $?} is \[
 		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s, a_0 = a \right].
 	\]
 \end{defi}
 
-This quantity is also referred to as the \emph{q-value} of an action in a state.
+This quantity is also referred to as the\david{action-state value function, or the} \emph{q-value} of an action in a state.
 Action-state values approximate the change in the state value, when a given action in a given state is assigned a larger probability.
 This is crucial in learning, when deciding how to alter a policy to maximize the expected return.
 
@@ -271,7 +271,8 @@ This is crucial in learning, when deciding how to alter a policy to maximize the
 \label{sec:prel-ppo}
 
 % existuje spoustu způsobů, my vybíráme PPO + NN
-There are many reinforcement learning algorithms, each with its\david{their?}\filip{neřekl bych} strengths and weaknesses.
+There are many reinforcement learning algorithms, each with its\david{their?}\filip{neřekl bych}\david{vždyť je to 
+množný číslo ne?} strengths and weaknesses.
 In our experiments, we use the \emph{Proximal Policy Optimization} (PPO) algorithm \citep{schulman2017proximal}.
 PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments \citep{conf/nips/Ouyang0JAWMZASR22,Berner2019Dota2W,conf/iclr/BakerKMWPMM20}.
 Importantly for our purposes, PPO is able to work with continuous state spaces, which is required in our application.%
@@ -281,7 +282,7 @@ Importantly for our purposes, PPO is able to work with continuous state spaces, 
 Let us now delve into the specifics of the PPO algorithm.
 PPO belongs to a family of so-called actor-critic algorithms.
 % PPO uses an actor-critic architecture.
-It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\david{jakoby tohle není pravda, ppo jde dělat tabular. Měl bys říct něco ve stylu že používá dvě fce, který jsou typicky aproximovaný neuronkou}\filip{davide to nikoho nezajímá. jsme v preliminaries, chci to vysvětlit jak to pouzíváme my. tohle by mě zmátlo. footnote?}
+It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\david{jakoby tohle není pravda, ppo jde dělat tabular. Měl bys říct něco ve stylu že používá dvě fce, který jsou typicky aproximovaný neuronkou}\filip{davide to nikoho nezajímá. jsme v preliminaries, chci to vysvětlit jak to pouzíváme my. tohle by mě zmátlo. footnote?}\david{Twl jak se role obrací :D Normálně bych na tyhle kraviny kašlal já. Asi dobrý.}
 % The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
 The actor tries to learn a policy $ \pi $ which maximizes the expected return,
 while the critic seeks to approximate the value $ \fce \stval s $ of each state $ s $ encountered when following the policy $\pi$.
@@ -293,14 +294,14 @@ Before defining their respective losses, let us mention how the training process
 The critic and the actor are trained simultaneously.
 The training process is split into \emph{iterations}.
 In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment.
-All trajectories use the same current actor's strategy, which allows the gathering process to be parallelized. \david{z té poslední části by se dala udělat samostatná věta a říct, že tohle stojí za tou snadností věci paralelizovat?}\filip{co teď? asi ještě pomasírovat by to chtělo, ale takhle lepší?}
+All trajectories use the same current actor's strategy, which allows the gathering process to be parallelized. \david{z té poslední části by se dala udělat samostatná věta a říct, že tohle stojí za tou snadností věci paralelizovat?}\filip{co teď? asi ještě pomasírovat by to chtělo, ale takhle lepší?}\david{pěkný}
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
-The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
+The advantage quantifies how much more reward the agent received from a given state when he chose\david{s} the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
 If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward than expected, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
-After the training\david{iteration?}\filip{ne! iteration je to celý -- data gathering plus training, ne jen ten training}, we drop all the gathered rewards, and move to the next iteration\david{and collect a new set of trajectories using the current policy?}\filip{to tam nechci}.
+After the training\david{iteration?}\filip{ne! iteration je to celý -- data gathering plus training, ne jen ten training}\david{no vždyť}, we drop all the gathered rewards, and move to the next iteration\david{and collect a new set of trajectories using the current policy?}\filip{to tam nechci}\david{okok}.
 
 % critic dělá tohle, minimalizuje tohle
 Let us now discuss the details of the actor and the critic.
@@ -318,7 +319,7 @@ Observe that one way to express this is as maximizing (over the parameters $ \th
 \]
 where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
 
-However, if we were to maximize this objective directly, with multiple gradient-descent\david{není tady spíš ascent?}\filip{jsou to losses, měl by být descent. proč ascent?} updates, the policy might change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
+However, if we were to maximize this objective directly, with multiple gradient-descent\david{není tady spíš ascent?}\filip{jsou to losses, měl by být descent. proč ascent?}\david{proč jsou to losy? Tu věc nahoře chceš maximalizovat - pokud advantage je >0, tak chceš větší čitatel} updates, the policy might change too much, and our approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, we want to \emph{clip} the loss, so it cannot become too low in one iteration.
 Hence, the objective of the actor is defined followingly \begin{align*}
 	\lossactor &\deq \fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
@@ -336,8 +337,8 @@ By taking the minimum of the clipped and unclipped objective, we ensure that the
 This is crucial as, if we are unlucky, one policy update might actually \emph{decrease} the objective, and if we were to clip from both sides, we would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
 
 % PPO pseudokod
-\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style\david{nechceš tohle hodit na začátek stránky?}\filip{ne}}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
-	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.\david{proč má vůbec critic hat a ctor ne?}\filip{critic má hat protože je to aproximace toho reálnýho $ v $. Actor je prostě nějaká policy.}}
+\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, $ \alpha_\theta $, $\alpha_\phi $, the coefficients of losses of the actor, critic.}
+	{Trained PPO model -- the critic $ \critic $ and actor $ \actor $.\david{proč má vůbec critic hat a ctor ne?}\filip{critic má hat protože je to aproximace toho reálnýho $ v $. Actor je prostě nějaká policy.}\david{eeeehhh...ok}}
 	\State Initialize $ \critic $ and $ \actor $ randomly.
 	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
 		\State Gather rewards for $ R $ trajectories using the current policy $ \actor $.
@@ -361,5 +362,5 @@ The gathering of trajectories is typically performed on CPUs, which are readily 
 \filip{Co tohle? Určitě by to šlo rozepsat ale nevim jestli to chceme.}
 Another popular choice is the REINFORCE algorithm with baseline \filip{citace}.
 PPO differs from it mainly in the loss of the actor -- REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described above.
-While the loss used by REINFORCE has greater theoretical support\david{tohle není pravda za mě. Spíš se snaží optimalizovat jiné věci}\filip{fakt ne? ze straky jsem měl takový pocit... tak co bys sem napsal jiného?}, the loss used by PPO works better empirically, allowing faster convergence and more stable learning.
+While the loss used by REINFORCE has greater theoretical support\david{tohle není pravda za mě. Spíš se snaží optimalizovat jiné věci}\filip{fakt ne? ze straky jsem měl takový pocit... tak co bys sem napsal jiného?}\david{No jsou to za mě prostě jiné objectivy, optimalizujou jiné věci.}, the loss used by PPO works better empirically, allowing faster convergence and more stable learning.
 These properties make PPO a good choice for various problems, including the one we are interested in, as described in \Cref{sec:ppo}.
