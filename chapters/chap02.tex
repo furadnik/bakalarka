@@ -103,8 +103,8 @@ This leads us to measuring the distance between the upper and lower functions, u
 The most obvious choice of $ \ell $ is some norm, as norms are well studied, well understood and have nice properties.
 However, we state the following definition for an arbitrary $ \ell $, and we will see an example of $ \ell $ which is not a norm, but which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
 % restrikce na \ell?
-\filip{tady jsem přidal tyhle věci:}
-We do not put explicit restrictions on $ \ell $, but we will assume in this thesis that the value of $ \ell $ decreases as the size of $ \k $ increases.
+\filip{tady jsem přidal tyhle věci:}\david{co jsem nekomentoval dobrý}
+We do not put explicit restrictions on $ \ell $, but we will assume in this thesis that the value of $ \ell $ decreases as the size of $ \k $ increases\david{?}\david{also, nechceš spíš říct neklesající?}.
 Note that this does hold for the norms, as increasing $ \k $ means reducing the size of the $ \cSuperadditive $-extensions, thus decreasing the distance between the upper and lower functions.
 
 \begin{defi}[Divergence]
@@ -140,7 +140,7 @@ In that context, the upper and lower functions are bounds on the characteristic 
 We want to split the value of $ \fce{v}{N} $ fairly among the players using the Shapley value.
 However, the Shapley value requires all the values of $ v $ to be known.
 
-\filip{odsud dolů je to přepsaný}
+\filip{odsud dolů je to přepsaný}\david{přijde mi, že jsem tohle už komentoval}
 One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $ (we assume it is known that $ v $ is superadditive).
 However, without knowing the true value of $ v $, there is no way to tell which choice is the most reasonable.
 Each player then\david{is thus incentivised to choose?} chooses the function which gives him the highest payoff,\david{tečka} let us call it $ v_i $, and demands the payoff of $ \shapley[i] {v_i} $.
@@ -265,19 +265,19 @@ Having $ \tau $ as a part of the state is crutial for the policy, as (intuitivel
   and outputs a probability distribution over $ \pot N \setminus \k $, such that $ \E_{f \sim \fdist} \val \tau \ell f \k \pi $ is minimal.
 \end{defi}
 
-\filip{odsud dolů nový}
+\filip{odsud dolů nový}\david{checked}
 % okomentovat rozdíl mezi online a offline, a že to nevadí, protože divergence je monotonně klesající:
 % \filip{Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}\david{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
 Notice that there is a slight difference in the definition of the online and offline problems in terms of how many subsets end up being revealed.
 In the definition of the offline problem, we say that the resulting subset structure $ \k^* $ must be of size $ \tau $.
 However, here, we do not explicitly forbid the policy to choose the same subset twice.
 We need not forbid it, as the divergence as we have defined it is non-increasing with the size of $ \k $.
-This means that choosing to reveal a subset twice (essentially decreasing the budget by 1) is never beneficial.
+This means that choosing to reveal a subset twice (essentially decreasing the budget by 1) is never beneficial\david{tohle není pravda ne? Dokonce na to dole ukážeš příklad s nekonečnou normou}.
 
 % \david{říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?}
 Finally, let us briefly mention the relationship between solutions of the online and the offline problems, which we will expand upon in \Cref{chap:pp}.
-In special cases, they become the same problem, for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has learned.
-In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
+In special cases, they become the same problem,\david{tečka?} for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has learned.
+In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution\david{striktně menší?}.
 This is clear from the discussion above the definition of the online problem.
 If the online information does not help in any way, the online policy can simply mimic the solution of the offline problem, and reach the same expected divergence.
 For a more rigurous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.
