@@ -315,20 +315,22 @@ For more details, see \Cref{chap:results}.
 	]
 		%Nodes
     \node[stff]        (RO)                                        {\algRO{}};
-    \node[stff]        (FO)         [below= of RO]      {\algFO{}};
-    \node[stff]        (RG)         [left=of FO]                  {\algRG{}};
-    \node[stff,dotted]        (Online)     [right=of FO]                  {\emph{Online solution}};
-    \node[stff]        (FG)         [below=of FO]                  {\algFG{}};
+    \node[stff]        (FO)         [below=of RO]      {\algFO{}};
+    \node[stff]        (RG)         [left=of RO]                  {\algRG{}};
+    \node[stff,dotted]        (Online)     [right=of FO, yshift=35]                  {\emph{Online solution}};
+    \node[stff]        (FG)         [left=of FO]                  {\algFG{}};
 
 		%Lines
-		\draw[->, very thick] (RG.north) to (RO.south);
-		\draw[->, very thick] (FG.north) to (FO.south);
-		\draw[->, very thick] (FO.north) to (RO.south);
-		\draw[->, very thick, dotted] (Online.north) to (RO.south);
-		\draw[->, very thick, dotted] (FO.east) to (Online.west);
+		\draw[->, very thick] (RG) to (RO);
+		\draw[->, very thick] (FG) to (FO);
+		\draw[->, very thick] (FO) to (RO);
+		\draw[->, very thick, dotted] (Online) to (RO);
+		\draw[->, very thick, dotted] (FO) to (Online);
 	\end{tikzpicture}
 	\caption{Comparison of the performance of different algorithms.
-  The relation $ A \to B $ indicates that the resulting divergence of algorithm $ A $ is always higher than algorithm $ B $, in other words $ A $ is provably worse than $ B $.}
+  The relation $ A \to B $ indicates that the resulting divergence of algorithm $ A $ is always higher than algorithm $ B $, in other words $ A $ is provably worse than $ B $.
+  Dotted lines represent the relationship of the theoretical online optimal solution.
+}
 \end{figure*}
 
 \subsection{Utilizing PPO}
