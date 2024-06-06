@@ -19,6 +19,7 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: thesis.tex
+          pre_compile: "tlmgr update --self && tlmgr update --all && tlmgr install xmpincl"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
