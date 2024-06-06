@@ -12,7 +12,7 @@ jobs:
       - name: Make Thesis
         run: |
           sudo apt update && sudo apt upgrade -y
-          sudo apt install -y texlive git make texlive-latex-extra
+          sudo apt install -y texlive-full git make
           sed -i 's/{\\textcolor.*/{}/' macros.tex
           make
       - uses: "marvinpinto/action-automatic-releases@latest"
