@@ -306,6 +306,30 @@ Empirically, it is in most cases very close or even identical to \algRO{}, but w
 Prehaps more surprisingly, we show that for very special choices of $ \ell $ and $ \fdist $, even \algFG{} yields better results than the \algRG{} algorithm.
 For more details, see \Cref{chap:results}.
 
+\begin{figure*}[t!]
+	\centering
+	\begin{tikzpicture}[
+	stff/.style={rectangle, draw=black, very thick, minimum height=40, minimum width=110, rounded corners=3},
+	youngnode/.style={rectangle, draw=black, very thick},
+	oldnode/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum size=40},
+	]
+		%Nodes
+    \node[stff]        (RO)                                        {\algRO{}};
+    \node[stff]        (FO)         [below= of RO]      {\algFO{}};
+    \node[stff]        (RG)         [left=of FO]                  {\algRG{}};
+    \node[stff,dotted]        (Online)     [right=of FO]                  {\emph{Online solution}};
+    \node[stff]        (FG)         [below=of FO]                  {\algFG{}};
+
+		%Lines
+		\draw[->, very thick] (RG.north) to (RO.south);
+		\draw[->, very thick] (FG.north) to (FO.south);
+		\draw[->, very thick] (FO.north) to (RO.south);
+		\draw[->, very thick, dotted] (Online.north) to (RO.south);
+		\draw[->, very thick, dotted] (FO.east) to (Online.west);
+	\end{tikzpicture}
+	\caption{Comparison of the performance of different algorithms.
+  The relation $ A \to B $ indicates that the resulting divergence of algorithm $ A $ is always higher than algorithm $ B $, in other words $ A $ is provably worse than $ B $.}
+\end{figure*}
 
 \subsection{Utilizing PPO}
 \label{sec:ppo}
