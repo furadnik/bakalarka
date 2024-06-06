@@ -12,11 +12,11 @@ jobs:
       - name: Remove comments
         run: sed -i 's/{\\textcolor.*/{}/' macros.tex
       - name: Compile Abstract
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract.tex
       - name: Compile Full Thesis
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: thesis.tex
       - uses: "marvinpinto/action-automatic-releases@latest"
