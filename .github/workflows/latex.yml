@@ -15,6 +15,7 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract.tex
+          pre_compile: "tlmgr update --self && tlmgr update --all && tlmgr install xmpincl"
       - name: Compile Full Thesis
         uses: xu-cheng/latex-action@v3
         with:
