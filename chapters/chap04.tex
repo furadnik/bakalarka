@@ -97,7 +97,7 @@ While the greedy and optimal algorithms are close to each other, around step $ \
 % remind what supermodular is
 The class of supermodular functions is widely studied in many fields, most notably in economics and cooperative game theory.\filip{citace}
 It has a very rich structure, and many interesting properties \filip{citace?}\david{Mistr určitě něco bude znát}.
-Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.\david{ta poslední část je navíc ne?}\filip{ne?}\david{no jde jen o škálování. Ale asi je to podstatný, kdybys chtěl přesně zreplikovat ty naše čísla no.}\filip{o to nejde, jde o to, že uniformně náhodná funkce není jasný co je, protože nemůžeš mít uniformně náhodný reálný číslo, protože je jich prostě moc a jsou neomezený. takže musíš říct že to je omezený na ten interval [0,1] aby to dávalo smysl}
+Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.\david{ta poslední část je navíc ne?}\filip{ne?}\david{no jde jen o škálování. Ale asi je to podstatný, kdybys chtěl přesně zreplikovat ty naše čísla no.}\filip{o to nejde, jde o to, že uniformně náhodná funkce není jasný co je, protože nemůžeš mít uniformně náhodný reálný číslo, protože je jich prostě moc a jsou neomezený. takže musíš říct že to je omezený na ten interval [0,1] aby to dávalo smysl}\david{very true, sorry říkám bs}
 We call this distribution $ \supermodular $.
 There is an efficient algorithm for sampling from such a distribution \filip{citace}.
 The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermodular}.
@@ -120,7 +120,7 @@ We investigate these findings further in \Cref{ssec:largest}.
 In \Cref{chap:pp}, we have proven various statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
 One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
-This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}\filip{? to není pravda ne? právě že to není pravda, o tom je tahle sekce :D}
+This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}\filip{? to není pravda ne? právě že to není pravda, o tom je tahle sekce :D}\david{sorry vyjadřuju se jak hotentot. Je to typicky pravda, jak ilustrujeme?}
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
@@ -139,10 +139,10 @@ Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
 % explain motivation
 The main motivation of this thesis is to find out which subsets/coalitions are in some sense the most important for a given distribution of set functions.
 To do this for any given distribution of superadditive set functions, we have devised the algorithms described in \Cref{chap:pp}.
-For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.
+For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.\david{Co takhle sem přidat něco jakože když jsme lepší než random, náš přístup navíc řekne jaký subsety jsou ty doležitý a další instavec by mohl říct něco jakože to ilustrujeme na supermodular? Ale klidně řekni, že se ti tahle sekce líbí a necháme jí :D}
 
 In this section, we further investigate the $ \supermodular $ distribution, and we hypothesize about the generalization of what we have seen in our experiments for larger $ n $.
-We have previously seen (\Cref{sec:supermodular}) that for $ n=5 $, all algorithms perform well, while behaving all in the same way -- first choosing the $ n $ largest subsets\david{tohle mi furt přijde moc silný, co takhle initially behaving in the same way?}\filip{přidal jsem tam že to platí pro $ n=5 $, což je prostě pravda}.
+We have previously seen (\Cref{sec:supermodular}) that for $ n=5 $, all algorithms perform well, while behaving all in the same way -- first choosing the $ n $ largest subsets\david{tohle mi furt přijde moc silný, co takhle initially behaving in the same way?}\filip{přidal jsem tam že to platí pro $ n=5 $, což je prostě pravda}\david{No, záleží ještě PPO je "our algorithm". Same mi ilustruje, že policy všech těch algoritmů jsou identický. To není pravda žejo, proto bych místo same dal very similar a nikdo nemůže říct ani popel}.
 After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 
 % comment on performance
@@ -156,7 +156,7 @@ In order to make the results comparable, we normalize the results by the initial
 % explain why
 Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
 In other words, while a random subset structure of size $ n $ carries \textquote{less information} as $n$ grows, the largest subsets get \textquote{more important} (again, in terms of the divergence).
-\filip{co něco takovýho aby se to víc prodalo:}
+\filip{co něco takovýho aby se to víc prodalo:}\david{kdybych chtěl být extra hnidopich tak nevíš, že tohle bude pokračovat, takže jestli to fakt minimalizuje. Ale tohle fakt nikdo nebude řešit, super!}
 We can thus minimize the gap to near-zero, while keeping the number of revealed subsets \emph{linear} in $ n $, instead of the exponentially many of them we would require to know the entire function.
 
 To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution.
