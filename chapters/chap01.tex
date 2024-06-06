@@ -214,7 +214,24 @@ Note that in the definition of the Markov decision process, we further require a
 	\end{enumerate}
 \end{defi}
 
-% TODO: daviduv oblibeny obrazek
+% daviduv oblibeny obrazek
+\begin{figure*}[t!]
+	\centering
+	\begin{tikzpicture}[
+	stff/.style={rectangle, draw=black, very thick, minimum height=40, minimum width=80},
+	youngnode/.style={rectangle, draw=black, very thick},
+	oldnode/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum size=40},
+	]
+		%Nodes
+		\node[stff]        (Agent)                            {Agent};
+		\node[stff]        (Environment)   [right=of Agent]   {Environment};
+
+		%Lines
+		\draw[->, very thick] (Agent.north)  .. controls  +(up:9mm) and +(up:9mm) .. node[midway, above] {$ a_t \in \actions $} (Environment.north);
+		\draw[->, very thick] (Environment.south)  .. controls  +(up:-9mm) and +(up:-9mm) .. node[midway, below, align=center] {$ s_{t+1} \sim \fce{\tran}{s_{t}} $\\$ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $} (Agent.south);
+	\end{tikzpicture}
+	\caption{An illustration of the agent-environment interaction in a Markov decision process.}
+\end{figure*}
 
 The agent starts in an initial state $ s_0 \sim \initial $.
 At each step $ t $, he chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
