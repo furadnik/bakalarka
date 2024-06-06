@@ -11,7 +11,8 @@ These results are already published by \cite{uradnik2024reducing}, along with a 
 In this thesis, we extend these results for different divergence functions, utilizing the $ L_k $-norms.
 We compare these results to those with the utopian gap.
 Finally, we show some examples documenting properties of the divergence already discussed above.
-Some of the results concerning norms were already submitted to the OptLearnMAS workshop \filip{citace? chceme toto?}\david{asi ne, workshop nikoho nezajímá :D}.
+% TODO: workshop?
+% Some of the results concerning norms were already submitted to the OptLearnMAS workshop \filip{citace? chceme toto?}\david{asi ne, workshop nikoho nezajímá :D}.
 
 % Metacentrum technical info
 The code for conducting the experiments was written in Python~3.10 using \texttt{stable\_baselines3}~2.0 \citep{stable-baselines3}, \texttt{gymnasium}~0.28 \citep{towers_gymnasium_2023} and \texttt{pytorch}~2.0 \citep{Ansel_PyTorch_2_Faster_2024}, and is available at Github \citep{gitrepo}.
@@ -31,7 +32,6 @@ In this thesis, we focus on the performance of our algorithms with the utopian g
 We further show the performance with the $ L_1 $ and $ L_2 $ norms as divergence functions.
 These are very general, not tied to a specific application, and they have a geometric interpretation which ties them to the original motivation of the divergence -- to measure the size of the set of extensions.
 See \Cref{sec:divergence} for more details.
-\david{proč ne $L_5$?}\filip{co takhle:}\david{skvělé!}
 As we will see, the results are very similar for the two $ L_k $ norms, and we hypothesize that this will be the case even for other choices of $ k $.
 
 \subsection{Factory Game}
@@ -95,9 +95,9 @@ While the greedy and optimal algorithms are close to each other, around step $ \
 \label{sec:supermodular}
 
 % remind what supermodular is
-The class of supermodular functions is widely studied in many fields, most notably in economy and cooperative game theory.\david{citace?}
+The class of supermodular functions is widely studied in many fields, most notably in economics and cooperative game theory.\filip{citace}
 It has a very rich structure, and many interesting properties \filip{citace?}\david{Mistr určitě něco bude znát}.
-Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.\david{ta poslední část je navíc ne?}\filip{ne?}\david{no jde jen o škálování. Ale asi je to podstatný, kdybys chtěl přesně zreplikovat ty naše čísla no.}
+Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.\david{ta poslední část je navíc ne?}\filip{ne?}\david{no jde jen o škálování. Ale asi je to podstatný, kdybys chtěl přesně zreplikovat ty naše čísla no.}\filip{o to nejde, jde o to, že uniformně náhodná funkce není jasný co je, protože nemůžeš mít uniformně náhodný reálný číslo, protože je jich prostě moc a jsou neomezený. takže musíš říct že to je omezený na ten interval [0,1] aby to dávalo smysl}
 We call this distribution $ \supermodular $.
 There is an efficient algorithm for sampling from such a distribution \filip{citace}.
 The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermodular}.
@@ -120,7 +120,7 @@ We investigate these findings further in \Cref{ssec:largest}.
 In \Cref{chap:pp}, we have proven various statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
 One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
-This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}
+This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}\filip{? to není pravda ne? právě že to není pravda, o tom je tahle sekce :D}
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
@@ -141,9 +141,8 @@ The main motivation of this thesis is to find out which subsets/coalitions are i
 To do this for any given distribution of superadditive set functions, we have devised the algorithms described in \Cref{chap:pp}.
 For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.
 
-\filip{menší masáž odsud do konce}\david{nice, i když furt bych podle mě mohl líp prodat tu kuchařku na zjištění důležitých koalic pro dané $\mathcal{F}$ :)}
-In this section, we further investigate at\david{at?} the $ \supermodular $ distribution, and we hypothesize about the generalization of what we have seen in our experiments for larger $ n $.
-We have previously seen (\Cref{sec:supermodular}) that all algorithms perform well, while behaving all in the same way -- first choosing the $ n $ largest subsets\david{tohle mi furt přijde moc silný, co takhle initially behaving in the same way?}.
+In this section, we further investigate the $ \supermodular $ distribution, and we hypothesize about the generalization of what we have seen in our experiments for larger $ n $.
+We have previously seen (\Cref{sec:supermodular}) that for $ n=5 $, all algorithms perform well, while behaving all in the same way -- first choosing the $ n $ largest subsets\david{tohle mi furt přijde moc silný, co takhle initially behaving in the same way?}\filip{přidal jsem tam že to platí pro $ n=5 $, což je prostě pravda}.
 After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 
 % comment on performance
@@ -157,6 +156,8 @@ In order to make the results comparable, we normalize the results by the initial
 % explain why
 Surprisingly, while the normalized divergence increases for the \algRand{} strategy as $ n $ grows, for our \algLC{} heuristic it stays the same, or even decreases.
 In other words, while a random subset structure of size $ n $ carries \textquote{less information} as $n$ grows, the largest subsets get \textquote{more important} (again, in terms of the divergence).
+\filip{co něco takovýho aby se to víc prodalo:}
+We can thus minimize the gap to near-zero, while keeping the number of revealed subsets \emph{linear} in $ n $, instead of the exponentially many of them we would require to know the entire function.
 
 To understand why that is the case, we have analyzed the average values of subsets in the supermodular distribution.
 We have found that the values decrease by several orders with the size of the subset.
