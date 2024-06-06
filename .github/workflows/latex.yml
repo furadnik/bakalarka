@@ -5,14 +5,13 @@ on:
       - "master"
 jobs:
   build_latex:
-    runs-on: archlinux
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
       - name: Make Thesis
         run: |
-          ln -snf /usr/share/zoneinfo/Europe/Prague /etc/localtime && echo Europe/Prague > /etc/timezone
-          pacman -Syu texlive-langczechslovak texlive-latexextra texlive-mathscience git make --noconfirm
+          sudo apt install -y texlive-langczechslovak texlive-latexextra texlive-mathscience git make
           sed -i 's/{\\textcolor.*/{}/' macros.tex
           make
       - uses: "marvinpinto/action-automatic-releases@latest"
