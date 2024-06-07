@@ -137,7 +137,7 @@ In such cases, for simplicity of notation, we simply alter their signature to $ 
 This is in contrast with so-called \emph{multi-point solution concepts}, which give results of varying magnitude.\david{"size" je divný}\filip{magnitude lepší? :d}\david{ani ne, co takhle which don't provide a unique answer?}
 
 The first important solution concept we will mention here is the \emph{core}.\filip{citace}
-The core is the set of payoff vectors, which encourage stability of the grand coalition.\david{wtf?}\filip{lol, to byl nějakej mistake xD}\david{každopdáně už skvělé :D}
+The core is the set of payoff vectors, which encourage stability of the grand coalition.
 In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, no player has the incentive to leave the grand coalition.
 
 \begin{defi}[Core]
@@ -148,7 +148,7 @@ In other words, when distributing $ \fce{v}{N} $ according to a payoff vector fr
 
 If the core of a game is empty, it tells us that there grand coalition is unstable.
 More specifically, no matter how we distribute the value of $ \fce{v}{N} $, there will always be a set of players that would be better off leaving the grand coalition.
-Hence, assuming perfect rationality of the players, it won't form.\david{tenhle odstavec je jedna věta - rozděl klidně na 3 :D}\filip{done}\david{skvělé!}
+Hence, assuming perfect rationality of the players, it won't form.
 
 % shapley
 However, the core doesn't consider the fairness of the distribution.
@@ -306,7 +306,7 @@ Importantly for our purposes, PPO is able to work with continuous state spaces, 
 Let us now delve into the specifics of the PPO algorithm.
 PPO belongs to a family of so-called actor-critic algorithms.
 % PPO uses an actor-critic architecture.
-It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\david{jakoby tohle není pravda, ppo jde dělat tabular. Měl bys říct něco ve stylu že používá dvě fce, který jsou typicky aproximovaný neuronkou}\filip{davide to nikoho nezajímá. jsme v preliminaries, chci to vysvětlit jak to pouzíváme my. tohle by mě zmátlo. footnote?}\david{Twl jak se role obrací :D Normálně bych na tyhle kraviny kašlal já. Asi dobrý.}\footnote{Note that there are also variations of PPO approximating the actor and the critic using other means than neural networks. We will not discuss them further in this thesis.}\filip{takhle?}\david{skvělé!}
+It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\footnote{Note that there are also variations of PPO approximating the actor and the critic using other means than neural networks. We will not discuss them further in this thesis.}
 % The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
 The actor tries to learn a policy $ \pi $ which maximizes the expected return,
 while the critic seeks to approximate the value $ \fce \stval s $ of each state $ s $ encountered when following the policy $\pi$.
@@ -321,11 +321,11 @@ In each iteration, the agent collects multiple \emph{trajectories} (sequences of
 All trajectories use the same current actor's strategy, which allows the gathering process to be parallelized.
 Then, for each time step in each trajectory, we define the so-called \emph{advantage} of the current strategy as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of $ G_t $ can be easily computed from the observed rewards.
-The advantage quantifies how much more reward the agent received from a given state when he chose\david{s}\filip{nn tohle je minulej čas, jakože si *vybral* akci, a teď kouká jakej reward *dostal*}\david{true, neumim číst :D} the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
+The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
 If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward than expected, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, we perform $ K $ training epochs on both the actor and the critic.
-After the training\david{iteration?}\filip{ne! iteration je to celý -- data gathering plus training, ne jen ten training}\david{no vždyť}\filip{joo jako takhle?}\filip{jo uz chapuuu, hmmm, tak to nevim, to mi prijde asi ten training lepsi nebo ne?}\david{nevim, není nutně jasný co je training. Říkal jsi něco o několika epochách a tak... Ale asi je to štouravé}, we drop all the gathered rewards, and move to the next iteration\david{and collect a new set of trajectories using the current policy?}\filip{to tam nechci}\david{okok}.
+After the training\david{iteration?}\filip{ne! iteration je to celý -- data gathering plus training, ne jen ten training}\david{no vždyť}\filip{joo jako takhle?}\filip{jo uz chapuuu, hmmm, tak to nevim, to mi prijde asi ten training lepsi nebo ne?}\david{nevim, není nutně jasný co je training. Říkal jsi něco o několika epochách a tak... Ale asi je to štouravé}, we drop all the gathered rewards, and move to the next iteration.
 
 % critic dělá tohle, minimalizuje tohle
 Let us now discuss the details of the actor and the critic.

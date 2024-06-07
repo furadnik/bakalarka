@@ -103,7 +103,7 @@ This leads us to measuring the distance between the upper and lower functions, u
 The most obvious choice of $ \ell $ is some norm, as norms are well studied, well understood and have nice properties.
 However, we state the following definition for an arbitrary $ \ell $, and we will see an example of $ \ell $ which is not a norm, but which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
 % restrikce na \ell?
-We do not put explicit restrictions on $ \ell $, but we will assume in this thesis that the value of $ \ell $ is non-increasing as the size of $ \k $ grows\david{?}\filip{tohle zařizuje že se divergence chová monotónně. jinak by neplatilo něco co tvrdím dál o principálech}\david{jasný, ane neměla by $l$ být non-decreasing?}.
+We do not put explicit restrictions on $ \ell $, but we will assume in this thesis that the value of $ \ell $ is non-increasing as the size of $ \k $ grows\david{?}\filip{tohle zařizuje že se divergence chová monotónně. jinak by neplatilo něco co tvrdím dál o principálech}\david{jasný, ane neměla by $l$ být non-decreasing?}\filip{jak velikost K stoupá, tak $ \ell $ se zmenšuje nebo zůstává stejná}.
 Note that this does hold for the norms, as increasing $ \k $ means reducing the size of the $ \cSuperadditive $-extensions, thus decreasing the distance between the upper and lower functions.
 
 \begin{defi}[Divergence]
@@ -143,9 +143,8 @@ One way to estimate the Shapley value is to choose a function from the set of al
 However, without knowing the true value of $ v $, there is no way to tell which choice is the most reasonable.
 Each player $ i \in N $ is prefers to choose the function which gives him the highest payoff.
 Let us call this function $ v_i $, which in turn means he demands the payoff of $ \shapley[i] {v_i} $.
-While we do not know what the payoff of any individual player should be, we \emph{do} know the value we should give out in total -- the value of the grand coaltiion\david{typo}, $ \fce{v}{N} $.
+While we do not know what the payoff of any individual player should be, we \emph{do} know the value we should give out in total -- the value of the grand coalition, $ \fce{v}{N} $.
 We hence define the utopian gap as the difference between what the players collectively demand, and what is available to give out.
-\david{Co tohle víc rozvést - třeba něco ve stylu, že sice nevíme kolik má každý opravdu dostat, ale protože Shapley je efficient, víme kolik mají dostat dohromady.}\filip{co takhle?}\david{velice pěkné!}
 
 \begin{defi}[Utopian gap]
   \label{def:gap}
@@ -278,7 +277,7 @@ This means that choosing to reveal a subset twice (essentially decreasing the bu
 Finally, let us briefly mention the relationship between solutions of the online and the offline problems, which we will expand upon in \Cref{chap:pp}.
 In special cases, they become the same problem.
 This happens for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has learned.
-In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution\david{striktně menší?}\filip{nee, vždyť když je support jedna tak je to stejný třeba}\david{buď jsem přehlídl to "ore equal", nebo jsi to tam od té doby přidal a jen mě zas testuješ! :D}.
+In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
 This is clear from the discussion above the definition of the online problem.
 If the online information does not help in any way, the online policy can simply mimic the solution of the offline problem, and reach the same expected divergence.
 For a more rigurous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.
