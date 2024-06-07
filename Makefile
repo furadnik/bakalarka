@@ -21,5 +21,6 @@ overleaf:
 	git fetch overleaf
 	git merge overleaf/master -m 'review: overleaf'
 	git push overleaf
+	git push
 
 .PHONY: overleaf clean all
