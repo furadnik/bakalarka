@@ -107,7 +107,7 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
 All algorithms vastly outperform the \algRand{} approach, achieving over 99~\% of gap reduction with just the budget of $ \tau = 5 $.
 Further, our algorithms exhibit very similar performance, suggesting that knowledge of the specific function drawn from the distribution is of little help when decreasing the gap.
-To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $.
+To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $\david{co tady dát $\tau\in\{1\,dots 12\}$? ale je to jen random thought jako většina toho co píšu :D}.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \section{Offline vs Oracle}
@@ -121,7 +121,7 @@ We investigate these findings further in \Cref{ssec:largest}.
 In \Cref{chap:pp}, we have proven various statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
 One would expect that the resulting valuation of \algFG{} would be an upper bound on \algRG{}, as was the case with the optimal variants.
-This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}\filip{? to není pravda ne? právě že to není pravda, o tom je tahle sekce :D}\david{sorry vyjadřuju se jak hotentot. Je to typicky pravda, jak ilustrujeme?}\filip{jo uz chapu. hele mne se asi nelibi to "typicky", protoze neni jasny co to presne znamena. ted to rika ze v tom co jsme zatim videli to tak bylo, coz mi prijde presnejsi}
+This has been the case in all the figures we have seen so far.\david{tahle věta je trochu navíc se mi zdá}\filip{idk}\david{co takhle říct, že to je skutečně pravda, jak naše experimenty ilustrují?}\filip{? to není pravda ne? právě že to není pravda, o tom je tahle sekce :D}\david{sorry vyjadřuju se jak hotentot. Je to typicky pravda, jak ilustrujeme?}\filip{jo uz chapu. hele mne se asi nelibi to "typicky", protoze neni jasny co to presne znamena. ted to rika ze v tom co jsme zatim videli to tak bylo, coz mi prijde presnejsi}\david{zdá se, že se moje názory mění každým okamžikem, ale už se mi ta věta líbí xD}
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
 % TODO: explain l-inf
