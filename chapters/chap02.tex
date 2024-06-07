@@ -167,6 +167,7 @@ However, it becomes clear when one remembers that the Shapley value is a weighte
 This statement was first given by \cite{uradnik2024reducing} as follows.
 
 \begin{lemma}[\cite{uradnik2024reducing}, Proposition 3.4]
+  \label{thm:uradniketal34}
   Let $ \left( N, \k, v \right) $ be a superadditive incomplete game.
   Then the utopian gap is \[
     \gap v = \sum_{i \in N}^{} \shapley[i] {v_i} - \fce{v}{N} = \sum_{S \subseteq N}^{} \alpha_S \beta_\k^S - \fce{v}{N},
@@ -178,15 +179,23 @@ This statement was first given by \cite{uradnik2024reducing} as follows.
 Interestingly, this statement further offers a connection between the gap and our divergence, which we formalize thusly.
 
 \begin{prop}[Gap is divergence]
-  Let $ \left( N, \k, v \right) $ be a superadditive incomplete cooperative game.
+  Let $ \left( N, \k, v \right) $ be a superadditive incomplete cooperative game, where $ \k_0 \subseteq \k $.
   Then it holds \[
     \gap v = \divg[v] {\ell_g}\k,
   \]
   where \[
-    \fce{\ell_g}{\uf v, \lf v} \deq \sum_{S \subseteq N}^{} \alpha_S \beta_\k^S - \fce{v}{N},
+    \fce{\ell_g}{\uf v, \lf v} \deq \sum_{S \subseteq N}^{} \alpha_S \beta_\k^S - \fce{\lf v}{N},
   \]
   further $ \alpha_S = \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $ and $ \beta_\k^S = \fce{\uf v}{S} - \fce{\lf v}{S} $.
 \end{prop}
+
+\begin{proof}
+  This statement follows almost directly from \Cref{thm:uradniketal34}.
+  The only difference from that formulation is the final $ \fce{v}{N} $ term.
+  However, we know that $ N \in \k_0 \subseteq \k $, and thus $ \fce{\lf v}{N} = \fce{\uf v}{N} = \fce{v}{N} $.
+  Hence, the statement holds.
+\end{proof}
+
 \filip{tohle je konec úprav. Tohle proposition nevím jestli sem dávat takhle extra, nebo jen říct "z toho vidíme že gap je divergence"}
 \david{tohle bych řekl, neboli je to jen vážená l1 norma.}
 
