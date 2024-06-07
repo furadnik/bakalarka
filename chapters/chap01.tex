@@ -19,13 +19,12 @@ matroid theory, game theory utility functions and countless others. \filip{citac
 
 Though the definition of a set function consideres a general finite set $ N $, in this thesis, we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
 This definition is equivalent to that over a general finite set.
-We denote the class of all set functions on $ N $ as $ \funcs $.
-
+The class of all set functions on $ N $ is denoted as $ \funcs $.
 % k čemu jsou
 For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represet a \emph{utility} an agent receives from obtaining a subset of the goods.
 
 % monotonicita
-When studying set functions modelling real-world problems, we can often assume that the set function has certain properties.
+When studying set functions modelling real-world problems, it can often be assumed that the set function has certain properties.
 One of the most natural and commonly observed of such properties is \emph{monotonicity}.
 
 \begin{defi}[Monotonicity]
@@ -38,7 +37,7 @@ One of the most natural and commonly observed of such properties is \emph{monoto
 \end{defi}
 
 % ukázat na utilitě
-In our example of a set function representing utility, assuming the utility of each good by itself is non-negative, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of an agent.
+In the example of a set function representing utility, assuming the utility of each good by itself is non-negative, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of an agent.
 Another very common and natural property of many set functions is \emph{superadditivity}.
 
 \begin{defi}[Superadditivity]
@@ -48,7 +47,7 @@ Another very common and natural property of many set functions is \emph{superadd
 \end{defi}
 
 % ukázat na utilitě
-Getting back to our example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
+Getting back to the example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
 In other words, a set is at least as valuable as the sum of its parts.
 
 % supermodularita
@@ -60,7 +59,7 @@ In other words, a set is at least as valuable as the sum of its parts.
 
 % proč je supermodularita sexy
 \filip{tenhle paragraf je pomasirovanej}\david{nice}
-Supermodularity is widely studied in various fields, most notably in cooperative game theory (which we will discuss below) and economics.\filip{TODO: citace}\martin{Neřekl bych broadly economics. Dá se asi říct všechno, kde je sub i super modularity, tj. coop hry, combinatorial auctions, matroid theory a combinatorial optimizations: https://link.springer.com/chapter/10.1007/978-3-642-68874-4_10 na comb. optimization a zbytek můžeš použít zdroje, které jsem uvedl výše}
+Supermodularity is widely studied in various fields, most notably in cooperative game theory (which will be discussed below) and economics.\filip{TODO: citace}\martin{Neřekl bych broadly economics. Dá se asi říct všechno, kde je sub i super modularity, tj. coop hry, combinatorial auctions, matroid theory a combinatorial optimizations: https://link.springer.com/chapter/10.1007/978-3-642-68874-4_10 na comb. optimization a zbytek můžeš použít zdroje, které jsem uvedl výše}
 Supermodular functions have a very rich structure and many nice properties.\david{co takhle nějaké zmínit? Nabízí se ty greedy algoritmy?}
 The supermodularity property is, assuming $ \fce{f}{\emptyset} = 0 $, a stronger condition than superadditivity, as the following proposition shows.
 
@@ -81,13 +80,13 @@ The supermodularity property is, assuming $ \fce{f}{\emptyset} = 0 $, a stronger
 
 % třídy funkcí
 When discussing set functions with certain properties, it is often useful to consider \emph{classes} of set functions with those properties.
-We will denote $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes of all set functions on the set $ N $ that are additive, superadditive, and supermodular (sometimes also called \emph{convex}), respectively.
+We denote $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes of all set functions on the set $ N $ that are additive, superadditive, and supermodular (sometimes also called \emph{convex}), respectively.
 
 \section{Cooperative Game Theory}
 
 % co je to kooperativní teorie her
 Cooperative game theory is a field of mathematics that studies situations in which agents cooperate.
-In this model, we analyze how agents form cooperating groups, called \emph{coalitions}.\david{tohle by šlo poštouchat. Rozdělit na dvě vety 1) CGT studuje kooperaci 2) v tomhle modelu tvoří lidi koalice, který maj hodnotu?}\filip{takhle?}\david{co takhle may chose to cooperate v první větě?}
+This model is used to analyze how agents form cooperating groups, called \emph{coalitions}.\david{tohle by šlo poštouchat. Rozdělit na dvě vety 1) CGT studuje kooperaci 2) v tomhle modelu tvoří lidi koalice, který maj hodnotu?}\filip{takhle?}\david{co takhle may chose to cooperate v první větě?}
 Each formed coalition receives some \emph{payoff}.
 \david{tohle je zmatečný}\filip{lepší teď tenhle odstavec?}\david{payoof bych si nechal až pro ten vektor x. Ten není pro koalice, ale jednotlivé hráče. Proč neříct, že koalice má hodnotu, která reprezentuje jak moc vydělá když se hráči rozhodnou spolupracovat?}
 The goal of cooperative game theory is to study the \emph{stability} of the formed coalitions, and the \emph{distribution} of the payoff among the agents.
@@ -95,15 +94,14 @@ The goal of cooperative game theory is to study the \emph{stability} of the form
 % definice kooperativní hry
 \begin{defi}[Cooperative game]
 	A \emph{cooperative game} is a pair $ \left( N,v \right) $, where $ N $ is a finite set of \emph{players} and $ v: \pot N \to \R $ is the \emph{characteristic function} of the game.
-	Further, we require that $ \fce{v}{\emptyset} = 0 $.
+	The characteristic function is assumed to be \emph{grounded}, meaning $ \fce{v}{\emptyset} = 0 $.
 \end{defi}
 
-When discussing coalitions, we usually use the terms \emph{grand coalition} for the coalition of all players $ N $, and \emph{singletons} for coalitions containing a single player.
+Additionally, the term \emph{grand coalition} is used to refer to the coalition of all players $ N $ and a \emph{singleton} is a coalition containing a single player.
 Further, for a set of coalitions $ \s \subseteq \pot N $, we use the term \emph{coalition structure}.
-From the definition it is clear that the characteristic function is a set function on the set $ N $, with the additional requirement that the value of the empty coalition is zero.
+From the definition of a cooperative game it is clear that the characteristic function is a set function on the set $ N $ with the additional requirement that the value of the empty coalition is zero.
 
 % payoff vector
-\filip{masirovano}
 In cooperative game theory, we usually assume that the grand coalition has formed, i.e. all the players are cooperating.
 We then discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players.
 Finally, based on the splitting mechanism, we investigate whether the formed coalition is stable, or not.
@@ -123,7 +121,7 @@ For a general coalition $ S \subseteq N $ and a payoff vector $ x \in \R^n $, we
 \]
 % efficiency
 In this thesis, we will only consider efficient payoff vectors, meaning we always want to distribute the entire value of the grand coalitions.\david{tohle opodstatnění nic neříká mi přijde. Klidně bych ho vynechal}
-Other notions of distribution where the payoff vector needn't \martin{need not, neměli by se psát zkrácené výrazy} be efficient are sometimes studied, but we will not discuss them here.\david{jako nevim jestli nás tohle vůbec trápí} % TODO: citace
+Other notions of distribution where the payoff vector need not be efficient are sometimes studied, but we will not discuss them here.\david{jako nevim jestli nás tohle vůbec trápí} % TODO: citace
 \filip{hele já jsem to malinko pošťouchal a nechal bych to tady takhle...}\david{može být, co takhle přihodit nějaké citace na ty non-efficient koncepty / články?}\martin{dal bych: https://www.researchgate.net/publication/226335741_Cooperative_Games_with_Coalition_Structures a }
 
 % solution concept
@@ -192,7 +190,7 @@ The goal of the agent is to learn a \emph{policy} (or a way to choose actions)\f
 \emph{Deep} reinforcement learning extends this concept by incorporating deep neural networks to the agent.
 
 % my budeme dělat jen trochu RL
-RL is an extensive field, which shall be discussed in this thesis only to the extent required for our purposes.
+RL is an extensive field, which will be discussed in this thesis only to the extent required for our purposes.
 Similarly, we do not further discuss the details of training deep neural networks.
 The reader is encouraged to look deeper into the literature for more information, for example \cite{sutton2018reinforcement,bengio2017deep}.
 
