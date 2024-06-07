@@ -183,7 +183,8 @@
 \def\lossactor{\fce {L^\pi}{\theta \suchthat \phi}}
 
 % algorithms
-\newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{algo}}
+% \newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{algo}}
+\newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \begin{minipage}{\textwidth} \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{minipage}\end{algo}}
 \def\AlgIn{\emph{Input: }}
 \def\AlgOut{\emph{Output: }}
 \theoremstyle{definition}
