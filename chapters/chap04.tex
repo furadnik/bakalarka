@@ -67,7 +67,7 @@ When running the experiments, we choose $ \fdist $ to be a uniform distribution 
   \centering
 	\includegraphics[width=\stdfigwidth]{figures/factory5.pdf}
 	\includegraphics[width=\stdfigwidth]{figures/l1_factory5.pdf}
-	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence. }
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence. \david{obojí je utopian gap?}}
 	\label{fig:factory}
 \end{figure*}
 
@@ -107,7 +107,7 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
 All algorithms vastly outperform the \algRand{} approach, achieving over 99~\% of gap reduction with just the budget of $ \tau = 5 $.
 Further, our algorithms exhibit very similar performance, suggesting that knowledge of the specific function drawn from the distribution is of little help when decreasing the gap.
-To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $\david{co tady dát $\tau\in\{1,\dots 12\}$? ale je to jen random thought jako většina toho co píšu :D}\filip{jasný. jakožeee nevím, tak jak to mám já mi přijde že to signaluje že to prochází tau od 1 do 12... ale nemám silný názor. co Mistr na to?}.
+To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $\david{co tady dát $\tau\in\{1,\dots 12\}$? ale je to jen random thought jako většina toho co píšu :D}\filip{jasný. jakožeee nevím, tak jak to mám já mi přijde že to signaluje že to prochází tau od 1 do 12... ale nemám silný názor. co Mistr na to?}\david{já spíš mám pocit, že ten můj návrh vypadá trochu víc ofiko (aka, stojí víc práce ho napsat :D)}.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \section{Offline vs Oracle}
