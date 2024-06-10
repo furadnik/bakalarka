@@ -6,11 +6,7 @@
 
 % co je set funkce
 Set functions are very general objects studied extensively in countless fields, including
-matroid theory, game theory utility functions and countless others. \filip{citace}
-% M: 10.1093/acprof/9780198566946.001.0001 - matroids
-% M: https://link.springer.com/book/10.1007/978-3-319-30690-2 - Set functions
-% M: https://link.springer.com/book/10.1007/978-3-540-69291-1 - coop games
-% M: https://pubsonline.informs.org/doi/abs/10.1287/ijoc.15.3.284.16077?journalCode=ijoc - combinatorial auctions
+matroid theory, game theory utility functions and countless others \citep{10.1093/acprof:oso/9780198566946.001.0001,grabisch2016set,peters2015game,doi:10.1287/ijoc.15.3.284.16077}.
 
 
 % definice set funkce
@@ -63,7 +59,7 @@ In other words, a set is at least as valuable as the sum of its parts.
 
 % proč je supermodularita sexy
 \filip{tenhle paragraf je pomasirovanej}\david{nice}
-Supermodularity is widely studied in various fields, most notably in cooperative game theory (which we will discuss below) and economics. % \filip{TODO: citace}\martin{Neřekl bych tak široce economics. Dá se asi říct všechno, kde je sub i super modularity, tj. coop hry, combinatorial auctions, matroid theory a combinatorial optimizations: https://link.springer.com/chapter/10.1007/978-3-642-68874-4_10 na comb. optimization a zbytek můžeš použít zdroje, které jsem uvedl výše}
+Supermodularity is widely studied in various fields, most notably in cooperative game theory (which we will discuss below) and combinatorial auctions \citep{grabisch2016set,doi:10.1287/ijoc.15.3.284.16077}.
 Supermodular functions have a very rich structure and many nice properties.\david{co takhle nějaké zmínit? Nabízí se ty greedy algoritmy?}
 The supermodularity property is, assuming $ \fce{f}{\emptyset} = 0 $, a stronger condition than superadditivity, as the following proposition shows.
 
@@ -125,8 +121,7 @@ For a general coalition $ S \subseteq N $ and a payoff vector $ x \in \R^n $, we
 \]
 % efficiency
 In this thesis, we only consider efficient payoff vectors, meaning the entire value of the grand coalition is to be distributed.
-Other notions of distribution where the payoff vector need not be efficient are sometimes studied, but we do not discuss them here. % TODO: citace
-% \filip{hele já jsem to malinko pošťouchal a nechal bych to tady takhle...}\david{može být, co takhle přihodit nějaké citace na ty non-efficient koncepty / články?}\martin{dal bych: https://www.researchgate.net/publication/226335741_Cooperative_Games_with_Coalition_Structures a https://arxiv.org/pdf/0907.4385}
+Other notions of distribution where the payoff vector need not be efficient are sometimes studied \citep{aumann74coop,bachrach2009cost}, but we do not discuss them here. 
 
 % solution concept
 Payoff vectors are studied based on the properties they possess, such as fairness, stability, etc.
@@ -142,11 +137,11 @@ These are referred to as \emph{single-point solution concepts}.
 In such cases, for simplicity of notation, we simply alter their signature to $ f: \games n \to \R^n $.
 This is in contrast with so-called \emph{multi-point solution concepts}, which give results of varying magnitude.
 
-The first important solution concept we will mention here is the \emph{core}.% \filip{citace}\martin{\cite{Gillies1959}}
+The first important solution concept we will mention here is the \emph{core}, originally introduced by \cite{Gillies1959}.
 The core is the set of payoff vectors, which encourage stability of the grand coalition.
 In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, no player has the incentive to leave the grand coalition.
 
-\begin{defi}[Core]
+\begin{defi}[Core \citep{Gillies1959}]
 	The \emph{core} is a multi-point solution concept defined as \[
 		\core v \deq \left\{ x \in \R^n \suchthat \fce{x}{N} =\fce{v}{N} \land \left( \forall S \subseteq N \right)\! \left( \fce{x}{S} \geq \fce{v}{S} \right) \right\}.
 	\]
@@ -166,7 +161,7 @@ Formally, for $ i \in N $ and $ S \subseteq N \setminus \left\{ i \right\} $, th
 
 \begin{defi}[Shapley value {\citep{Shapley+1953+307+318}}]
 	The \emph{Shapley value} is a single-point solution concept defined as\david{nemá to být $\phi_i(v)$?} \[
-		\shapley v_i \deq \sum_{S \subseteq N \setminus \left\{ i \right\}}^{} \frac{s! \left( n - s - 1 \right)!}{n!} \left( \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} \right),
+		\shapley[i] v \deq \sum_{S \subseteq N \setminus \left\{ i \right\}}^{} \frac{s! \left( n - s - 1 \right)!}{n!} \left( \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} \right),
 	\]
 	where $ s \deq \absolute{S} $.
 \end{defi}
@@ -353,14 +348,14 @@ However, if this loss were to minimized directly, with multiple gradient-descent
 To prevent this, the loss is \emph{clipped} so it cannot become too low in one iteration.
 Hence, the objective of the actor is defined as follows \begin{align*}
 	\lossactor &\deq -\fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
-	\text{where \david{nechceš tohle where dát na samostatný řádek?}}
-	\left[ x \right]^a_b &\deq \begin{cases}
+\end{align*}
+where
+\[
+	\left[ x \right]^a_b \deq \begin{cases}
 		a & \text{if $ x > a $,} \\
 		b & \text{if $ x < b $,} \\
 		x & \text{otherwise.}
 	\end{cases}
-\end{align*}
-\[
 \]
 The hyperparameter $ \varepsilon $ is used to control the amount of clipping, and thus the maximum rate of change of the policy in each iteration, along with the stability of the learning process.
 Taking the minimum of the clipped and unclipped objective, ensures that the loss is clipped from only one direction.
