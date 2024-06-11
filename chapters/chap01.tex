@@ -172,7 +172,7 @@ However, the Shapley value is generally accepted as fair across the literature b
 
 \begin{prop}[Characterization of the Shapley value {\citep{Shapley+1953+307+318}}]
 	The Shapley value $ \Shapley $ is the unique \david{Mistře, není unique linear?} function satisfying the following properties\david{btw, co tady je ta $f$? Nemá tady být $\phi$?}: \begin{enumerate}[ ]
-		\item efficience, $ \sum_{i \in N}^{} \fce{f_i}{v} = \fce{v}{N} $,
+		\item efficiency, $ \sum_{i \in N}^{} \fce{f_i}{v} = \fce{v}{N} $,
 		\item symmetry, \[
 				\left( \forall i,j \in N \right)\! \left( \left( \forall S \subseteq N \setminus \left\{ i,j \right\} \right)\! \left( \fce{v}{S \cup i} = \fce{v}{S \cup j} \right) \implies \fce{f_i}{v} = \fce{f_j}{v} \right),
 			\]
@@ -198,7 +198,7 @@ The reader is encouraged to look deeper into the literature for more information
 % agent+environment
 Let us first formally define the model used when discussing RL.
 The environment is a black box to the agent, which holds some \emph{state}.
-The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the envrionment moves to after he chooses an action,
+The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the environment moves to after he chooses an action,
 and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action.\footnote{The reward also possibly depends on the \emph{outcome} of the action, i.e. the new state.}
 The goal of the agent is to maximize the cumulative reward received over time.
 This is formalized as a \emph{Markov decision process} in the following definition.
@@ -247,7 +247,7 @@ As the agent plays, sampling his actions according to the policy $ \pi $, he rec
 We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
 However, formally, the agent plays indefinitely.
 To make the total expected cumulative reward finite, the future rewards are discounted exponentially by a factor of $ \gamma^t $.\footnote{This gives a finite sum, assuming $ \gamma < 1 $ and the rewards are bounded.}
-This is similar to human behavior, often prefering smaller immediate rewards over larger rewards far in the future.
+This is similar to human behavior, often preferring smaller immediate rewards over larger rewards far in the future.
 To capture environments with a finite horizon of $ T $ steps, the rewards for times $ t > T $ are set to zero.
 
 % return

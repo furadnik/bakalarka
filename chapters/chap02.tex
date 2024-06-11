@@ -1,7 +1,7 @@
 \chapter{Problem Definition}
 
 In this section, we define the model we will be working with.
-Suppose a real-world situation, which can be modelled using a set function over some set $ N $.
+Suppose a real-world situation, which can be modeled using a set function over some set $ N $.
 The most natural example of this is cooperative game theory, where $ N $ is a set of players who are, say, starting a company together.
 Now the players want to split the earnings in a fair way, using the Shapley value.
 However, as there are many of them, the characteristic function $ v $ is huge, requiring the knowledge of values for every coalition $ S \subseteq N $.
@@ -125,7 +125,7 @@ The properties of the divergence differ based on the choice of the function $ \e
 For example, if we choose $ \ell $ to be the $ L_k $ norm (which we will denote by $ \lp k $), then the divergence will be \[
 \divg {\lp k} \k \deq \sqrt[k]{\sum_{S \in \pot N}^{} \absolute{ \fce{\uf f}{S} - \fce{\lf f}{S}}^k}.
 \]
-This is exactly the $ L_k $-lenght of the longest diagonal in the hyperrectangle defined by the values of the upper and lower functions,
+This is exactly the $ L_k $-length of the longest diagonal in the hyper rectangle defined by the values of the upper and lower functions,
 when viewed as $ 2^n $-dimensional vectors.\david{tohle by asi chtělo ještě rozepsat a říct jak tenhle rectangle nemusí obsahovat jen extenze atd.}\david{ale asi to není třeba :)}
 
 % TODO: properties of divg? aspoň to že je monotonně klesající
@@ -202,7 +202,7 @@ Interestingly, this statement further offers a connection between the gap and ou
 \section{Principal's Problems}
 
 We will now introduce the main framework we will be working with, both in the theoretical and the experimental parts of this thesis.
-The setup is as follows: we have a real-world situation modelled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq \pot N $ values.
+The setup is as follows: we have a real-world situation modeled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, from which we only know $ \k_0 \subseteq \k \subseteq \pot N $ values.
 There is a principal, who wants to know the rest of the values of $ f $ as precisely as possible.
 However, she only has the budget to reveal $ \tau $ additional values.
 She wants to choose $ \tau $ subsets from $ \pot N \setminus \k $ whose values to reveal (adding them to $ \k $), such that the bounds on the unknown values are as tight as possible, as measured by the divergence with a chosen function $ \ell $.
@@ -226,7 +226,7 @@ The flaw of the offline problem is that the optimal $ \s $ might depend on the s
 % \david{Observe that the principal doesn't use the values on the coalitions she encounters during the revelation process. These can be used to restrict the distribution $\fdist$, improving performance.}
 Now, granted, the principal doesn't know all the values of $ f $.
 However, in addition to knowing the values of $ \k $, she has the budget to reveal $ \tau $ extra values, which give her further information about the specific instance of $ f $ she is working with.
-It might then be benefitial to spend some of the budget on exploring other values of $ f $,
+It might then be beneficial to spend some of the budget on exploring other values of $ f $,
 and then use the remainder of the budget to reveal the values which are most beneficial, taking into account the values she has already revealed.
 We call this approach the \emph{online principal's problem}, as the principal utilizes the online information she has gathered about $ f $ when choosing the next values to reveal.
 
@@ -260,7 +260,7 @@ It measures the divergence after the budget has been spent, allowing the princip
 % \david{celkově se mi tahle definice líbí a nebál bych se víc říct, že tohle je vlastně normální search s value funkcí za tau kroků. Normálně bysme se mohli tvářit, že ta není přesná a tak, ale to je doslova o co nám jde, takže je to vlastně skutečný outcome.}
 
 Notice that the policy used here matches the definition of a policy we have given as \Cref{def:policy} in \Cref{sec:rl}, with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
-Having $ \tau $ as a part of the state is crutial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most benefitial, given the values it has already seen.
+Having $ \tau $ as a part of the state is crucial for the policy, as (intuitively) it gives the information whether there is still budget to further explore the instance of $ f $, or if it is to instead focus on revealing the values which are most beneficial, given the values it has already seen.
 
 \begin{defi}[Online principal's problem] \label{def:online-pp}
   Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
@@ -289,4 +289,4 @@ This happens for example when $ \tau = 1 $, because the policy from the online p
 In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
 This is clear from the discussion above the definition of the online problem.
 If the online information does not help in any way, the online policy can simply mimic the solution of the offline problem, and reach the same expected divergence.
-For a more rigurous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.
+For a more rigorous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.

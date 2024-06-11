@@ -68,7 +68,7 @@ In our Python implementation we do in fact compute every sample in a parallel pr
 
 % časové odhady pro různé velikosti instance
 For a small, constant budget $ \tau $, the time complexity of the \algFO{} algorithm is exponential in the size of the ground set $ n $.
-This is managable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - \kappa}{n}}$.
+This is manageable for small instances, assuming the divergence function is computable in a reasonable time, and we have enough memory to store the results, $ \fce{\O}{\sigma \binom{2^n - \kappa}{n}}$.
 If $ \kappa $ is small, but $ \tau $ grows polynomially with $ n $, the time (and space) complexity becomes worse, as the following \namecref{thm:algfo-time-complexity-poly-tau} shows.
 
 \begin{prop}[ ]
@@ -157,7 +157,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more managable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more manageable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
@@ -169,19 +169,19 @@ The offline principal's problem seeks to find a subset structure that yields the
 We study it with the hope that it gives us insight into what subsets are important for a given class of set functions.
 In practice, this knowledge would reduce the cost of gathering the remaining values, assuming having some ambiguity is acceptable.
 However, if we had a distribution $ \fdist $ based on a real-world situation, to get the greedy solution, we would need multiple samples, for which we know \emph{all} the values of the function, which would be costly.
-This can be overcome by either approximating the distribution, and computing the offline solution on the new, approximated distribution, or by studying the real distribution, but on a smaller scale, thus having a managable cost of computing the offline solution.
+This can be overcome by either approximating the distribution, and computing the offline solution on the new, approximated distribution, or by studying the real distribution, but on a smaller scale, thus having a manageable cost of computing the offline solution.
 
-\section{Approaching the Online Problem Solition}
+\section{Approaching the Online Problem Solution}
 
 % wanting online optimal is bad
 When solving the \nameref{def:offline-pp}, we perform an exhaustive search over the domain, or the set of all possible subsets.
 Though this is double-exponential in the number of players in the worst case, it is at least finite.
 In contrast, a solution of the \nameref{def:online-pp} (\Cref{def:online-pp}) is a \emph{policy}, a function that maps the current state to a distribution over the next actions, minimizing the final expected divergence.
-The domain of the online problem then is the set of all policies, which is uncountably infinite, and due to that fact, an exhaustive search becomes infeasible.
+The domain of the online problem then is the set of all policies, which is uncountably infinite, and due to that fact, an exhaustive search becomes unfeasible.
 
 Instead of finding a solution to the online problem, in this section, we strive to at least bound its optimum.
-An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, since the offline solition can be seen as a policy where the online information is just ignored.
-This is formalised in the following \namecref{thm:online-bound-offline}.
+An upper bound on the divergence of the optimal policy is the divergence of the optimal offline solution, since the offline solution can be seen as a policy where the online information is just ignored.
+This is formalized in the following \namecref{thm:online-bound-offline}.
 
 % offline bounds online
 \begin{prop}[Offline bounds online]
@@ -276,7 +276,7 @@ The \algRO{} algorithm is almost identical to the \algFO{} algorithm (\Cref{alg:
 The difference between the two is the order in which we gather and evaluate the actions.
 In both algorithms, we sample $ \sigma $ functions, evaluate them on all possible $ \s $, and then, in the \algFO{} algorithm we choose the actions that do the best \emph{on average}, whereas in the \algRO{} algorithm we choose the best action for \emph{each sample}, and only then average the \emph{resulting} divergence.
 As such, by the same reasoning as in \Cref{thm:algfo-time-complexity}, we can show that the time complexity of the \algRO{} algorithm is $ \fce\Theta{\sigma \cdot \binom{2^n-k}{\tau} \cdot \fce\divt{n}} $.
-That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus infeasible for large instances.
+That is once again double exponential in the size of the ground set $ n $ for $ \tau $ big enough, and thus unfeasible for large instances.
 
 This brings us to the \algRG{} algorithm, which is a greedy approximation of the \algRO{} algorithm.
 
@@ -303,7 +303,7 @@ Further, \algRG{} is again clearly outperformed by \algRO{}, as the subset struc
 Since the Oracle valuation approach was to be an upper bound on the value of the optimal online solution, it begs the question of how the greedy approach compares to the optimal online solution.
 The \algRG{} algorithm is in fact incomparable to the online solution.
 Empirically, it is in most cases very close or even identical to \algRO{}, but we do have examples where the two differ significantly.
-Prehaps more surprisingly, we show that for very special choices of $ \ell $ and $ \fdist $, even \algFG{} yields better results than the \algRG{} algorithm.
+Perhaps more surprisingly, we show that for very special choices of $ \ell $ and $ \fdist $, even \algFG{} yields better results than the \algRG{} algorithm.
 For more details, see \Cref{chap:results}.
 
 \begin{figure*}[t!]
@@ -339,7 +339,7 @@ For more details, see \Cref{chap:results}.
 
 % oracle je teorie, ppo je praktický
 We have introduced the oracle approach to find a provable lower bound on the online solution.
-However, in practice, the oracle algorithms are infeasible.
+However, in practice, the oracle algorithms are unfeasible.
 This is because they assume we have access to all the values, which defeats the purpose of our approach in the first place.
 To get a solution of the online problem which is applicable in practice, we thus turn to \emph{reinforcement learning}.
 
@@ -356,12 +356,12 @@ We handle this by \emph{masking} the actions that are not available, so the agen
 % state space grows exponentially, což není dobrý
 Assuming the size of the initial information $ \kappa $ is sub-exponential, the size of both the state and action space, and thus the size of the input and output of the neural network, is exponential in the size of the ground set $ n $.
 For larger $ n $, this makes the network struggle to make sense of all the information, increasing the number of epochs needed for training.
-One of the directions for future work is to find an architecture of the network which has the input and output encoded in such a way that its size becomes more managable, and thus the training is more stable as $ n $ increases.
+One of the directions for future work is to find an architecture of the network which has the input and output encoded in such a way that its size becomes more manageable, and thus the training is more stable as $ n $ increases.
 
 % reward
 We have not yet discussed the reward function.
 In order to precisely model the online principal's problem, the reward should be the divergence of the revealed subset structure, and it should be received after revealing the $ \tau $-th subset.
-This means that the agent receives reward all the way at the end, giving him very little information about the performance of a specific action, espetially for large $ \tau $.
+This means that the agent receives reward all the way at the end, giving him very little information about the performance of a specific action, especially for large $ \tau $.
 In order to make the training more stable, we have decided to alter the reward function.
 We give the agent a reward after each action, which is the negative of the divergence of the currently revealed subset structure.
 This gives the agent more information about the action it has just taken, thus allowing it to learn faster, and in a more stable manner.
