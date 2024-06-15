@@ -8,6 +8,7 @@
 Set functions are very general objects studied extensively in countless fields, including
 matroid theory, game theory utility functions and countless others \citep{10.1093/acprof:oso/9780198566946.001.0001,grabisch2016set,peters2015game,doi:10.1287/ijoc.15.3.284.16077}.
 \filip{chci ty citace mit takhle najednou, nebo to rozdelit a dat neco k matroidum, neco k utilite atd?}
+\david{obojí je fajn, ale rozhodit je za mě lepší}
 
 
 % definice set funkce
@@ -85,7 +86,7 @@ We denote as $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes 
 \section{Cooperative Game Theory}
 
 % co je to kooperativní teorie her
-\filip{co říkáte teď na tenhle odstavec?}
+\filip{co říkáte teď na tenhle odstavec?}\david{za mě good}
 Cooperative game theory is a field of mathematics that studies situations in which agents may choose to cooperate.
 This model is used to analyze how agents form cooperating groups, called \emph{coalitions}.
 The formed coalitions receive some \emph{value}.
@@ -170,7 +171,7 @@ That obviously depends on your definition of fairness, which can be very subject
 However, the Shapley value is generally accepted as fair across the literature because it satisfies many natural qualities that a reasonable fair solution concept should satisfy, as the following shows.
 
 \begin{prop}[Characterization of the Shapley value {\citep{Shapley+1953+307+318}}]
-	The Shapley value $ \Shapley $ is the unique \david{Mistře, není unique linear?}\filip{podle mě to ne, linearitu zajišťuje poslední axiom} function satisfying the following properties: \begin{enumerate}[ ]
+	The Shapley value $ \Shapley $ is the unique \david{Mistře, není unique linear?}\filip{podle mě to ne, linearitu zajišťuje poslední axiom}\david{na linearitu je ale ještě třeba $\phi_i(\alpha v) = \alpha \phi_i(v)$ ne? To nevim kde člověk dostane.} function satisfying the following properties: \begin{enumerate}[ ]
 		\item efficiency, $ \sum_{i \in N}^{} \shapley[i]{v} = \fce{v}{N} $,
 		\item symmetry, \[
 				\left( \forall i,j \in N \right)\! \left( \left( \forall S \subseteq N \setminus \left\{ i,j \right\} \right)\! \left( \fce{v}{S \cup i} = \fce{v}{S \cup j} \right) \implies \shapley[i]{v} = \shapley[j]{v} \right),
@@ -385,8 +386,8 @@ Conversely, off-policy algorithms are more data efficient, as utilizing old traj
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
 
-\filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}
-Another popular choice is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}\filip{tady cituju suttona... je to ten algoritmus co ma i straca ve slidech}.
+\filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}\david{až na ten začátek je to moc pěkné}
+Another popular choice \david{of what? Možní another popular RL algorithm?} is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}\filip{tady cituju suttona... je to ten algoritmus co ma i straca ve slidech}\david{tak to musí být správně :D}.
 PPO differs from it mainly in the loss of the actor -- REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described above.
 The loss used by REINFORCE tries to adjust the policy such that, in each visited state, the action with the highest q-value is chosen.
 This can result in the distribution of visited states changing too fast.
