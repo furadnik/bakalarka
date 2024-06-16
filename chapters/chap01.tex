@@ -86,7 +86,6 @@ We denote as $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes 
 \section{Cooperative Game Theory}
 
 % co je to kooperativní teorie her
-\filip{co říkáte teď na tenhle odstavec?}\david{za mě good}
 Cooperative game theory is a field of mathematics that studies situations in which agents may choose to cooperate.
 This model is used to analyze how agents form cooperating groups, called \emph{coalitions}.
 The formed coalitions receive some \emph{value}.
@@ -386,8 +385,8 @@ Conversely, off-policy algorithms are more data efficient, as utilizing old traj
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
 
-\filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}\david{až na ten začátek je to moc pěkné}
-Another popular choice \david{of what? Možní another popular RL algorithm?} is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}\filip{tady cituju suttona... je to ten algoritmus co ma i straca ve slidech}\david{tak to musí být správně :D}.
+% TODO: \filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}\david{až na ten začátek je to moc pěkné}
+Another popular RL algorithm is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}.
 PPO differs from it mainly in the loss of the actor -- REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described above.
 The loss used by REINFORCE tries to adjust the policy such that, in each visited state, the action with the highest q-value is chosen.
 This can result in the distribution of visited states changing too fast.
