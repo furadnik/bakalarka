@@ -1,3 +1,32 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
+% \filip{je to tezkyyy}
+% Superadditive set functions offer a way to express the relationship between subsets of some finite ground set.
+% This is used in countless fields, e.g., for modeling the utility of a player based on their received items in combinatorial auctions, or for modeling the value of coalitions in cooperative game theory.
+
+% However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
+% A set function assigns a value to every subset of a set $ N $.
+% It is thus easy to see that the size of a set function grows exponentially in the size of $ N $.
+% \filip{for the memes:}
+% If $ N $ is any bigger than 300 elements, the number of subsets, and thus the size of the set function, is larger than the number of particles in the universe.
+
+% Throughout the literature, we can find many ways to circumvent this problem.
+% Most commonly, this is done by restricting the allowed structure of the set function, and based on that creating an oracle which can compute the value of a subset from a smaller amount of information.
+% For example, consider a set function $ f $ which is additive, meaning $ \fce{f}{S} = \sum_{i \in S}^{} \fce{f}{\left\{ i \right\}} $.
+% Then the whole set function is precisely given by just the values $ \fce{f}{\left\{ i \right\}} $ for all $ i \in N $.
+% While this solution is sufficient in many situations, it vastly limits the set functions we are allowed to work with.
+
+% % my to delame jinak
+% % mame set funkci, ale vybrat z ni hodnoty je tezky
+% % spokojime se s tim ze nebudeme znat vsechny hodnoty
+% % dame si budget na hodnoty ktery chceme zjistit
+% % ty subsety ktery budeme zjistovat vybereme tak aby ten zbytek hodnot jsme vedeli co mozna nejlip
+
+% In this thesis, we investigate a different approach.
+% We assume that, while the full set function is unknown to us, getting even a single value of it is hard -- it costs us, e.g., money, time, resources.
+
+
+% \cite{uradnik2024reducing} have proposed a different approach.
+% They work with a \emph{budget} $ \tau $ of how many subsets they are allowed to know from the set function.
+% Then, 

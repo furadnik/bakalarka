@@ -149,7 +149,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{prop}
 
 \begin{proof}
-  First, we sample $ \sigma $ games (we assume sampling of a single game takes $ \fce\O{2^n} $, i.e. constant time for each subset).
+  First, we sample $ \sigma $ games (we assume sampling of a single game takes $ \fce\O{2^n} $, i.e., constant time for each subset).
   The algorithm iterates over $ \tau $ timesteps. 
   In each timestep, we compute the argmin, which translates to going over all viable subset structures, of which there are $ 2^n-\kappa $.
   For each subset, we compute the divergence in each sample, reaching $ \sigma \cdot \fce\divt{n} $.
@@ -157,7 +157,8 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{proof}
 
 % TODO: tohle přepsat, potenciálně corollary
-We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $, which is much more manageable than $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
+We can see that, even for a large $ \tau $ and small $ \kappa $, the \algFG{} algorithm has a worst-case time complexity $ \fce{\Theta}{\sigma \cdot 2^{2n} \cdot \fce{\divt}{n}} $.
+This is vastly faster than the complexity $ \fce{\Theta}{\sigma \cdot 2^{2^n} \cdot 2^{-\frac{3n}{2}}\cdot \fce{\divt}{n}} $ of the \algFO{} algorithm.
 
 % paralelizace nejde, leda to trochu upravit....
 One thing to point out is that in order to allow greedy choice of $ S $, we had to switch the order of computation -- in the optimal approach, we first compute all the divergences for all samples, and then choose the best subset structure, while in \algFG{}, we explicitly don't want to compute all the divergences, which makes parallelization slightly more involved.
@@ -345,7 +346,7 @@ This is because they assume we have access to all the values, which defeats the 
 To get a solution of the online problem which is applicable in practice, we thus turn to \emph{reinforcement learning}.
 
 % PPO state space
-We employ the PPO algorithm, which we have described in detail in the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of Preliminaries (\Cref{sec:prel-ppo}).
+We employ the PPO algorithm, which we have described in detail in the \nameref{sec:prel-ppo}~\namecref{sec:prel-ppo} of \nameref{chap:prel} (\Cref{sec:prel-ppo}).
 As the state space, we use a vector of size $ 2^n - \kappa $ ($ \kappa $ is the number of initially known subsets), where each element is a value of a subset, or zero if the value is unknown.
 This captures the state space as defined in the \nameref{def:online-pp} (\Cref{def:online-pp}).
 

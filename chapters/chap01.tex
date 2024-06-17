@@ -1,15 +1,17 @@
 \chapter{Preliminaries}
+\label{chap:prel}
 
-\david{hodil bych nějakou omáčku jako o co vůbec půjde a jak je tahle kapitola organizovaná}
+\david{hodil bych nějakou omáčku jako o co vůbec půjde a jak je tahle kapitola organizovaná}\filip{souhlas, co tohle?}
+The goal of this chapter is to lay out basic definitions used throughout the thesis, and to offer intuition for each term.
+The first section describes set functions along with some of their properties.
+This is then expanded upon in the second chapter, which offers an introduction into cooperative game theory.
+Finally, independent\filip{nevim jestli independent je dobry slovo, ale asi chapes co chci rict... nejak proste ze jo, vim ze RL je uplne neco jinyho nez ty prvni dve :D} of the first two, the third chapter discusses deep reinforcement learning, a method of building and training intelligent agents.
 
 \section{Set Functions}
 
 % co je set funkce
 Set functions are very general objects studied extensively in countless fields, including
 matroid theory, game theory utility functions and countless others \citep{10.1093/acprof:oso/9780198566946.001.0001,grabisch2016set,peters2015game,doi:10.1287/ijoc.15.3.284.16077}.
-\filip{chci ty citace mit takhle najednou, nebo to rozdelit a dat neco k matroidum, neco k utilite atd?}
-\david{obojí je fajn, ale rozhodit je za mě lepší}
-
 
 % definice set funkce
 \begin{defi}[Set function]
@@ -17,14 +19,14 @@ matroid theory, game theory utility functions and countless others \citep{10.109
 	A \emph{set function} on the set $ N $ is any function $ f: \pot N \to \R $.
 \end{defi}
 
-Though the definition of a set function consideres a general finite set $ N $, in this thesis, we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
+Though the definition of a set function considers a general finite set $ N $, in this thesis, we will for simplicity only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
 This definition is equivalent to that over a general finite set.
-The class of all set functions on $ N $ is denoted as $ \funcs $.
+We denote the class of all set functions on $ N = \left\{ 1, \ldots, n \right\} $ as $ \funcs $.
 % k čemu jsou
-For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represet a \emph{utility} an agent receives from obtaining a subset of the goods.
+For example, $ N $ can represent a set of \emph{goods}, while the set function $ f $ can represent a \emph{utility} an agent receives from obtaining a subset of the goods.
 
 % monotonicita
-When studying set functions modelling real-world problems, it can often be assumed that the set function has certain properties.
+When studying set functions modeling real-world problems, it can often be assumed that the set function has certain properties.
 One of the most natural and commonly observed of such properties is \emph{monotonicity}.
 
 \begin{defi}[Monotonicity]
@@ -51,6 +53,8 @@ Getting back to the example with utility, superadditivity means that the utility
 In other words, a set is at least as valuable as the sum of its parts.
 
 \david{co sem hodit ještě nějakou větu typu "další zobecnění jsou supermodulární fce"?}
+\filip{nejsem si jistej zobecnenim.... co tohle}
+Another very useful and natural property is \emph{supermodularity}.
 
 % supermodularita
 \begin{defi}[Supermodularity]
@@ -102,7 +106,7 @@ Further, for a set of coalitions $ \s \subseteq \pot N $, we use the term \emph{
 From the definition of a cooperative game it is clear that the characteristic function is a set function on the set $ N $ with the additional requirement that the value of the empty coalition is zero.
 
 % payoff vector
-In cooperative game theory, we usually assume that the grand coalition has formed, i.e. all the players are cooperating.
+In cooperative game theory, we usually assume that the grand coalition has formed, ie. all the players are cooperating.
 We then discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players.
 Finally, based on the splitting mechanism, we investigate whether the formed coalition is stable, or not.
 The payoff of players is described by a payoff vector.
@@ -198,7 +202,7 @@ The reader is encouraged to look deeper into the literature for more information
 Let us first formally define the model used when discussing RL.
 The environment is a black box to the agent, which holds some \emph{state}.
 The agent interacts with the environment via two functions -- the \emph{transition function} $ \tran $, which informs the agent what state the environment moves to after he chooses an action,
-and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action.\footnote{The reward also possibly depends on the \emph{outcome} of the action, i.e. the new state.}
+and the \emph{reward function} $ \rew $, which tells him the \emph{reward} he received for choosing an action.\footnote{The reward also possibly depends on the \emph{outcome} of the action, i.e., the new state.}
 The goal of the agent is to maximize the cumulative reward received over time.
 This is formalized as a \emph{Markov decision process} in the following definition.
 Note that the definition of the Markov decision process further establishes a \emph{discount factor} $ \gamma $, which will be discussed later.
@@ -321,7 +325,7 @@ In each iteration, the agent collects multiple \emph{trajectories} (sequences of
 All trajectories use the same current actor's strategy, which allows the gathering process to be parallelized.
 The \emph{advantage} of the current strategy in each time step in each trajectory is formally defined as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
 An approximation of the $ G_t $ term can be easily computed from the observed rewards.
-The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e. approximately the reward he expected under the current strategy $ \actor $).
+The advantage quantifies how much more reward the agent received from a given state when he chose the action $ a_t $, compared to the prediction of the critic (i.e., approximately the reward he expected under the current strategy $ \actor $).
 If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it lead him to more reward than expected, and if it is negative, it is probably best to play it \emph{less often}.
 
 From the gathered values, $ K $ training epochs are performed on both the actor and the critic.

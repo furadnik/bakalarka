@@ -59,16 +59,6 @@
 \newtheorem*{rem}{Remark}
 \newtheorem*{example}{Example}
 
-%%% An environment for proofs
-
-\newenvironment{myproof}{
-  \par\medskip\noindent
-  \textit{Proof}.
-}{
-\newline
-\rightline{$\qedsymbol$}
-}
-
 %%% An environment for typesetting of program code and input/output
 %%% of programs. (Requires the fancyvrb package -- fancy verbatim.)
 
@@ -145,7 +135,7 @@
 \newcommand{\uf}[2][\k]{\overline{#2}_{#1}}
 
 % classes
-\def\funcs{\mathbb{F}}
+\def\funcs{\mathbb{F}^n}
 \def\cAdditive{\mathbb{A}^n}
 \def\cSuperadditive{\mathbb{S}^n}
 \def\cSupermodular{\mathbb{C}^n}
