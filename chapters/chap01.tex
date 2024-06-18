@@ -343,12 +343,12 @@ This loss forces in the critic to estimate the value of the state $ s_t $ as clo
 The actor is trying to learn the policy which maximizes the expected return.
 As mentioned above, when $ \hat{A_t} $ is positive, the actor should increase the probability with which he chooses the action $ a_t $, and decrease it otherwise.
 % TODO: kontrola znaminek tady
-Observe that one way to express this is as maximizing (over the parameters $ \theta $) the following loss \[
+Observe that one way to express this is as minimizing (over the parameters $ \theta $) the following loss \[
 	-\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
 \]
 where $ \theta_{\text{old}} $ denotes the parameters of the actor from the previous iteration.
 
-However, if this loss were to minimized directly, with multiple gradient-descent updates, the policy might change too much, and the critic's approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
+However, if this loss were to be minimized directly, with multiple gradient-descent updates, the policy might change too much, and the critic's approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
 To prevent this, the loss is \emph{clipped} so it cannot become too low in one iteration.
 Hence, the objective of the actor is defined as follows \begin{align*}
 	\lossactor &\deq -\fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
