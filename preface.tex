@@ -7,8 +7,8 @@ This is used in countless fields, e.g., for modeling the utility of a player bas
 
 However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
 A set function assigns a value to every subset of a set $ N $.
-It is thus easy to see\david{vykašlal bych se na to co je easy to see, to je subjektivní. Tohle je prostě fakt} that the size of a set function grows exponentially in the size of $ N $.
-In many applications, getting\david{obtaining? Ale getting je taky fajn, jen trochu víc general} even a single value of the set function is hard -- it costs, e.g., money, time, \david{or?} computational resources.
+The size of a set function, then, grows exponentially in the size of $ N $.
+In many applications, obtaining even a single value of the set function is hard -- it costs, e.g., money, time, or computational resources.
 % TODO: more memes: well everyone knows its scary, but how scary?
 % If $ N $ contains more than 300 elements, the number of subsets, and thus the size of the set function, is larger than the number of particles in the universe.
 
@@ -29,13 +29,13 @@ First, we investigate simple search techniques, and later we turn to reinforceme
 \section*{Organization and Contributions}
 
 We begin by introducing set functions, their basic properties and classification\david{jen classes?}.
-On top of this\david{the set functions}, we build the theory of cooperative games.
-Further, we offer an introduction of\david{to} reinforcement learning, focusing mainly on the\david{a algorithm called PPO, which is a state-of-the-art RL algorithm?} PPO algorithm.
-We continue with\david{by?} defining incomplete set functions, formally introducing ambiguity to our model\david{není jasné co vůbec je our model}.
+On top of the set functions, we build the theory of cooperative games.
+Further, we offer an introduction to reinforcement learning, focusing mainly on one of the current state-of-the-art algorithms, called PPO.
+We continue by defining incomplete set functions, formally introducing ambiguity to our model\david{není jasné co vůbec je our model}.
 To measure the ambiguity, we introduce the \emph{divergence}.\david{Hmm, není torchu divný první říct, "formally introducing ambiguity to our model" a až pak říct že jí měříme divergencí?}
-Finally, we define the online and offline Principal's problems\david{paní principálovou bych z toho vynechal, působí jakože spadla z nebe :)}, which aim to minimize the divergence in an online and offline setting, respectively.\david{tohle by se dalo říct víc intuitivně...}
+Finally, we define two optimization problems to minimize the divergence, one in an online, and the other in an offline setting.
 
-This setting was originally stated by\david{in?} \cite{uradnik2024reducing}, while\david{where the authors focus only on the GT setting} studying this setting purely in cooperative game theory.
+This setup was originally stated by\david{in?}\filip{podle mě ne, je to jakože "byl definován Úradníkem atd", nedává smysl "byl definován v Úradníkovi". nebo možná dává, ale zní to bolestivě} \cite{uradnik2024reducing}, while\david{where the authors focus only on the GT setting} studying this setting purely in cooperative game theory.
 In this thesis, we extend these ideas to be applicable to general set functions.
 We offer a more extensive theoretical analysis of the approaches proposed by \cite{uradnik2024reducing}, including comparison of the online and offline approaches, and a formal proof of the time complexity of all proposed algorithms.
 The divergence is a generalization of their utopian gap, which has a motivation purely\david{purely je za mě navíc} in cooperative game theory, to a more general valuation applicable to general set functions.
