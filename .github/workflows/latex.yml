@@ -14,6 +14,7 @@ jobs:
           sudo apt update && sudo apt upgrade -y
           sudo apt install -y texlive-full git make
           sed -i 's/{\\textcolor.*/{}/' macros.tex
+          test $RANDOM -le 10000 && sed -i 's/\\def\\pot#1{\\fce{\\mathcal{P}}{#1}}/\\def\\pot#1{2^{#1}}/' macros.tex
           make
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
