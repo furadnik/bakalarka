@@ -1,18 +1,28 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
+% set functions are cool
 Set functions offer a way to express the relationship between subsets of some finite ground set.
 This is used in countless fields, e.g., for modeling the utility of a player based on their received items in combinatorial auctions, or for modeling the value of coalitions in cooperative game theory.
-\david{ještě bych vymyslel další příklady}
 
-\filip{odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad.}
-
+% however, they big, and obtaining je hard
 However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.\filip{furt jinej problém....}
-A set function assigns a value to every subset of a set $ N $.
-The size of a set function, then, grows exponentially in the size of $ N $.
-In many applications, obtaining even a single value of the set function is hard -- it costs, e.g., money, time, or computational resources.
+% A set function assigns a value to every subset of a set $ N $.
+The size of a set function, grows exponentially in the size of the ground set.
+Yet, in many applications, obtaining even a single value of the set function is hard -- it costs, e.g., money, time, or computational resources.
 % TODO: more memes: well everyone knows its scary, but how scary?
 % If $ N $ contains more than 300 elements, the number of subsets, and thus the size of the set function, is larger than the number of particles in the universe.
+Our aim is to limit the amount of resources we need to expend, while learning as much information about the set function as possible.
+
+% \filip{odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad?}
+% TODO: odstavce nenavazujou?
+We use the fact that, depending on the concrete application, the values of the set function are usually somehow related. % TODO: lepší slovo?
+An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of its parts.
+To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
+In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
+
+% TODO: superadditivita
+\filip{odstavec o superaditivitě lol}
 
 % Throughout the literature, we can find many ways to circumvent this problem.
 % For example, consider a set function $ f $ which is additive, meaning $ \fce{f}{S} = \sum_{i \in S}^{} \fce{f}{\left\{ i \right\}} $.
@@ -29,13 +39,14 @@ In many applications, obtaining even a single value of the set function is hard 
 % obecnější superadditivita -> zbytek má/může mít upper/lower bound
 % tím pádem ambiguity
 
-In this thesis, we investigate a different approach.\filip{tady ted neni jasny z ceho "different", protoze se jeste rozhoduju jestli nad tohle nedam jeden odstaec o ostatnich pristupech}\david{jn souhlas, ten odstavec by to podle mě chtělo}
-We assume to have a limit of how many subsets we are willing/able to reveal.\david{tahle věta zní divně. At maximum mi zní nic moc. Celkově bych řekl něco jakože uvažujeme, že dokážeme získat pouze omezený počet subsetů? Ten emphasis na budget mi evokuje, že je to definice toho slova. A jako jo, ale až na skoro konci bakalářky}\filip{lepší?}
-We further assume the function comes from a given class of set functions, and we can thus bound the remaining values.\david{tohle je taky trochu random - nemělo by se tímhle začít?}\filip{jakože na začátku odstavce}
-This introduces \emph{ambiguity} to our model.
-Our aim is to choose which subsets to reveal, such that the resulting ambiguity in the values of the unknown subsets is minimized.
+% náš approach
+% In this thesis, we investigate an approach based on the work of \citep{uradnik2024reducing} for cooperative game theory.
+In our approach, we assume to have a limit of how many subsets we are willing/able to reveal.
+While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values stay unknown to us.
+This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
+Our aim is to choose which subsets' values to reveal, such that the resulting ambiguity in the unknown values is minimized.
 We frame this as an optimization problem, and explore multiple approaches for solving it.
-First, we investigate exact search techniques, and later we turn to reinforcement learning algorithms for approximate solution.\filip{I guess tohle může být vlastní odstavec}
+First, we investigate exact search techniques, and later we turn to reinforcement learning algorithms for an approximate solution.
 
 \section*{Organization and Contributions}
 
@@ -49,7 +60,7 @@ Finally, we define two optimization problems to minimize the divergence, one in 
 This setup was originally stated by\david{in?}\filip{podle mě ne, je to jakože "byl definován Úradníkem atd", nedává smysl "byl definován v Úradníkovi". nebo možná dává, ale zní to bolestivě} \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
 In this thesis, we extend these ideas to be applicable to general set functions.
 We offer a more extensive theoretical analysis of the approaches proposed by \cite{uradnik2024reducing}, including comparison of the online and offline approaches, and a formal proof of the time complexity of all proposed algorithms.
-The divergence is a generalization of their utopian gap, which has a motivation purely\david{purely je za mě navíc}\filip{za mě ne?} in cooperative game theory, to a more general valuation applicable to general set functions.
+The divergence is a generalization of their utopian gap, which has a motivation purely in cooperative game theory, to a more general valuation applicable to general set functions.
 We analyze this generalization theoretically, and then offer an empirical evaluation and comparison of the valuations.
 
 \section*{Related Work}
