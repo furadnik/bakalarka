@@ -3,8 +3,7 @@
 
 % set functions are cool
 Set functions offer a way to express the relationship between subsets of some finite ground set.
-This is used in countless fields, e.g., for modeling the utility of a player based on their received items in combinatorial auctions\david{vynechal bych tu aukci, jde to použít dobře i mimo}, or for modeling the value of coalitions in cooperative game theory.\david{wiki dává příklad: zavedení Lebesguova integrálu je postavený na (nekonečných) set fcích. Tušim celá matika je postavená z množin, set fce v tom určitě hrajou velkou roli...}
-% TODO: hypergrafy
+This is used in countless fields, including explainable AI, probability theory, combinatorial auctions, fair division, and cooperative game theory.\filip{citace....}
 
 % however, they big, and obtaining je hard
 However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
@@ -16,29 +15,14 @@ Our aim is to limit the amount of resources we need to expend, while learning as
 We use the fact that, depending on the concrete application, the values of the set function are often closely related.
 An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of its parts.
 To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
+
+% superadditivita
 In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
+The superadditivity constraint guarantees that the value of a union of two disjoint subsets is greater or equal to the sum of the two subsets' values.
+For example, when the function in question models utility, superadditivity represents \emph{cooperation}, or \emph{synergy}.\filip{citace? je fakt těžký k tomuhle něco najít...}
 
-% TODO: superadditivita
-\filip{odstavec o superaditivitě lol}
-\david{v tom případě zvaž hodit tu předchozí větu do tohohle odstavce?}
-
-% Throughout the literature, we can find many ways to circumvent this problem.
-% For example, consider a set function $ f $ which is additive, meaning $ \fce{f}{S} = \sum_{i \in S}^{} \fce{f}{\left\{ i \right\}} $.
-% Then the whole set function is precisely given by just the values $ \fce{f}{\left\{ i \right\}} $ for all $ i \in N $.
-% While this solution is sufficient in many situations, it vastly limits the set functions we are allowed to work with.
-
-% \begin{itemize}
-%     \item (v závislosti na aplikaci) často ty hodnoty jsou provázaný
-%     \item například .... ?
-%     \item můžeme toho využít?
-% \end{itemize}
-
-% aditivita -> stačí lineární a je to všechno určený, super
-% obecnější superadditivita -> zbytek má/může mít upper/lower bound
-% tím pádem ambiguity
 
 % náš approach
-% In this thesis, we investigate an approach based on the work of \citep{uradnik2024reducing} for cooperative game theory.
 In our approach, we assume to have a limit of how many subsets we are willing/able to reveal.
 While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values remain unknown to us.
 This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
