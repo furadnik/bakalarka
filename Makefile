@@ -3,6 +3,9 @@ all: main.pdf thesis.pdf abstract.pdf
 main.pdf: thesis.pdf
 	cp thesis.pdf main.pdf
 
+thesis.xmpdata: abstract_text.tex thesis.tex abstract.xmpdata thesis_xmpdata.sh
+	./thesis_xmpdata.sh
+
 # LaTeX must be run multiple times to get references right
 thesis.pdf: thesis.tex $(wildcard *.tex) $(wildcard */*.tex) bibliography.bib thesis.xmpdata
 	pdflatex $<
