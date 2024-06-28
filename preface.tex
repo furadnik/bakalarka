@@ -15,13 +15,14 @@ Yet, in many applications, obtaining even a single value of the set function is 
 Our aim is to limit the amount of resources we need to expend, while learning as much information about the set function as possible.
 
 % \filip{odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad?}
-We use the fact that, depending on the concrete application, the values of the set function are usually somehow related. % TODO: lepší slovo?
+We use the fact that, depending on the concrete application, the values of the set function are usually somehow\david{hmm, co třeba closely / tightly? Ale potom ofter tightly related} related. % TODO: lepší slovo?
 An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of its parts.
 To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
 In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
 
 % TODO: superadditivita
 \filip{odstavec o superaditivitě lol}
+\david{v tom případě zvaž hodit tu předchozí větu do tohohle odstavce?}
 
 % Throughout the literature, we can find many ways to circumvent this problem.
 % For example, consider a set function $ f $ which is additive, meaning $ \fce{f}{S} = \sum_{i \in S}^{} \fce{f}{\left\{ i \right\}} $.
@@ -41,7 +42,7 @@ In this thesis, we study a similar approach on the broader class of \emph{supera
 % náš approach
 % In this thesis, we investigate an approach based on the work of \citep{uradnik2024reducing} for cooperative game theory.
 In our approach, we assume to have a limit of how many subsets we are willing/able to reveal.
-While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values stay unknown to us.
+While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values stay\david{remain?} unknown to us.
 This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
 Our aim is to choose which subsets' values to reveal, such that the resulting ambiguity in the unknown values is minimized.
 We frame this as an optimization problem, and explore multiple approaches for solving it.
