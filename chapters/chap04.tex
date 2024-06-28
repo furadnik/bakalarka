@@ -12,7 +12,7 @@ In this thesis, we extend these results for different divergence functions, util
 We compare these results to those with the utopian gap.
 Finally, we show some examples documenting properties of the divergence already discussed above.
 % TODO: workshop?
-% Some of the results concerning norms were already submitted to the OptLearnMAS workshop \filip{citace? chceme toto?}\david{asi ne, workshop nikoho nezajímá :D}.
+% Some of the results concerning norms were already submitted to the OptLearnMAS workshop \filip{citace? chceme toto?}
 
 % Metacentrum technical info
 The code for conducting the experiments was written in Python~3.10 using \texttt{stable\_baselines3}~2.0 \citep{stable-baselines3}, \texttt{gymnasium}~0.28 \citep{towers_gymnasium_2023} and \texttt{pytorch}~2.0 \citep{Ansel_PyTorch_2_Faster_2024}, and is available at Github \citep{gitrepo}.
@@ -24,7 +24,7 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 In this section, we explore different distributions of set functions/cooperative games and see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
 As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential for sufficiently large $ \tau $.
 For this reason, we only present the results for $ n=5 $, for which the optimal algorithms took approximately 60 hours to compute.
-Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute the optimal algorithms for all choices of $ \tau $, it would require over 100 years with our current setup\david{infrastructure? Setup je trochu lidové, infrastructure se mi ale taky moc nelíbí...}.
+Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute the optimal algorithms for all choices of $ \tau $, it would require over 100 years with our current computational resources. \filip{je "computational resources" dobry? bylo "setup", david nadhazoval jeste "infrastructure"...}\filip{jeste navrhuju "computing power"}
 % TODO: \david{možná teda přidáš něco o greedy. V tom případě to sem připiš}
 
 There are countless options to choose from for the divergence function $ \ell $.
@@ -96,8 +96,6 @@ While the greedy and optimal algorithms are close to each other, around step $ \
 \label{sec:supermodular}
 
 % remind what supermodular is
-\filip{essentially stejnej paragraf mam i v preliminaries. jeden chceme vyhodit?}
-\david{nevyhazoval bych to, přijde mi to ok připomenout proč to děláme a ty důvody by se neměly měnit. Navíc už je to dávno co jsme to posledně viděli}
 The class of supermodular functions is widely studied in many fields, most notably in economics and cooperative game theory.\filip{citace (tohle vymyslim, ale to pod tím mistře pls)}
 It has a very rich structure, and many interesting properties \citep{Lovasz1983}.
 Our experiments were conducted on a uniform distribution of monotone supermodular games on $ n $ players, where the ground coalition has unit value.
@@ -109,10 +107,10 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
 All algorithms vastly outperform the \algRand{} approach, achieving over 99~\% of gap reduction with just the budget of $ \tau = 5 $.
 Further, our algorithms exhibit very similar performance, suggesting that knowledge of the specific function drawn from the distribution is of little help when decreasing the gap.
-To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $\david{co tady dát $\tau\in\{1,\dots 12\}$? ale je to jen random thought jako většina toho co píšu :D}\filip{jasný. jakožeee nevím, tak jak to mám já mi přijde že to signaluje že to prochází tau od 1 do 12... ale nemám silný názor. co Mistr na to?}\david{já spíš mám pocit, že ten můj návrh vypadá trochu víc ofiko (aka, stojí víc práce ho napsat :D)}.
+To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $.
 We investigate these findings further in \Cref{ssec:largest}.
 
-\section{Offline vs Oracle}
+\section{Offline vs. Oracle}
 
 % TODO: offline beats oracle?
 % \david{Možná spíš offline vs oracle?}

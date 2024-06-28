@@ -1,12 +1,10 @@
 \chapter{Preliminaries}
 \label{chap:prel}
 
-\david{hodil bych nějakou omáčku jako o co vůbec půjde a jak je tahle kapitola organizovaná}\filip{souhlas, co tohle?}\david{tohle se sem podle mě nehodí. Podobnej odstavec může být na konci intra s tím, že text je organizován tak a tak. Tady by mělo být co se dělá v téhle kapitole. Stačí klidně jedna věta.}
-\filip{vsak tohle je o tyhle kapitole... mam to zkratit nebo?chapte}
 The goal of this chapter is to lay out basic definitions used throughout the thesis, and to offer intuition for each term.
 The first section describes set functions along with some of their properties.
 This is then expanded upon in the second section, which offers an introduction into cooperative game theory.
-Finally, independent\filip{nevim jestli independent je dobry slovo, ale asi chapes co chci rict... nejak proste ze jo, vim ze RL je uplne neco jinyho nez ty prvni dve :D} of the first two, the third section discusses deep reinforcement learning, a method of building and training intelligent agents.
+Finally, independent of the first two, the third section discusses deep reinforcement learning, a method of building and training intelligent agents. % TODO: přepsat tohle
 
 \section{Set Functions}
 
@@ -53,8 +51,6 @@ Another very common and natural property of many set functions is \emph{superadd
 Getting back to the example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
 In other words, a set is at least as valuable as the sum of its parts.
 
-\david{co sem hodit ještě nějakou větu typu "další zobecnění jsou supermodulární fce"?}
-\filip{nejsem si jistej zobecnenim.... co tohle}\david{jn, není to nutne subset. Tohle je good}
 Another very useful and natural property is \emph{supermodularity}.
 
 % supermodularita
@@ -175,7 +171,7 @@ That obviously depends on your definition of fairness, which can be very subject
 However, the Shapley value is generally accepted as fair across the literature because it satisfies many natural qualities that a reasonable fair solution concept should satisfy, as the following shows.
 
 \begin{prop}[Characterization of the Shapley value {\citep{Shapley+1953+307+318}}]
-	The Shapley value $ \Shapley $ is the unique \david{Mistře, není unique linear?}\filip{podle mě to ne, linearitu zajišťuje poslední axiom}\david{na linearitu je ale ještě třeba $\phi_i(\alpha v) = \alpha \phi_i(v)$ ne? To nevim kde člověk dostane.} function satisfying the following properties: \begin{enumerate}[ ]
+	The Shapley value $ \Shapley $ is the unique function satisfying the following properties: \begin{enumerate}[ ]
 		\item efficiency, $ \sum_{i \in N}^{} \shapley[i]{v} = \fce{v}{N} $,
 		\item symmetry, \[
 				\left( \forall i,j \in N \right)\! \left( \left( \forall S \subseteq N \setminus \left\{ i,j \right\} \right)\! \left( \fce{v}{S \cup i} = \fce{v}{S \cup j} \right) \implies \shapley[i]{v} = \shapley[j]{v} \right),
@@ -390,7 +386,7 @@ Conversely, off-policy algorithms are more data efficient, as utilizing old traj
 PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
 The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
 
-% TODO: \filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}\david{až na ten začátek je to moc pěkné}
+% TODO: \filip{Co tohle? Asi po padesáté přepsáno, a už se mi to skoro začíná líbit :D}
 \paragraph{Other RL algorithms}
 Another popular RL algorithm is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}.
 PPO differs from it mainly in the loss of the actor -- REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described above.
