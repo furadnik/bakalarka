@@ -52,14 +52,14 @@ First, we investigate exact search techniques, and later we turn to reinforcemen
 \section*{Organization and Contributions}
 
 We begin by introducing set functions, their basic properties and classification.
-On top of the set functions, we build the theory of cooperative games.
+On top of the set functions, we build\david{tohle evokuje, že to je tvůj koncept - spíš bych řekl něco jako "pak se zaměříke na CGT, která je postavená na set fcích"?} the theory of cooperative games.
 Further, we offer an introduction to reinforcement learning, focusing mainly on one of the current state-of-the-art algorithms, called PPO.
-% TODO: od teď nový
+\david{tady bys mohl udělat odstavec a říct něco, že tady začánají our contributions} 
 We continue by defining incomplete set functions, formally introducing ambiguity to our setup.
-To measure the ambiguity, we introduce the \emph{divergence}.\david{Hmm, není torchu divný první říct, "formally introducing ambiguity to our model" a až pak říct že jí měříme divergencí?}\filip{podle mě ne?}
+To measure the ambiguity, we introduce the \emph{divergence}.\david{Hmm, není torchu divný první říct, "formally introducing ambiguity to our model" a až pak říct že jí měříme divergencí?}\filip{podle mě ne?}\david{už se mi to líbí, nevim co jsem přetím řešil xD}
 Finally, we define two optimization problems to minimize the divergence, one in an online, and the other in an offline setting.
 
-This setup was originally stated by\david{in?}\filip{podle mě ne, je to jakože "byl definován Úradníkem atd", nedává smysl "byl definován v Úradníkovi". nebo možná dává, ale zní to bolestivě} \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
+This setup was originally stated by\david{in?}\filip{podle mě ne, je to jakože "byl definován Úradníkem atd", nedává smysl "byl definován v Úradníkovi". nebo možná dává, ale zní to bolestivě}\david{no kdybys napsal jen "...stated by Úradník", tak je to dobrý. Ale tohle je odkaz přímo na tu práci ve které to bylo udělané ne? Ale oboje asi ok} \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
 In this thesis, we extend these ideas to be applicable to general set functions.
 We offer a more extensive theoretical analysis of the approaches proposed by \cite{uradnik2024reducing}, including comparison of the online and offline approaches, and a formal proof of the time complexity of all proposed algorithms.
 The divergence is a generalization of their utopian gap, which has a motivation purely in cooperative game theory, to a more general valuation applicable to general set functions.
