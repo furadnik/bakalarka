@@ -8,15 +8,12 @@ This is used in countless fields, e.g., for modeling the utility of a player bas
 
 % however, they big, and obtaining je hard
 However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
-% A set function assigns a value to every subset of a set $ N $.
 The size of a set function, grows exponentially in the size of the ground set.
 Yet, in many applications, obtaining even a single value of the set function is hard -- it costs, e.g., money, time, or computational resources.
-% TODO: more memes: well everyone knows its scary, but how scary?
-% If $ N $ contains more than 300 elements, the number of subsets, and thus the size of the set function, is larger than the number of particles in the universe.
 Our aim is to limit the amount of resources we need to expend, while learning as much information about the set function as possible.
 
 % \filip{odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad?}
-We use the fact that, depending on the concrete application, the values of the set function are usually somehow\david{hmm, co třeba closely / tightly? Ale potom ofter tightly related} related. % TODO: lepší slovo?
+We use the fact that, depending on the concrete application, the values of the set function are often closely related.
 An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of its parts.
 To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
 In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
@@ -43,7 +40,7 @@ In this thesis, we study a similar approach on the broader class of \emph{supera
 % náš approach
 % In this thesis, we investigate an approach based on the work of \citep{uradnik2024reducing} for cooperative game theory.
 In our approach, we assume to have a limit of how many subsets we are willing/able to reveal.
-While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values stay\david{remain?} unknown to us.
+While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values remain unknown to us.
 This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
 Our aim is to choose which subsets' values to reveal, such that the resulting ambiguity in the unknown values is minimized.
 We frame this as an optimization problem, and explore multiple approaches for solving it.
@@ -52,14 +49,14 @@ First, we investigate exact search techniques, and later we turn to reinforcemen
 \section*{Organization and Contributions}
 
 We begin by introducing set functions, their basic properties and classification.
-On top of the set functions, we build\david{tohle evokuje, že to je tvůj koncept - spíš bych řekl něco jako "pak se zaměříke na CGT, která je postavená na set fcích"?} the theory of cooperative games.
+We then focus on cooperative game theory, which is built on top of set functions.
 Further, we offer an introduction to reinforcement learning, focusing mainly on one of the current state-of-the-art algorithms, called PPO.
-\david{tady bys mohl udělat odstavec a říct něco, že tady začánají our contributions} 
-We continue by defining incomplete set functions, formally introducing ambiguity to our setup.
-To measure the ambiguity, we introduce the \emph{divergence}.\david{Hmm, není torchu divný první říct, "formally introducing ambiguity to our model" a až pak říct že jí měříme divergencí?}\filip{podle mě ne?}\david{už se mi to líbí, nevim co jsem přetím řešil xD}
+We continue with our contributions.
+We first define incomplete set functions, formally introducing ambiguity to our setup.
+To measure the ambiguity, we introduce the \emph{divergence}.
 Finally, we define two optimization problems to minimize the divergence, one in an online, and the other in an offline setting.
 
-This setup was originally stated by\david{in?}\filip{podle mě ne, je to jakože "byl definován Úradníkem atd", nedává smysl "byl definován v Úradníkovi". nebo možná dává, ale zní to bolestivě}\david{no kdybys napsal jen "...stated by Úradník", tak je to dobrý. Ale tohle je odkaz přímo na tu práci ve které to bylo udělané ne? Ale oboje asi ok} \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
+This setup was originally stated by \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
 In this thesis, we extend these ideas to be applicable to general set functions.
 We offer a more extensive theoretical analysis of the approaches proposed by \cite{uradnik2024reducing}, including comparison of the online and offline approaches, and a formal proof of the time complexity of all proposed algorithms.
 The divergence is a generalization of their utopian gap, which has a motivation purely in cooperative game theory, to a more general valuation applicable to general set functions.
