@@ -18,7 +18,8 @@ abstract.pdf: abstract.tex abstract.xmpdata
 
 clean:
 	rm -f *.log *.dvi *.aux *.toc *.lof *.lot *.out *.bbl *.blg *.xmpi
-	rm -f thesis.pdf abstract.pdf
+	rm -f thesis.pdf abstract.pdf main.pdf
+	rm thesis.xmpdata
 
 overleaf:
 	git fetch overleaf
