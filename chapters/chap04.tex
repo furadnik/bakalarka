@@ -58,19 +58,18 @@ It is rather to have a finite class of games with very simple structure, which a
 % TODO: tohle
 \filip{tady bych chtěl říct něco jako že tím že je to malá třída tak jsme schopný identifikovat dobře co se děje, ale zatím nevím jak}\david{Něco jako že dokážeme enumerovat celou tu třídu a tak přesně spočítat ty expectations?}
 
-% factory distribution
-For a given $ n \in \N $, there are $ n $ different factory games, each with a different owner.
-When running the experiments, we choose $ \fdist $ to be a uniform distribution on these $ n $ games, which we call $ \factory $.
-\Cref{fig:factory} shows the results of our experiments for $ n=5 $ as a function of the budget $ \tau $, for different choices of divergence functions.
-
 \begin{figure*}[t!]
   \centering
-	\includegraphics[width=\stdfigwidth]{figures/factory5.pdf}
-	\includegraphics[width=\stdfigwidth]{figures/l1_factory5.pdf}
+	\includegraphics[width=\stdfigwidth]{figures/exploitability_predictible_factory5.pdf}
+	\includegraphics[width=\stdfigwidth]{figures/l1_norm_predictible_factory5.pdf}
 	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence. \david{obojí je utopian gap?}}
 	\label{fig:factory}
 \end{figure*}
 
+% factory distribution
+For a given $ n \in \N $, there are $ n $ different factory games, each with a different owner.
+When running the experiments, we choose $ \fdist $ to be a uniform distribution on these $ n $ games, which we call $ \factory $.
+\Cref{fig:factory} shows the results of our experiments for $ n=5 $ as a function of the budget $ \tau $, for different choices of divergence functions.
 
 % explain the observed
 We can see that, no matter the divergence function, all our proposed algorithms outperform the \algRand{} approach, where each coalition is chosen uniformly at random.
@@ -102,6 +101,15 @@ Our experiments were conducted on a uniform distribution of monotone supermodula
 We call this distribution $ \supermodular $.
 To conduct our experiments, we use an efficient algorithm for sampling from such a distribution \citep{9252865}.
 The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermodular}.
+
+\begin{figure*}[t!]
+  \centering
+	% \includegraphics[width=\stdfigwidth]{figures/exploitability_convex5.pdf}
+	\includegraphics[width=\stdfigwidth]{figures/l1_norm_convex5.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \supermodular[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence.}
+	\label{fig:supermodular}
+\end{figure*}
+
 
 % explain the observed
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
