@@ -7,7 +7,7 @@ thesis.xmpdata: abstract_text.tex thesis.tex abstract.xmpdata thesis_xmpdata.sh
 	bash thesis_xmpdata.sh
 
 # LaTeX must be run multiple times to get references right
-thesis.pdf: thesis.tex $(wildcard *.tex) $(wildcard */*.tex) bibliography.bib thesis.xmpdata
+thesis.pdf: thesis.tex $(wildcard *.tex) $(wildcard */*.tex) bibliography.bib thesis.xmpdata figures/*
 	pdflatex $<
 	bibtex thesis
 	pdflatex $<
