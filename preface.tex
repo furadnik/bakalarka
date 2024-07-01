@@ -8,23 +8,23 @@ This is used in countless fields, including explainable AI, probability theory, 
 % however, they big, and obtaining je hard
 However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
 The size of a set function, grows exponentially in the size of the ground set.
-Yet, in many applications, obtaining even a single value of the set function is hard -- it costs, e.g., money, time, or computational resources.
+Yet, in many applications, obtaining even a single value of the set function is hard -- it \david{may?} costs, e.g., money, time, or computational resources.
 Our aim is to limit the amount of resources we need to expend, while learning as much information about the set function as possible.
 
 % \filip{odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad?}
-We use the fact that, depending on the concrete application, the values of the set function are often closely related.
-An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of its parts.
+We use the fact that, depending on the concrete application, the values of the set function are often closely related.\david{tohle by šlo přeformulovat - we use that in some applications the values are related?}
+An extreme example of this is \emph{additivity}, where the value of a subset is exactly equal to the sum of \david{the values of} its \david{components?} parts.
 To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
 
 % superadditivita
 In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
 The superadditivity constraint guarantees that the value of a union of two disjoint subsets is greater or equal to the sum of the two subsets' values.
-For example, when the function in question models utility, superadditivity represents \emph{cooperation}, or \emph{synergy}.\filip{citace? je fakt těžký k tomuhle něco najít...}
+For example, when the function in question models utility, superadditivity represents \emph{cooperation}, or \emph{synergy}.\filip{citace? je fakt těžký k tomuhle něco najít...}\david{taky jsem teď nic extra nenašel. Mistr možná bude vědět?}
 
 
 % náš approach
 In our approach, we assume to have a limit of how many subsets we are willing/able to reveal.
-While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on the remaining values, but their true values remain unknown to us.
+While additivity gave us the exact values of the remaining subsets, superadditivity \david{only allows us to }allows us only to give bounds on the remaining values, but their true values remain unknown to us.
 This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
 Our aim is to choose which subsets' values to reveal, such that the resulting ambiguity in the unknown values is minimized.
 We frame this as an optimization problem, and explore multiple approaches for solving it.
@@ -49,7 +49,9 @@ We analyze this generalization theoretically, and then offer an empirical evalua
 \section*{Related Work}
 
 As mentioned above, this thesis builds on top of the work of \citep{uradnik2024reducing}.
-Other authors have tried to circumvent the problem of the size of a set function by restricting themselves to a narrower class of set functions, where a more compact representation becomes possible.
+Other \david{works, takhle to zní jako ostatní autoři toho článku?} authors have tried to circumvent the problem of the size of a set function by restricting themselves to a narrower class of set functions, where a more compact representation becomes possible.
 Another approach similar to ours, thus far used mostly for submodular set functions, is to approximate a function up to a multiplicative bound with high probability.\filip{je tohle ok na to https://proceedings.mlr.press/v80/rosenfeld18a/rosenfeld18a.pdf a https://www.cs.cmu.edu/~ninamf/papers/learn-vals.pdf?}
+\david{Mistr posílal druhému Filipovi nějaké ty články na ten jeho ročníkáč. Nevim jestli jsou to oni, ale vypadají minimálně relevantně.}
 
 \filip{Nevim co dál sem...}
+\david{v aamas článku něco dalšího je. Ten náš článek bych zmínil až později, jako první aplikaci přímo na CGT. }

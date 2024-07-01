@@ -22,6 +22,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
 
 
 % pseudokód \algFO{}
+\david{furt nevim, jestli se mi líbí tenhle styl algoritmu. Je to na tobě, ale co tam přidat nějaké horizontal lines, ať se to odliší od textu?}
 \begin{algor}{\label{alg:fo}\algFO{}}{Function distribution $ \fdist $, number of samples $ \sigma $, the initially known subsets $ \k \supseteq \k_0 $, the remaining budget $ \tau $, a divergence function $ \ell $.}
   {$ \hat{\s_*} $, the (approximate) solution of the offline principal's problem.}
   \State $ D \gets $ a map of zeros of size $ \binom{2^n-\absolute{\k}}{\tau} $, indexed by $ \left\{ \s \subseteq N \setminus \k \suchthat \absolute{\s} = \tau \right\} $.
@@ -31,7 +32,7 @@ This approach doesn't guarantee the optimal solution, however, with $ \sigma $ l
     \State $ D[\s] \gets D[\s] + \divg[f_i] \ell {\k_- \cup \s} $
     \EndIndent
   \EndIndent
-  \State $ \hat{\s_*} \gets \argmin_{\s} D[\s] $
+  \State $ \hat{\s_*} \gets \argmin_{\s\david{\in 2^N?}} D[\s] $
 \end{algor}
 
 % analýza časové složitosti
@@ -142,7 +143,7 @@ This is a greedy approach, and it is not guaranteed to give the optimal solution
 \end{algor}
 
 % analýza časové složitosti OG
-\begin{prop}[\algFG{} time complexity]
+\begin{prop}[\algFG{} time complexity \david{of OFFLINE GREADY?}]
   Let $ n $ be the size of the ground set, $ \kappa $ the size of the initial information, $ \tau $ the remaining budget, $ \sigma $ the number of samples, and $ \ell $ a divergence function.
   Suppose that the time complexity of computing the divergence is $ \fce\divt{n} $.
   Then the time complexity of the \algFG{} algorithm is $ \fce\Theta{\sigma \cdot \left( 2^n-\kappa \right)\cdot\tau \cdot \fce\divt{n}} $.
