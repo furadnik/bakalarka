@@ -22,22 +22,22 @@ When running the experiments, we utilized 15~cores and 12~GB of RAM.
 \section{Experimental Domains}
 
 In this section, we explore different distributions of set functions/cooperative games and see how our methods compare for different choices of the budget $ \tau $ and the divergence function $ \ell $.
-As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential \david{in what} for sufficiently large $ \tau $.
-For this reason, we only present the results for $ n=5 $, for which the optimal algorithms took approximately 800 CPU hours to compute \david{what? není lepší run?}.
-Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to compute\david{compute algorithm se mi nelíbí, co třeba obtain similar results?} the optimal algorithms for all choices of $ \tau $, it\david{bez it ne?} would require over 1000 CPU years with the computational resources currently available to us.
+As we have shown in \Cref{thm:algfo-time-complexity-double-exp}, the time complexity of the optimal variants of the algorithms is double-exponential in the size of the ground set $ n $ for sufficiently large budget $ \tau $.
+For this reason, we only present the results for $ n=5 $, for which the results for each of the optimal algorithms took approximately 1000 CPU hours to compute.
+Using the complexity bound from \Cref{thm:algfo-time-complexity-double-exp}, we estimate that for $ n=6 $, to obtain similar results for the optimal algorithms  would require over 1000 CPU years with the computational resources currently available to us.
 % TODO: \david{možná teda přidáš něco o greedy. V tom případě to sem připiš}
 
 There are countless options to choose from for the divergence function $ \ell $.
-In this thesis, we focus on the performance of our algorithms with the utopian gap as divergence\david{(see Definition x)?}, because it is well motivated in cooperative game theory.
+In this thesis, we focus on the performance of our algorithms with the utopian gap as divergence (\Cref{def:gap}), because it is well motivated in cooperative game theory.
 We further show the performance with the $ L_1 $ and $ L_2 $ norms as divergence functions.
-These are very general, not tied to a specific application, and they have a geometric interpretation which ties them to the original motivation of the divergence -- to measure the size of the set of \david{superadditive} extensions.
+These are very general, not tied to a specific application, and they have a geometric interpretation which ties them to the original motivation of the divergence -- to measure the size of the set of superadditive extensions.
 See \Cref{sec:divergence} for more details.
-As we will see, the results are very similar for the two $ L_k $ norms, and we hypothesize that this will be\david{is} the case \david{for larger $k$ tečka} even for other choices of $ k $.
+As we will see, the results are very similar for the two $ L_k $ norms, and we hypothesize that this is the case for larger $k$.
 
 \subsection{Factory Game}
 
 % factory game class
-The first setting \david{kdyžtak we focus on?} where we run our experiments is a class of cooperative games we call the \emph{factory games}.
+The first setting  we focus on is a class of cooperative games we call the \emph{factory games}.
 
 \begin{defi}[Factory game]
   Let $ N = \left\{ 1, \ldots, n \right\} $ be a set of players and $ o \in N $ be an \emph{owner}.
@@ -49,12 +49,12 @@ The first setting \david{kdyžtak we focus on?} where we run our experiments is 
   \]
 \end{defi}
 
-We imagine that this\david{začátek: This game} is a very simple model of a factory, with $ n-1 $ equally productive workers, and one owner of the factory.
-If the owner is present in the\david{a} coalition, the workers can work in the factory, each producing a value of $ 1 $.
+This game is a very simple model of a factory, with $ n-1 $ equally productive workers, and one owner of the factory.
+If the owner is present in a coalition, the workers can work in the factory, each producing a value of $ 1 $.
 Otherwise, the workers cannot work, and thus produce nothing.
 
 The point of this example is not to precisely model a real-world situation.
-It is rather to have a finite class of \david{superadditive} games with very simple structure, \david{zrušit}which are superadditive, and\david{až sem} on which we can thus run our algorithms and \david{compare their performance?}see how they perform.
+It is rather to have a finite class of superadditive games with very simple structure, on which we can thus run our algorithms and compare their performance.
 % TODO: tohle
 \filip{tady bych chtěl říct něco jako že tím že je to malá třída tak jsme schopný identifikovat dobře co se děje, ale zatím nevím jak}\david{Něco jako že dokážeme enumerovat celou tu třídu a tak přesně spočítat ty expectations?}
 
