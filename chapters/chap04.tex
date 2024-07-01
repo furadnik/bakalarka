@@ -6,7 +6,7 @@ In this chapter, we show the experimental results of the above discussed algorit
 We compare them with a baseline called \algRand{}, where the principal chooses which subsets to reveal uniformly at random from the as of yet unrevealed subsets.
 
 % experimenty jsou i z clankuu
-We first show results utilizing the game-theoretic motivation, with the utopian gap (\Cref{def:gap}) as\david{set} the divergence.
+We first show results utilizing the game-theoretic motivation, with the utopian gap (\Cref{def:gap}) set as the divergence.
 These results are already published by \cite{uradnik2024reducing}, along with a very well-performing heuristic for uniform supermodular games.
 In this thesis, we extend these results for different divergence functions, utilizing the $ L_k $-norms.
 We compare these results to those with the utopian gap.
@@ -87,9 +87,18 @@ Now, let us compare the utopian gap and the $ L_1 $-divergence.
 % greedy ain't optimal
 Let us now focus on the differences between the performance of the greedy and optimal algorithms.
 We have not yet discussed whether the greedy algorithms behave optimally, or if there is a gap between the greedy and optimal algorithms.
-This is best illustrated in \Cref{fig: fixed owner factory}, where we change the factory distribution to always yield the game with player 1 as the factory owner.
-This distribution has support size of 1, and thus the offline algorithms become identical to the oracle algorithms.
+This is best illustrated in \Cref{fig: fixed owner factory}, where an altered distribution over the factory games is used, yielding always the game with player 1 as the factory owner.
+This distribution, which we call $\factoryf$, has support size of 1, and thus the offline algorithms become identical to the oracle algorithms.
 While the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $, the optimal algorithms are in fact strictly better than their greedy counterparts.
+
+\begin{figure*}[t!]
+  \centering
+	\includegraphics[width=\stdfigwidth]{figures/exploitability_fixed_factory4.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence.}
+	\label{fig: fixed owner factory}
+\end{figure*}
+
+
 
 \subsection{Supermodular}
 \label{sec:supermodular}
@@ -110,12 +119,22 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
 	\label{fig:supermodular}
 \end{figure*}
 
+\begin{figure*}[t!]
+  \centering
+	\includegraphics[width=\textwidth]{figures/l1_norm_convex5_coalition_bar_sizes.pdf}
+	\caption{ The percentage of subsets of a given size revealed in steps $1 $ to $ 12$ for the different approaches, when ran on the $\supermodular[5]$ distribution with $L_1$-divergence.
+	  Similar results can be seen for the utopian gap. \filip{appendix?}
+	}
+	\label{fig:supermod_coals}
+\end{figure*}
+
+
 
 % explain the observed
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
 All algorithms vastly outperform the \algRand{} approach, achieving over 99~\% of gap reduction with just the budget of $ \tau = 5 $.
 Further, our algorithms exhibit very similar performance, suggesting that knowledge of the specific function drawn from the distribution is of little help when decreasing the gap.
-To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for $ \tau = 1, \dots, 12 $.
+To illustrate the strategy used by each algorithm, \Cref{fig:supermod_coals} shows the distribution of revealed subsets for steps $ 1 $ to $ 12 $.
 We investigate these findings further in \Cref{ssec:largest}.
 
 \section{Offline vs. Oracle}
@@ -125,6 +144,13 @@ We investigate these findings further in \Cref{ssec:largest}.
 % \filip{Uuuuh, faaajn, ale offline beats oracle mi přišlo chytlavější teda xD}
 % \david{Jakože zní to cool, ale ten title pak naznačuje, že je to takhle vždycky}
 
+\begin{figure*}[t!]
+  \centering
+	\includegraphics[width=\textwidth]{figures/linf_norm_predictible_factory5.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the $ L_\infty $-divergence. }
+	\label{fig:offlinebeatsoracle}
+\end{figure*}
+
 % re-introduce what it's about
 In \Cref{chap:pp}, we have proven various statements about the relationship between the solutions of the \algFO{} and \algRO{} algorithms, along with the relationships of the optimal algorithms and their greedy counterparts.
 The last relationship we have not mentioned yet is that of \algFG{} and \algRG{}.
@@ -132,18 +158,37 @@ One would expect that the resulting valuation of \algFG{} would be an upper boun
 This has been the case in all the figures we have seen so far.
 However, as we show in \Cref{fig:offlinebeatsoracle}, it is \emph{not} true in general.
 
-% TODO: explain l-inf
+% explain l-inf
 Our example uses the $ L_\infty $ norm as $ \ell $, which is defined as \[
   \fce {L_\infty} x \deq \max_i x_i.
 \]
+The $ L_\infty $ norm is what the $ L_k $ norms converge to as $ k $ becomes large.
+The performance of all our approaches on the $L_\infty$ norm is very different to what we saw in \Cref{fig:factory}.
+Most notably, the performance of both the greedy algorithms is exceptionally worse than all the other approaches.
+Around $ \tau = 10 $, they are both outperformed by even the \algRand{} benchmark.
+Furthermore, the offline variant outperforms the oracle variant for some choices of $ \tau $.
 
-% TODO: explain why
+% explain why
+This is a direct consequence of our specific implementation, specifically of our argmin function.
+You can see that the first actions do not affect the divergence at all.
+In this case, our implementation of argmin simply chooses the \textquote{first} action (in some internal ordering of actions it has).\filip{appendix?}
+In such a case, the greedy algorithms choose their first actions completely blindly.
+Then, at $ \tau=15 $, the fact that \algFG{} sees an \emph{average} divergence of its actions in fact help it make a better decision than \algRG{}, which just sees the effect of the action on the specific instance.
 
-\filip{schůzka: nevím kolik a na co tam chceme dát ty obrázky přes celou stránku}
-\david{Jn, ať to nepůsobí jako spam. Ale minimálně nějaký se tam hodí mi přijde. Mohlo by se na ně odkázat v té sekci o Largest Coalitions.}
+% btw ppo
+Notice also that in this example, the PPO approach does not suffer from the same problem as the greedy approaches. 
+In fact, the PPO reaches performance which, at $ \tau \geq 10 $, is comparable to the \algRO{} approach.
 
 \section{Largest Coalition Heuristic}
 \label{ssec:largest}
+
+\begin{figure*}[t!]
+  \centering
+	\includegraphics[width=\stdfigwidth]{figures/expl_supermodular_linear.pdf}
+	\includegraphics[width=\stdfigwidth]{figures/l1_supermodular_linear.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the normalized utopian gap \citep{uradnik2024reducing}\filip{TODO} and the normalized $ L_1 $-divergence.}
+	\label{fig:largest}
+\end{figure*}
 
 % explain motivation
 The main motivation of this thesis is to find out which subsets/coalitions are in some sense the most important for a given distribution of set functions.
@@ -151,12 +196,12 @@ To do this for any given distribution of superadditive set functions, we have de
 For some distributions, these algorithms are more effective, while for others they are nearly comparable to revealing the subsets at random.\david{Co takhle sem přidat něco jakože když jsme lepší než random, náš přístup navíc řekne jaký subsety jsou ty doležitý a další instavec by mohl říct něco jakože to ilustrujeme na supermodular? Ale klidně řekni, že se ti tahle sekce líbí a necháme jí :D}
 
 In this section, we further investigate the $ \supermodular $ distribution, and we hypothesize about the generalization of what we have seen in our experiments for larger $ n $.
-We have previously seen (\Cref{sec:supermodular}) that for $ n=5 $, all algorithms perform well, while behaving all in a very similar way -- first choosing the $ n $ largest subsets.
-After those are revealed, the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
+As we have seen in \Cref{fig:supermodular,fig:supermod_coals}, for $ n=5 $, all algorithms perform well while behaving all in a very similar way.
+They all first choose the $ n $ largest subsets, after which the divergence decreases by about 99 \% (depending on the choice of $ \ell $).
 
 % comment on performance
 This suggests that the \textquote{most important subsets} for the supermodular functions, at least in terms of the divergence, are in fact the largest subsets, in addition to the minimal information $ \k_0 $.
-We thus propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = 2n + 2 $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
+We thus propose the heuristic we call the \algLC{}, which, for a budget of $ \tau = n $, reveals the subsets $ \k = \k_0 \cup \left\{ N \setminus \left\{ i \right\} \suchthat i \in N \right\} $.
 Unfortunately, we cannot compare this heuristic to the optimal algorithms for $ n > 5 $,  due to their time complexity (\Cref{thm:algfo-time-complexity-poly-tau}).
 We hence compare it only with the \algRand{} strategy.
 \Cref{fig:largest} shows the performance of this heuristic as a function of $ n $, with the utopian gap and the $ L_1 $-divergence.
