@@ -62,7 +62,8 @@ It is rather to have a finite class of games with very simple structure, which a
   \centering
 	\includegraphics[width=\stdfigwidth]{figures/exploitability_predictible_factory5.pdf}
 	\includegraphics[width=\stdfigwidth]{figures/l1_norm_predictible_factory5.pdf}
-	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence.}
+	\includegraphics[width=\stdfigwidth]{figures/l2_norm_predictible_factory5.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $- and $ L_2 $-divergence.}
 	\label{fig:factory}
 \end{figure*}
 
@@ -77,12 +78,27 @@ Further, both the offline algorithms are significantly outmatched by the oracle 
 As expected, the PPO algorithm starts off close to the offline algorithm.
 As budget grows, and it gains information about the specific game (in this case, information about which player is the owner), it noticeably outperforms the offline algorithms, and approaches the oracle algorithms.
 
+% TODO: \filip{tady by se dalo zmínit že je to graph game, kdybychom to pak definovali někde}
+
 % comparison of divergence functions
-\filip{tady by se dalo zmínit že je to graph game, kdybychom to pak definovali někde}
-\david{souhlas, to řekni. ML bude mít radost :D}
 Now, let us compare the utopian gap and the $ L_1 $-divergence.
-% TODO: finish rewrite
-\filip{čekám na experimenty, tady chybí odstavec :) ale jinak ten dalsí je zmasirovanej}
+As we can see, the performance of all algorithms is almost identical to the performance for utopian gap.
+This is due to the fact that the Shapley value, which is what the utopian gap uses when computing divergence, is a linear combination of the values of all coalitions.
+The utopian gap is then naturally very similar to the $ L_1 $ norm, where each term as a weight with which it contributes to the divergence.
+
+Finally, we analyze the $ L_2 $-divergence.
+The performance of each algorithm changes, becoming less predictible.\filip{eeeeeh}
+We suspect that this change is due to the nonlinearity of the $ L_2 $ norm.
+However, we do see that the relative performance of each algorithm did not change much.
+Interestingly, the gap between the performances of the offline and oracle approaches seems to be widening.
+This allows us to see more clearly that the PPO algorithm, as we theorised, starts by behaving similarly to the offline approaches, and later reaches the performance of the oracle approaches.
+
+\begin{figure*}[t!]
+  \centering
+	\includegraphics[width=\stdfigwidth]{figures/exploitability_fixed_factory4.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \factoryf[4] $ distribution for the utopian gap \citep{uradnik2024reducing}.}
+	\label{fig: fixed owner factory}
+\end{figure*}
 
 % greedy ain't optimal
 Let us now focus on the differences between the performance of the greedy and optimal algorithms.
@@ -91,17 +107,7 @@ This is best illustrated in \Cref{fig: fixed owner factory}, where an altered di
 This distribution, which we call $\factoryf$, has support size of 1, and thus the offline algorithms become identical to the oracle algorithms.
 While the greedy and optimal algorithms are close to each other, around step $ \tau = 5 $, the optimal algorithms are in fact strictly better than their greedy counterparts.
 
-\begin{figure*}[t!]
-  \centering
-	\includegraphics[width=\stdfigwidth]{figures/exploitability_fixed_factory4.pdf}
-	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence.}
-	\label{fig: fixed owner factory}
-\end{figure*}
-
-
-
 \subsection{Supermodular}
-\label{sec:supermodular}
 
 % remind what supermodular is
 The class of supermodular functions is widely studied in many fields, most notably in economics and cooperative game theory.\filip{citace (tohle vymyslim, ale to pod tím mistře pls)}
@@ -115,7 +121,8 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
   \centering
 	\includegraphics[width=\stdfigwidth]{figures/exploitability_convex5.pdf}
 	\includegraphics[width=\stdfigwidth]{figures/l1_norm_convex5.pdf}
-	\caption{ The divergence as a function of budget $ \tau $ on the $ \supermodular[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $-divergence.}
+	\includegraphics[width=\stdfigwidth]{figures/l2_norm_convex5.pdf}
+	\caption{ The divergence as a function of budget $ \tau $ on the $ \supermodular[5] $ distribution for the utopian gap \citep{uradnik2024reducing} and the $ L_1 $- and $ L_2 $-divergences.}
 	\label{fig:supermodular}
 \end{figure*}
 
@@ -123,12 +130,10 @@ The results of those experiments for $ n=5 $ are presented in \Cref{fig:supermod
   \centering
 	\includegraphics[width=\textwidth]{figures/l1_norm_convex5_coalition_bar_sizes.pdf}
 	\caption{ The percentage of subsets of a given size revealed in steps $1 $ to $ 12$ for the different approaches, when ran on the $\supermodular[5]$ distribution with $L_1$-divergence.
-	  Similar results can be seen for the utopian gap. \filip{appendix?}
+	  Similar results can be seen for the $ L_2 $-divergence and the utopian gap. \filip{appendix?}
 	}
 	\label{fig:supermod_coals}
 \end{figure*}
-
-
 
 % explain the observed
 Surprisingly, our algorithms work remarkably well on the $ \supermodular[5] $ distribution for all our three choices of the divergence function.
@@ -146,7 +151,7 @@ We investigate these findings further in \Cref{ssec:largest}.
 
 \begin{figure*}[t!]
   \centering
-	\includegraphics[width=\textwidth]{figures/linf_norm_predictible_factory5.pdf}
+	\includegraphics[width=\stdfigwidth]{figures/linf_norm_predictible_factory5.pdf}
 	\caption{ The divergence as a function of budget $ \tau $ on the $ \factory[5] $ distribution for the $ L_\infty $-divergence. }
 	\label{fig:offlinebeatsoracle}
 \end{figure*}
