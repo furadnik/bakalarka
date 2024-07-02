@@ -5,18 +5,18 @@
 \filip{eeh, nevim. napiš hate pls}
 
 % mame otazku: jak zvolit subsety abychom meli co nejmensi ambiguity
-In this thesis, we study approaches for minimizing ambiguity in incomplete set functions, when we have a set budget on the amount of values we are willing to reveal.
+In this thesis, we study approaches for minimizing ambiguity in incomplete set functions, when we have a given budget on the amount of values we are willing to reveal.
 We introduce a measure for this ambiguity, which we call the divergence, and we offer a connection between it and the utopian gap of \cite{uradnik2024reducing}.
 
 % delame optimalizacni problemy
 We state two optimization problems, one for solving an online setting, and one for an offline setting.
 % f je lehkej, ale expexp
-We propose the \algFO{} algorithm as an exact solution to the offline problem, and we analyze its complexity.
+We introduce the \algFO{} algorithm, which is an exact solution to the offline problem, and we analyze its complexity.
 Since the complexity of \algFO{} is double-exponential in the size of the ground set, we offer the \algFG{} algorithm as an approximation of the true optimum with a better time complexity.
 
 % online je jeste tezsi
 % ale umime jeho optimalni ambiguity lower boundnout
-The online problem cannot be solved via searching the space of all possible solutions, because it is infinite.
+The online problem cannot be solved via searching the space of all possible solutions, because the solution space is infinite.
 However, we show that the optimal online solution's divergence is upper bounded by the offline optimal divergence.
 We further introduce the \algRO{} and \algRG{} algorithms as benchmarks, which we prove are a lower bound on the divergence of the solution to the online problem.
 
@@ -36,14 +36,15 @@ We employ the PPO algorithm, which does not have guarantees, but works very well
 Our experiments suggest that the PPO approximation of the online solution is in fact close to the optimum.
 We run the experiments on instances of size 5.
 With our current computational power, this is the largest size where the optimal algorithms finish within our lifetime.
-As the available budget increases, PPO reaches the theoretical best-case performance bound of the \algRO{}.
+We show that as the available budget increases, PPO reaches the theoretical best-case performance bound of the \algRO{}.
 
 Further, on the $ \supermodular[5] $ distribution, we observe a significant reduction of ambiguity with just linear revealed subsets.
 This leads us to proposing a heuristic we call \algorithm{Largest Coalitions}.
 We run this heuristic on larger instances of the $ \supermodular $ distribution, and we compare the results to a \algRand{} benchmark.
 The results show that the \algorithm{Largest Coalitions} heuristic outperforms \algRand{} by orders of magnitude.
 This suggests the largest subsets carry the most information on a uniform distribution of supermodular functions.
-Thus, on the very general and well studied class of supermodular games, we have found a solution which can be used as a simple approximation of a solution to the offline problem.
+Thus, on the very general and well studied class of supermodular games, we have found a simple approximation of the solution to the offline problem.
+This simple approximation requires the budget to be linear in the size of the ground set, and it decreases the ambiguity, as given by the $ L_1 $-divergence, by approximately 99 \%.
 
 % future work
 \section*{Future Work}
