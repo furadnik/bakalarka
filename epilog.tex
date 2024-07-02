@@ -1,11 +1,49 @@
 \chapter*{Conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
 
-% TODO: future work
+In this thesis, we study approaches for minimizing ambiguity in incomplete set functions, when we have a set budget on the amount of values we are willing to reveal.
+We introduce a measure for this ambiguity, which we call the divergence, and we offer a connection between it and the utopian gap of \cite{uradnik2024reducing}.
+
+We state two optimization problems, one for solving an online setting, and one for an offline setting.
+We propose the \algFO{} algorithm as an exact solution to the offline problem, and we analyze its complexity.
+Since the complexity of \algFO{} is double-exponential in the size of the ground set, we offer the \algFG{} algorithm as an approximation of the true optimum with a better time complexity.
+
+To approximate the solution of the online problem, we turn to reinforcement learning.
+We employ the PPO algorithm, which does not have guarantees, but works very well empirically.
+We further introduce the \algRO{} and \algRG{} algorithms, which we prove are a lower bound on the solution to the online problem.
+Finally, we run experiments on the $ \factory[5] $ distribution, which is an example distribution, allowing us to understand the behavior of all the proposed algorithms.
+Another distribution we study is $ \supermodular[5] $, which is very rich in its structure.
+
+Our experiments suggests the PPO approximation of the online solution is in fact close to the optimum, as with increasing budget, it reaches the theoretical limit of the \algRO{} approach.
+Further, on the $ \supermodular[5] $ distribution, we observe a significant reduction of ambiguity with just linear revealed subsets.
+This leads us to proposing a heuristic we call \algorithm{Largest Coalitions}.
+We run this heuristic on larger instances of the $ \supermodular $ distribution, and we compare the results to a \algRand{} benchmark.
+The results show that the \algorithm{Largest Coalitions} heuristic outperforms \algRand{} by orders of magnitude.
+This suggests the largest subsets carry the most information on a uniform distribution of supermodular functions.
+
+\filip{co říkáš na tenhle odstavec:}
+To draw further conclusions about the significance of our empirical findings, we would require computing power unreachable to us at the current time.
+By the very nature of this problem, the space in which we search for solutions is up to double-exponential, as we show in \ref{chap:pp}.
+It is hence impossible to give empirical results on instances larger than those included in our experiments.
+
+% future work
 \section*{Future Work}
 
-% TODO: slabé stránky: 
+% slabé stránky: 
+% malýýýýý
+As stated before, there is room for expansion in the experimental section.
+However, without drastic improvements in computing power, those are infeasible.
+With that said, one possible improvement could be rewriting the implementation in a different programming language, which might yield a speed boost big enough for getting the results for $ n=6 $.
+We however do not expect to gain any significant new knowledge for such a small step in size.
+
 % divergence nereflektuje velikost množiny extenzí?
+We define the divergence, and we look at the choice of $ L_k $-divergence, and the utopian gap.
+It is not yet clear how this notion of ambiguity coincides with other notions of ambiguity, for example the volume of the set of extensions.
+This direction is challenging, in that it is not clear how volume should be defined for a set of changing dimension.
+It would also be interesting to see how different choice of the class of extensions affects the resulting performance of the algorithms.
+
 % porovnání s jinými approximacemi set fcí
-% ta prior distribuce je známá, ale to nemusí být úplně realistické...
-% rozšíření na supermodularitu a tak?
+% rozšíření na submodularitu a tak?
+Finally, we would also like to understand the connection of our approach to the multiplicative bounds approximation.
+This would require extending our framework, exchanging the class of superadditive functions by submodular functions.
+This brings complexity in computing the set of extensions.
