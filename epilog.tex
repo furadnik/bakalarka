@@ -1,0 +1,81 @@
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+% epilog: overview, context, broad
+
+% mame otazku: jak zvolit subsety abychom meli co nejmensi ambiguity
+In this thesis, we study approaches for minimizing ambiguity in incomplete set functions.
+We strive to strike a balance between the number of values one needs to obtain, and the ambiguity introduced by the missing values.
+To measure the ambiguity, we introduce the divergence, and we offer a connection between it and the utopian gap of \cite{uradnik2024reducing}.
+
+% delame optimalizacni problemy
+We state two optimization problems, which capture the minimization of ambiguity.
+The first optimization problem is stated in an offline setting, and the second in an online setting.
+% f je lehkej, ale expexp
+We introduce the \algFO{} algorithm, which is an exact solution to the offline problem, and we analyze its complexity.
+Since the complexity of \algFO{} is double-exponential in the size of the ground set, we further introduce the \algFG{} algorithm as an approximation of the true optimum with an exponentially better time complexity.
+
+% online je jeste tezsi
+% ale umime jeho optimalni ambiguity lower boundnout
+The online problem cannot be solved via an exhaustive search over the space of all possible solutions, because the solution space is infinite.
+However, we show that the optimal online solution's divergence is upper bounded by the offline optimal divergence.
+We further introduce the \algRO{} and \algRG{} algorithms as benchmarks, which we prove are a lower bound on the divergence of the solution to the online problem.
+
+% chceme neco co je pouzitelny v praxi
+% tj chceme ppo
+% ppo je expandovatelny na vetsi veci, ale nema garance
+% takze na nejvetsi instanci co upocitame delame comparison ppo s optimama
+% a funguje to fakt dobre it seems -- reaching algro
+% navic pro supermodular mame heuristiku
+% heuristika funguje i na o hodne vetsi instance, kde ji porovnavame jen s random
+In this thesis, we ask the question of how to gather as much information about a set function, while constraining the number of values we can obtain.
+We seek a solution which is usable in practice, even on instances of a larger size.
+The \algFO{} and \algRO{} algorithms cannot be used to answer this question, due to their poor time complexity.
+The \algRG{} algorithm has a more suitable time complexity, but it assumes the existence of an \emph{oracle} giving out the values for free, which defeats the purpose of having a budget in the first place.
+
+To approximate the solution of the online problem which we can use in practice, we thus turn to reinforcement learning.
+We employ the PPO algorithm, which does not have any convergence guarantees, but works very well empirically.
+Our experiments suggest that the PPO approximation of the online solution is, in fact, close to the optimum.
+In particular, we show that as the available budget increases, PPO typically reaches the theoretical best-case performance bound of the \algRO{}.
+We run the experiments on distributions on ground sets of size five.
+Due to the poor scaling of the optimal algorithms, with our current computational resources, this is the largest size where the optimal algorithms finish within our lifetime.
+
+The strategy used by our algorithms on a given distribution of set functions may lead us to uncover important features of its structure.
+Consider for example the $\supermodular$ distribution, where for $ n=5 $ we observe a significant reduction of ambiguity with just $ \fce{\O}{n} $ revealed subsets.
+This leads us to proposing a heuristic we call \algorithm{Largest Coalitions}.
+We run this heuristic on larger instances of the $ \supermodular $ distribution,  along with the \algRand{} benchmark.
+Comparing this heuristic to revealing subset at random shows an interesting trend.
+While a typical subset \textquote{carries less information} as $n$ grows, meaning the decrease of the divergence becomes less substantial, the largest subsets stay \textquote{relevant}.
+Thus, on the very general and frequently studied class of supermodular functions, we have found a simple approximation of the solution to the offline problem, which generalizes to larger instances.
+This simple approximation requires knowledge of only linear number of subsets, while almost entirely removing ambiguity.
+
+% future work
+\section*{Future Work and Limitations}
+
+% slabé stránky: 
+% malýýýýý
+As stated before, it is unfeasible to compare our algorithms to the optimal solutions for larger instances.
+With significant engineering effort and computational resources, one could hope to obtain the optimal solution for $n=6$.
+We however do not expect to gain any significant new insights for such a small increase in size.
+% Considering the strong empirical performance of the approximate algorithms, further simplifications could allow us to scale to larger values of $n$.
+Other empirical results can be extended to larger instances, offering only a comparison of the more scalable sub-optimal algorithms among themselves, without comparison to the optimal results.
+
+% divergence nereflektuje velikost množiny extenzí?
+In our analysis of the divergence, we restrict ourselves to the $ L_k $-divergence, and the utopian gap.
+It is not yet clear how this notion of ambiguity coincides with different notions of ambiguity, for example the volume of the set of extensions.
+This direction is challenging in that it is not clear how volume should be defined for a set of changing dimension.
+Expanding upon the cooperative game theory aspect, one might consider, e.g., how the \emph{core} might be used within our framework, in a manner similar to the Shapley value in the utopian gap.
+In a similar spirit, it might lead to interesting results to consider how a different choice of the class of extensions affects the resulting performance of the algorithms.
+In studying our framework with different classes of extensions, divergence, and set function distributions, one may be led to discover heuristics similar to our heuristic for the $ \supermodular $ distribution.
+
+% jiná neuronka
+Expanding upon the reinforcement learning side of this thesis, there is much to be said about the design of our PPO approach.
+We leave the default architecture of both the critic and the actor, which works well in our scope.
+However, recall that the state space of the PPO grows exponentially in the size of the ground set as well, which leads to slower learning and more training episodes required as the ground set grows.
+It might yield even greater performance to have a custom architecture of the actor and the critic, which condenses the known information to a smaller representation.
+Additional boost in performance might be achieved by having at least a part of the actor and the critic \emph{share} their parameters.
+
+% porovnání s jinými approximacemi set fcí
+% rozšíření na submodularitu a tak?
+Finally, an interesting future direction would be to understand the connection of our approach to the multiplicative bounds approximation \citep{10.5555/1496770.1496829,10.1145/3039871}.
+This approximation is typically considered on submodular functions.
+Applying our framework to submodular functions would require computing upper and lower bounds of submodular extensions, which would be more computationally demanding.

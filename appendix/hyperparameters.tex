@@ -1,0 +1,56 @@
+\chapter{Code Specifications}
+\label{app:code}
+
+The code used for gathering experimental results is available online on Github \citep{gitrepo}.
+The experiments were ran under package version \texttt{3.15}.
+The experiments all used the seed \texttt{3141592653}.
+We used 50 samples for gathering the results.
+The figures show the mean divergence, with error bars showing the standard error.
+
+\paragraph{Code Organization}
+The generators of all distributions are implemented in the \texttt{generators} submodule.
+Notably, for the $ \factory $ distributions, the \texttt{predictible\_factory} generator was used, which cycles through the owners in sequence.
+This does not change the behavior of any of the algorithms, but it does make the results more stable with less samples.
+For the $ \supermodular $ distribution, we use the \texttt{generate\_convex} function, which employs an algorithm by \cite{9252865}.
+The implementation used in this project is a fork of the authors' original implementation, where we fix bugs related to recent versions of C++.
+It is available only on Github, see the project's dependencies for more details \citep{gitrepo}.
+
+The $ L_k $-divergences are implemented in the \texttt{norms} submodule, while utopian gap is implemented in the \texttt{exploitability} submodule, and is referred to as \emph{exploitability} throughout the project, for purposes of backwards compatibility.
+
+\paragraph{PPO}
+We use an implementation of the PPO algorithm with action masking called \texttt{MaskablePPO} from the \texttt{sb3\_contrib} library \citep{stable-baselines3}.
+PPO is trained to maximize the divergence at every step.
+For the details of the PPO implementation, see \cite{stable-baselines3}.
+For futher details of the hyperparameters supplied to the \texttt{MaskablePPO} when training, see \Cref{tab:ppo_params}.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{c|c|c}
+    \hline
+    Parameter  & Value             & Description                    \\
+    \hline
+    \hline
+    $\alpha_a$ & $3\cdot10^{-4}$   & Actor learning rate            \\
+    $\alpha_c$ & $1.5\cdot10^{-4}$ & Critic learning rate           \\
+    $\beta$    & $0.1$             & Entropy regularization         \\
+    $\gamma$   & 1                 & Reward discounting rate        \\
+    $\lambda$  & 0.95              & Generalized advantage estimate \\
+    $\epsilon$ & 0.2               & Surrogate clip range           \\
+    $B$        & $5\cdot 10^{4}$   & Rollout buffer size            \\
+    $M$        & 0.5               & Max gradient norm              \\
+    $n_e$      & 10                & Number of training epochs      \\
+    \hline
+  \end{tabular}
+  \caption{Hyperparameters used during training.}
+  \label{tab:ppo_params}
+\end{table}
+
+\paragraph{Subset Representation}
+We represent a set function by a vector of length $ 2^n $, where the $ i $-th index holds the value of the subset \[
+	\left\{ k \in \left\{ 1, \ldots, n \right\} \suchthat 2^k \otimes i \neq 0 \right\},
+\]
+where $ \otimes $ is the bitwise AND operation.
+
+Understanding this representation is cruicial in understanding the results of \Cref{fig:offlinebeatsoracle}.
+The \algRG{} and \algFG{} implementations use the argmin function of \texttt{numpy}, which returns the first index of the minimum value.
+This means that, when the value of the subset is the same for multiple subsets, the subset with the \emph{smallest index} is selected.

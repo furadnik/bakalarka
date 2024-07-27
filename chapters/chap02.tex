@@ -1,0 +1,315 @@
+\chapter{Problem Definition}
+
+In this section we define the model we will be working with.
+Consider a real-world situation, which can be modeled using a set function over some set $ N $.
+One natural example of this is cooperative game theory, where $ N $ is a set of players who are, say, starting a company together.
+Now the players want to split the earnings in a fair way, using the Shapley value.
+However, as there are many of them, the characteristic function $ v $ is huge, requiring the knowledge of values for every coalition $ S \subseteq N $.
+
+Without the knowledge of all the values in $ v $, they will not be able to compute the Shapley value.
+This gives rise to \emph{ambiguity} in the distribution of earnings---a player may claim he is more valuable to the grand coalition than he actually is, requiring a bigger share of the profit.
+\cite{uradnik2024reducing} have proposed a framework where a third party selects a portion of coalitions for which to reveal the values, such that the ambiguity is minimized.
+In this thesis, we are extending this framework, both in theoretical and practical aspects, most notably by generalizing it to arbitrary set functions.
+
+\section{Incomplete Set Functions}
+
+First, let us formalize the set functions with incomplete information.
+
+\begin{defi}[Incomplete set function]
+  Let $ f: \pot N \to \R $ be a set function.
+  An \emph{incomplete set function} is $ \left( f, \k \right) $, where $ \k \subseteq \pot N $ are the subsets with \emph{known values} of the set function.
+\end{defi}
+
+Notice that the $ f $ in the pair $ \left( f, \k \right) $ is still the \emph{complete} set function.
+We are just restricting ourselves to using only the values from $ \k $.
+This is in contrast to the field of \emph{partial set functions}, where the \textquote{incomplete} function is truly defined as $ \hat f: \k \to \R $ \citep{CERNY202462}.
+We use the definition with complete $ f $ in this thesis, as this allows us to \emph{add} subsets to $ \k $, without the need to alter $ f $ itself to get another correct incomplete set function.
+
+\begin{defi}[$ \C $-extension]
+  Let $ \C $ be a class of set functions, and let $ \left( f, \k \right) $ be an incomplete set function, such that $ f \in \C $.
+  Then $ g \in \C $ is a \emph{$ \C $-extension of $ \left( f,\k \right) $}, if \[
+    \left( \forall S \in \k \right)\quad \fce{f}{S} = \fce{g}{S}.
+  \]
+  The class of all $ \C $-extensions of $ \left( f,\k \right) $ is denoted by $ \fce{\C}{f, \k} $.
+\end{defi}
+
+By assuming that $ f \in \C $, the $ \C $-extensions are a class containing every viable candidate for $ f $---it does not contradict anything already known about $ f $.
+The set $ \fce{\C}{f, \k} $ is non-empty, as $ f $ is always a $ \C $-extension of itself, by the assumption of $ f \in \C $.
+Further, if $ \k = \pot N $, then $ \fce{\C}{f, \k} $ is of size one---only containing $ f $ itself.
+Note that the set of $ \C $-extensions can have size one even for $ \k \neq \pot N $, as the following example shows.
+
+\begin{example}[ ]
+  Let $ f: \pot N \to \R $ be an additive set function, and $ \left( f, \k \right) $ be an incomplete set function, where $ \k = \left\{ \left\{ i \right\} \suchthat i \in N \right\} $.
+  Then $ \fce{\cAdditive}{f, \k} $ is of size 1.
+\end{example}
+
+In the remainder of this section, we seek to find bounds on the unknown values of a superadditive function $ f $.
+As we focus on superadditive extensions, we first define \emph{minimal information} which is required to be known in order for all the bounds on the other values to be well defined.
+
+\begin{defi}[Minimal information]
+  An incomplete set function $ \left( f,\k \right) $ \emph{has minimal information}, if $ \k_0 \subseteq \k $, where \[
+    \k_0 \deq \left\{ \emptyset, N \right\} \cup \left\{ \left\{ i \right\} \suchthat i \in N \right\}.
+  \]
+\end{defi}
+
+% od teď v(0) = 0 & proč to nevadí
+From this point on, we limit ourselves to non-negative superadditive incomplete set functions with minimal information, where further $ \fce{f}{\emptyset} = 0 $.
+We denote the class of non-negative superadditive set functions as $ \cSp $.
+This restriction is general enough to fit all of the motivating examples mentioned above.
+The minimal information in particular requires only a \emph{linear} (in $n$) number of values to be known, compared to the exponential number of all values, which are still potentially unknown.
+On the other hand, this restriction enables us to \emph{bound} the unknown values of $ f $.
+
+% upper a lower bound
+\begin{defi}[Lower/upper function]
+  Let $ f \in \cSp $ be a set function and $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then the \emph{lower function} $ \lf f: \pot N \to \R $ is defined as \[
+    \fce{\lf f}{S} \deq \max_{\substack{S_1, \dots, S_k \in \k \\ \bigcup_i S_i = S \\ S_i \cap S_j = \emptyset}} \sum_{i=1}^k \fce{f}{S_i},
+  \]
+  and the \emph{upper function} $ \uf f: \pot N \to \R $ is defined as \[
+    \fce{\uf f}{S} \deq \min_{\substack{T \in \k \\ T \subseteq S}} \fce{f}{T} - \fce{\lf f}{S \setminus T}.
+  \]
+\end{defi}
+
+\begin{prop}[ ]
+  Let $ f \in \cSp $.
+  Let $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then $ \lf f $ and $ \uf f $ are well-defined set functions, and \[
+    \left( \forall S \subseteq N \right)\quad \fce{\lf f}{S} \leq \fce{f}{S} \leq \fce{\uf f}{S}.
+  \]
+\end{prop}
+
+\begin{proof}
+  Let $ f \in \cSp $ and $ \k \supseteq \k_0 $.
+  First, notice that since all the singletons are in $ \k_0 $, the function $ \lf f $ is well-defined, as the maximum is taken over a non-empty set.
+  Further, since $ N \in \k_0 $, the function $ \uf f $ is also well-defined, as the minimum is taken over a non-empty set.
+
+  The first inequality can be proven by induction on the size of the subset.
+  For $ \absolute{S} = 0,1 $ this is trivial, as the empty set and singletons are in $ \k $.
+  Let $ S \subseteq N $, $ \absolute{S} > 1 $, and let $ \emptyset \neq T,U \subseteq S $, such that $ T \cap U = \emptyset $ and $ T \cup U = S $.
+  The superadditivity bound guarantees \[
+		\fce{f}{S} \geq \fce{f}{T} + \fce{f}{U} \geq \fce{\lf f}{T} + \fce{\lf f}{U} \geq \max_{\substack{S_1, \dots, S_k \in \k \\ \bigcup_i S_i = S \\ S_i \cap S_j = \emptyset}} \sum_{i=1}^k \fce{f}{S_i} = \fce{\lf f}{S},
+  \]
+  where the second inequality follows from the induction hypothesis and the third inequality follows from the definition of $ \lf f $.
+
+  The second inequality can be proven similarly.
+\end{proof}
+
+Further, as the following proposition shows, these bounds are tight.
+
+\begin{prop}[{\citep[][Theorem 2.5]{uradnik2024reducing}}]
+  Let $ f \in \cSp $.
+  Let $ \left( f, \k \right) $ be an incomplete set function with minimal information.
+  Then for $ S \in \pot N \setminus \k $, there exist $ g,h \in \fce \cSuperadditive{f, \k} $, such that \[
+    \fce{g}{S} = \fce{\lf f}{S}, \qquad \fce{h}{S} = \fce{\uf f}{S}.
+  \]
+\end{prop}
+
+Note that the upper and lower functions themselves need not be members of $ \fce \cSuperadditive{f, \k} $.
+
+\section{Divergence}
+\label{sec:divergence}
+
+We would now like to measure the ambiguity of the incomplete set function.
+We achieve this by measuring the size of the set of $ \cSuperadditive $-extensions of $ \left( f, \k \right) $.
+Intuitively, we would like to quantify the \emph{volume} of the set of $ \cSuperadditive $-extensions.
+However, this is not possible as the dimension of the set changes based on the size of $ \k$.
+Instead, we use the distance between the upper and lower functions, measured by some function $ \ell $.
+The most obvious choice of $ \ell $ is some norm on the difference of the upper and lower functions, as norms are often studied, well understood and have nice properties.
+However, we state the following definition for an arbitrary $ \ell $ to keep it more general, as we do not need any special properties of $ \ell $ in this thesis.
+We mostly focus on $ L_k $-norms, but we will also see an example of a non-conventional choice of $ \ell $ which gives a nice interpretation to the \textquote{size} of the $ \cSuperadditive $-extensions based on the context in which it is used.
+
+% restrikce na \ell?
+% $ \ell $ pak nazýváme "divergence function"
+For the remainder of this thesis, we call $ \ell $ a \textquote{divergence function}.
+We do not put explicit restrictions on $ \ell $ other than assuming that the value of $ \ell $ is non-increasing as the size of $ \k $ grows, for any $f \in \cSuperadditive$.
+Note that this does hold for the norms as increasing $ \k $ means reducing the size of the $ \cSuperadditive $-extensions, which cannot increase the distance between the upper and lower functions.
+
+\begin{defi}[Divergence]
+  Let $ f \in \cSp $.
+  Further, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
+  Then the \emph{set function divergence} of $  f $ is $ \Delta_f^{\ell}: \pot{\pot N \setminus \k_0} \to \R^+_0 $, defined as \[
+    \divg \ell \k \deq \fce{\ell}{\lf[\k \cup \k_0] f, \uf[\k \cup \k_0] f}.
+  \]
+\end{defi}
+
+Notice that the divergence is defined on the power set of the set of unknown values, without the minimal information $ \k_0 $, which is then added to $ \k $ when computing the lower and upper functions.
+This is because, as discussed above, the lower and upper functions needn't exist for $ \k \not\supseteq \k_0 $.
+However, we will often work with $ \k $ which includes the minimal information.
+To avoid this, we will use the notation $ \k_- $, defined as $ \k_- \deq \k \setminus \k_0 $, which turns $ \k $ to a valid input of the divergence.
+
+The properties of the divergence differ based on the choice of the function $ \ell $.
+For example, we can choose $ \ell $ to be the $ L_k $ norm of the difference $ \uf f - \lf f $.
+We denote this quantity as $ \fce{\lp k}{\lf f, \uf f} $.
+The divergence is then \[
+\divg {\lp k} \k \deq \sqrt[k]{\sum_{S \in \pot N}^{} \absolute{ \fce{\uf f}{S} - \fce{\lf f}{S}}^k}.
+\]
+This is exactly the $ L_k $-length of the longest diagonal in the hyper rectangle defined by the values of the upper and lower functions, when viewed as $ 2^n $-dimensional vectors.
+Note that this hyper rectangle is a superset of the set of $ \cSuperadditive $-extensions, which tightly encloses it~\citep{uradnik2024reducing}.
+
+\subsection{Utopian Gap}
+
+The divergence is a generalization of the so-called \emph{utopian gap} introduced by \cite{uradnik2024reducing}.
+The motivation for the utopian gap stems from cooperative game theory.
+In that context, the upper and lower functions are bounds on some characteristic function $ v $ of a cooperative game.
+We want to split the value $ \fce{v}{N} $ fairly among the players using the Shapley value.
+However, the Shapley value requires all the values of $ v $ to be known.
+
+One way to estimate the Shapley value is to choose a function from the set of all superadditive extensions of $ v $ (we assume it is known that $ v $ is superadditive).
+However, without knowing the true value of $ v $, there is no way to tell which choice is the most reasonable.
+Each player $ i \in N $ prefers to choose the function which gives him the highest payoff.
+Let us call this function $ v_i $, which in turn means he demands the payoff of $ \shapley[i] {v_i} $.
+While we do not know what the payoff of any individual player should be, we \emph{do} know the value we should give out in total---the value of the grand coalition, $ \fce{v}{N} $.
+We hence define the utopian gap as the difference between what the players collectively demand, and what is available to give out.
+
+\begin{defi}[Utopian gap]
+  \label{def:gap}
+  Let $ \left( N, \k, v \right) $ be an incomplete cooperative game.
+  The \emph{(cumulative) utopian gap} of a cooperative game $ v $ is \[
+    \gap v \deq \sum_{i \in N} \shapley[i] {v_i} - \fce{v}{N},
+  \]
+  where $ v_i $ is the \emph{utopian game} of player $ i $, defined as \[
+    \fce{v_i}{S} \deq \begin{cases}
+      \fce{\uf v}{S} & \text{if } i \in S, \\
+      \fce{\lf v}{S} & \text{if } i \notin S.
+    \end{cases}
+  \]
+\end{defi}
+
+% v_i je definovaná správně
+First, notice that the definition of $ v_i $ is phrased differently than what we discussed in the motivation above.
+It is not at all obvious at first that this $ v_i $ should maximize player $ i $'s profit.
+However, it becomes clear when one remembers that the Shapley value is a weighted sum of the differences $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $ for all $ S \subseteq N \setminus \left\{ i \right\} $, so the former quantity we aim to maximize, while the latter is to be minimized.
+For a formal proof of this statement, along with further properties of the utopian gap, see the work of \cite{uradnik2024reducing}.
+Let us now focus on the connection between the utopian gap and the divergence.
+
+\begin{prop}[Utopian gap is divergence]
+  Let $ \left( N, \k, v \right) $ be an incomplete cooperative game, where $ \k_0 \subseteq \k $ and $ v \in \cSp $.
+  Then it holds \[
+    \gap v = \divg[v] {\ell_G}\k,
+  \]
+  where \begin{equation}
+    \label{eq:gap_divg}
+    \fce{\ell_G}{x,y} \deq \sum_{S \subseteq N}^{} \alpha_S \absolute{y_S-x_S},
+  \end{equation}
+  and $ \alpha_S \deq \frac{\absolute{S}! \left( \absolute{S} - n \right)!}{n!} $.
+\end{prop}
+
+\begin{proof}
+  Let us have a superadditive incomplete game $ \left( N,\k,v \right) $ with $ \k_0 \subseteq \k $.
+  When we write out the definition of the utopian gap with the definition of the Shapley value, we get \[
+    \gap v = \left( \sum_{i \in N}^{} \sum_{S \subseteq N \setminus \left\{ i \right\}} \frac{\left( n - \absolute{S} - 1 \right)! \absolute{S}!}{n!} \left( \fce{\uf v}{S \cup \left\{ i \right\}} - \fce{\lf v}{S} \right) \right) - \fce{v}{N}.
+  \]
+  We now aim to rewrite this expression as a sum over coalitions.
+  To see how many times the terms $ \fce{\lf v}{S} $ and $ \fce{\uf v}{S} $ are present in the sum, we perform case analysis.
+  \begin{enumerate}
+  	\item If $ S = N $, then $ \fce{\lf v}{S} $ is never present, and $ \fce{\uf v}{S} $ is present $ n $-times---once for each player---always with the coefficient $ \frac{0!\left( n-1 \right)!}{n!} = \frac 1n $.
+	\item If $ S = \emptyset $, then do not need to compute the coefficients, as $ \fce{\uf v}{S} = \fce{\lf v}{S} = 0 $, from the definition of a cooperative game and $ \k_0 $, and thus they do not contribute to the final sum.
+	\item Otherwise, both $ \fce{\uf v}{S} $ and $ \fce{\lf v}{S} $ are present.
+	  We now compute their coefficients.
+	  \begin{enumerate}[ ]
+	  	\item The lower function is present $ \left( n-\absolute{S} \right) $-times, once for each player not present in $ S $, and it has the coefficient \[
+	  		-\frac{\left( n-\absolute{S}-1 \right)! \absolute{S}!}{n!}.
+	  	\]
+	  	\item The upper function is present $ \absolute{S} $-times, once for each player present in $ S $, and it has the coefficient \[
+	  		\frac{\left( n-\absolute{S} \right)! \left( \absolute{S}-1 \right)!}{n!}.
+	  	\]
+	  \end{enumerate}
+  \end{enumerate}
+  Putting this all together, we reach the following expression. \begin{align*}
+    \gap v &=  \left( \sum_{i \in N}^{} \sum_{S \subseteq N \setminus \left\{ i \right\}} \frac{\left( n - \absolute{S} - 1 \right)! \absolute{S}!}{n!} \left( \fce{\uf v}{S \cup \left\{ i \right\}} - \fce{\lf v}{S} \right) \right) - \fce{v}{N} \\
+	   &=  \left( \sum_{\emptyset \subset S \subset N}^{} \absolute{S}\tfrac{\left( n-\absolute{S} \right)! \left( \absolute{S}-1 \right)!}{n!} \fce{\uf v}{S} - \left( n-\absolute{S} \right)\tfrac{\left( n-\absolute{S}-1 \right)! \absolute{S}!}{n!} \fce{\lf v}{S} \right) \\ &\quad+ \fce{\uf v}{N} - \fce{v}{N} \\
+	   &= \left( \sum_{\emptyset \subset S \subset N}^{} \frac{\left( n-\absolute{S} \right)! \absolute{S}!}{n!}\left(    \fce{\uf v}{S} - \fce{\lf v}{S}\right) \right) + \fce{\uf v}{N} - \fce{v}{N}
+  \end{align*}
+  Note that since $ \uf v \geq \lf v $, their difference is non-negative.
+  Finally, since $ N \in \k $, and thus $ \fce{v}{N} = \fce{\lf v}{N} $, and since $ \frac{0! n!}{n!} = 1 $, we can rewrite this as \[
+  	\gap v = \sum_{S \subseteq N}^{} \frac{\left( n-\absolute{S} \right)! \absolute{S}!}{n!}\left|    \fce{\uf v}{S} - \fce{\lf v}{S}\right|,
+  \]
+  which concludes the proof.
+\end{proof}
+
+\section{Principal's Problems}
+\label{sec:pp}
+
+We now introduce the two optimization problems we will be working with both in the theoretical and the experimental parts of this thesis.
+The setup is as follows: we have a real-world situation modeled by a superadditive set function $ f: \pot N \to \R $ from a distribution of functions $ \fdist $, such that $ \supp \fdist \subseteq \cSp $.
+From this function $ f $, we only know $ \k_0 \subseteq \k \subseteq \pot N $ values.
+There is a principal, who wants to know the rest of the values of $ f $ as precisely as possible.
+However, she only has the budget to reveal $ \tau $ additional values.
+She wants to choose $ \tau $ subsets from $ \pot N \setminus \k $ whose values to reveal (adding them to $ \k $), such that the bounds on the unknown values are as tight as possible, as measured by the divergence with a chosen function $ \ell $.
+
+From this basic setup, we have two possible approaches to minimizing the divergence.
+First, we can try to establish which $ \tau $ subsets lead to the smallest divergence in expectation.
+This leads to the definition of the \emph{offline principal's problem}.
+
+\begin{defi}[Offline principal's problem] \label{def:offline-pp}
+  Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
+  Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $, and $ \supp \fdist \subseteq \cSp $.
+  Finally, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
+  The \emph{offline principal's problem} is to find a set $ \s \subseteq \pot N \setminus \k $, such that \[
+    \s = \argmin_{\substack{\abs{\s} = \tau \\ \s \subseteq \pot N \setminus \k }} \E_{f \sim \fdist} \left[ \divg \ell {\k_- \cup \s} \right].
+  \]
+\end{defi}
+
+This is an approach which, if it were solved exactly, would give a \textquote{recipe} for the principal to follow, regardless of the already revealed values of $ f $.
+However, there is an approach which leads to a potentially lower value of the divergence.
+The inefficiency in the offline problem is that the optimal $ \s $ might depend on the specific instance $ f $ taken from $ \fdist $.
+Now, granted, the principal does not know all the values of $ f $.
+However, in addition to knowing the values of $ \k $, she has the budget to reveal $ \tau $ extra values, which give her further information about the specific instance of $ f $ she is working with.
+It might then be beneficial to spend some of the budget on exploring other values of $ f $,
+and then use the remainder of the budget to reveal the values which are most beneficial, taking into account the values she has already revealed.
+We call this approach the \emph{online principal's problem}, as the principal, at every step $ t \leq \tau $, utilizes the online information she has gathered about $ f $ when choosing the next subset value to reveal.
+
+% formal def
+The formal definition of the online principal's problem is a bit more involved.
+Unlike the offline problem, the solution to the online problem is a \emph{policy} $ \pi $, according to which the principal will choose the next values to reveal, based on the values she has already seen.
+This input of the policy are the known subsets $ \k $, their corresponding values of $ f $, and the remaining budget $ \tau $.
+To quantify the performance of a policy, we define a \emph{policy valuation function}.
+
+% policy cost
+\begin{defi}[Online policy valuation]\label{def:online-pv}
+  Let $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $ be a policy.
+  Let $ \left( f, \k \right) $ be an incomplete set function with minimal information, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function,
+  and let $ \tau \in \N $ be the remaining budget, such that $ \tau \leq \absolute{\pot N \setminus \k} $.
+  The \emph{policy valuation} of $ \pi $ is defined recursively as \[
+    \val \tau \ell f \k \pi \deq \begin{cases}
+      \E_{S \sim \pi(f\left< \k \right>, \tau)} \left[ \val {\tau - 1} \ell f {\k \cup S} \pi \right] & \text{if } \tau > 0, \\
+      \divg \ell {\k_-} & \text{if } \tau = 0,
+    \end{cases}
+  \]
+  where $ f \!\left< \k \right> \deq \left\{ \left( S, \fce{f}{S} \right) \suchthat S \in \k \right\} $.
+\end{defi}
+
+We can see that the policy valuation exactly quantifies the performance we have discussed above.
+It measures the final divergence reached after the budget has been spent, allowing the principal to make moves that might not be optimal in a \textquote{greedy} sense, meaning that they might not lead to the smallest divergence in the next step, but they might lead to a smaller final divergence.
+
+Notice that the policy used here matches the definition of a policy we have given as \Cref{def:policy} in \Cref{sec:rl}, with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
+Having $ \tau $ as a part of the state is crucial for the policy, as (intuitively) it gives the information whether there is still budget for the principal to further explore the instance of $ f $, or if she is to instead focus on revealing the values which are most beneficial, given the values she has already seen.
+
+\begin{defi}[Online principal's problem] \label{def:online-pp}
+  Let $ \k_0 \subseteq \k \subseteq \pot N $ be the set of known subsets.
+  Let $ \fdist $ be a given distribution of superadditive set functions, which all have the same values on $ \k $, and $ \supp \fdist \subseteq \cSp $.
+  Finally, let $ \ell: \funcs \times \funcs \to \R^+_0 $ be a divergence function.
+  The \emph{online principal's problem} is to find a policy $ \pi: \pot {\pot N \times \R} \times \N \to \dist {\pot N \setminus \k_0} $,
+  which receives \begin{enumerate}[ ]
+    \item the known values $ \k $, along with the revealed values $ \fce{f}{S} $ for $ S \in \k $, and
+    \item $ \tau $, the remaining number of steps,
+  \end{enumerate}
+  and outputs a probability distribution over $ \pot N \setminus \k $, such that $ \E_{f \sim \fdist} \val \tau \ell f \k \pi $ is minimal.
+\end{defi}
+
+% okomentovat rozdíl mezi online a offline, a že to nevadí, protože divergence je monotonně klesající:
+% {Detail: u offline problému máme $ \absolute{\s} = \tau $, ale online problém technicky vzato může zvolit jednu koalici několikrát (byť se to asi nikdy nevyplatí, až na případ kdy divergence už je nula). Takže co to změnit na $ \absolute{\s} \leq \tau $?}{Klíďo pído, ale možná to přinese víc zmatení, když ještě neznáš online definici?}
+Notice that there is a slight difference in the definition of the online and offline problems in terms of how many subsets end up being revealed.
+In the definition of the offline problem, we say that the resulting subset structure $ \k^* $ must be of size $ \tau $.
+However, here we do not explicitly forbid the policy to choose the same subset twice.
+We need not forbid it as the divergence as we have defined it is non-increasing with the size of $ \k $.
+This means that choosing to reveal a subset twice (decreasing the budget by one without learning any new information) is never beneficial.
+
+% říct něco o tom, že online se redukuje na offline když máme policy nezávislou na odhalených hodnotách, nebo $\tau=1$?
+Finally, let us briefly mention the relationship between solutions of the online and offline problems, which we expand upon in \Cref{chap:pp}.
+In special cases, they become the same problem.
+This happens for example when $ \tau = 1 $, because the policy from the online problem does not have the opportunity to use the information it has uncovered.
+In general, the divergence reached by an optimal online solution is always smaller or equal to the divergence reached by an optimal offline solution.
+This is clear from the discussion above the definition of the online problem.
+If the online information does not help in any way, the online policy can simply mimic the solution of the offline problem, and reach the same expected divergence.
+For a more rigorous proof, see \Cref{thm:online-bound-offline} in \Cref{chap:pp}.

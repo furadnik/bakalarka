@@ -1,0 +1,28 @@
+name: Build The Thesis
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Make Thesis
+        run: |
+          sudo apt update && sudo apt upgrade -y
+          sudo apt install -y texlive-full git make
+          sed -i 's/{\\textcolor.*/{}/' macros.tex
+          test $RANDOM -le 10000 && sed -i 's/\\def\\pot#1{\\fce{\\mathcal{P}}{#1}}/\\def\\pot#1{2^{#1}}/' macros.tex
+          make
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Automatic Release"
+          files: |
+            thesis.pdf
+            abstract.pdf
+            abstract_czech.pdf

@@ -1,0 +1,55 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+% set functions are cool
+Set functions provide a method to express relationships among subsets of a finite ground set.
+This is used in countless fields, including explainable AI \citep{lundberg2017shap}, combinatorial auctions \citep{doi:10.1287/ijoc.15.3.284.16077}, fair division \citep{brandt2016handbook}, and cooperative game theory \citep{grabisch2016set,peters2015game}.
+
+% however, they big, and obtaining je hard
+However, in applying set functions to a real-world problem, one quickly reaches a significant roadblock: their size.
+The size of a set function grows exponentially with the size of the ground set.
+Yet, in many applications, obtaining the function value of even a single subset is hard – often involving significant expenditure of money, time, or computational resources.
+Our aim is to limit the amount of resources we need to expend, while learning as much information about the set function as possible.
+
+% odstavec sem o aditivních valuacích, a že pak obecnější je třeba superad?
+In many applications, the values of the set function exhibit close relationships.
+A prominent example is \emph{additivity}, where the value of a subset precisely equals the sum of the values of its parts.
+To know the entire additive set function, it thus suffices to know only the values of the subsets of size one.
+
+% superadditivita
+In this thesis, we study a similar approach on the broader class of \emph{superadditive} set functions.
+The superadditivity constraint guarantees that the value of a union of two disjoint subsets is greater or equal to the sum of the two subsets' values.
+For example, when the function in question models utility, superadditivity represents \emph{cooperation}, or \emph{synergy}.
+
+
+% náš approach
+In our approach, we assume there is a limit to how many subsets we are willing or able to reveal.
+While additivity gave us the exact values of the remaining subsets, superadditivity allows us only to give bounds on their remaining values, but the true values remain unknown to us.
+This incomplete knowledge thus introduces \emph{ambiguity} to the set function.
+Our aim is to choose which subsets' values to reveal, such that the resulting ambiguity in the unknown values is minimized.
+We frame this as an optimization problem, and explore multiple approaches for solving it.
+First, we investigate exact search techniques, and later, we turn to reinforcement learning for an approximate solution.
+
+\section*{Organization and Contributions}
+
+We begin by introducing set functions, their basic properties and classification.
+We then focus on cooperative game theory, which is built on top of set functions.
+Further, we offer an introduction to reinforcement learning, focusing mainly on one of the current state-of-the-art algorithms, called PPO.
+We continue with our contributions.
+We first define incomplete set functions, formally introducing ambiguity to our setup.
+To measure the ambiguity, we introduce \emph{divergence}.
+Finally, we define two optimization problems to minimize the divergence: one in an online, and the other in an offline setting.
+
+This setup was originally stated by \cite{uradnik2024reducing}, focusing purely on the setting of cooperative game theory.
+In this thesis, we extend these ideas to be applicable to general set functions.
+We offer a more extensive theoretical analysis of the approaches proposed by \cite{uradnik2024reducing}, including comparison of the online and offline approaches, and formal proofs of the time complexities of all proposed algorithms.
+The divergence is a generalization of their utopian gap, which has a motivation purely in cooperative game theory, to a valuation applicable in general set functions.
+We analyze this generalization theoretically, and then offer an empirical evaluation and comparison of the valuations.
+
+\section*{Related Work}
+
+As mentioned above, this thesis builds on the work of \cite{uradnik2024reducing}.
+Previous works also focus on a theoretical study of incomplete information in set functions \citep{Seshadhri2010IsST,CERNY202462,Bok2023,RePEc:spr:fuzodm:v:15:y:2016:i:3:d:10.1007_s10700-015-9229-1,Cerny2023}.
+Other works have tried to circumvent the problem of the size of a set function by restricting themselves to a narrower class of set functions, where a more compact representation is possible \citep{Chalkiadakis2012}.\footnote{As a simple example of this, consider the restriction to additive set functions mentioned above.}
+Our approach to solving the online setting resembles active learning \citep{settlet2009active}, where an agent seeks to achieve the most accuracy by querying an oracle for additional information.
+Another approach similar to ours, thus far used mostly for submodular set functions, is approximating set functions up to a multiplicative bound with high probability \citep{10.5555/1496770.1496829,10.1145/3039871}.

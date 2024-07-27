@@ -1,0 +1,404 @@
+\chapter{Preliminaries}
+\label{chap:prel}
+
+The goal of this chapter is to lay out basic notation and definitions used throughout the thesis, and to offer intuition for each term.
+The first section describes set functions along with some of their properties.
+This is expanded upon in the second section, which offers an introduction into cooperative game theory.
+Finally, independent of the first two, the third section discusses deep reinforcement learning, a method of building and training agents to optimize a reward function.
+
+Let us first introduce some basic notation used throughout this thesis.
+The powerset of a set $ X $ is denoted as $ \pot X $.
+Further, $ \dist X $ denotes the set of all probability distributions over $ X $.
+We include zero in natural numbers, meaning $\N \deq \left\{ 0,1,2,\ldots \right\}$.
+Moving to notation regarding probability, for a random variable $ X $, we use $ \supp X $ as its \emph{support}, or the set of values it can have.
+Similarly, for a distribution $ \fdist $, we define $ \supp \fdist $ to be the support of a random variable with this distribution.
+Finally, we use $ X \sim \fdist $ to denote that a random variable $ X $ has a distribution $ \fdist $.
+
+\section{Set Functions}
+
+% co je set funkce
+Set functions are very general objects studied extensively in countless fields, including
+matroid theory, game theory, combinatorial auctions and many more \citep{10.1093/acprof:oso/9780198566946.001.0001,grabisch2016set,peters2015game,doi:10.1287/ijoc.15.3.284.16077}.
+
+% definice set funkce
+\begin{defi}[Set function]
+	Let $ N $ be a finite set.
+	A \emph{set function} on the set $ N $ is any function $ f: \pot N \to \R $.
+\end{defi}
+
+Though the definition of a set function considers a general finite set $ N $, in this thesis we will, for simplicity, only consider set functions on the set $ N = \{1, 2, \ldots, n\} $.
+This definition is equivalent to that over a general finite set.
+We denote the class of all set functions on $ N = \left\{ 1, \ldots, n \right\} $ as $ \funcs $.
+% k čemu jsou
+For example, $ N $ can represent a set of \emph{goods}, while the set function can represent a \emph{utility} received from obtaining a subset of the goods.
+
+% monotonicita
+When studying set functions modeling real-world problems, it can often be assumed that the set function has certain properties.
+One of the simplest and most natural of such properties is \emph{monotonicity}.
+
+\begin{defi}[Monotonicity]
+	A set function $ f: \pot N \to \R $ is \emph{monotonically non-decreasing} if \[
+		\left( \forall S \subseteq T \subseteq N \right)\quad \fce{f}{S} \leq \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+In the example of a set function representing utility, the monotonicity property is equivalent to the assumption that acquiring more goods can never decrease the utility of the agent.
+Another very common and natural property of many set functions is \emph{superadditivity}.
+
+\begin{defi}[Superadditivity]
+	A set function $ f: \pot N \to \R $ is \emph{superadditive} if \[
+		\left( \forall S, T \subseteq N; S \cap T = \emptyset \right)\quad \fce{f}{S \cup T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+
+% ukázat na utilitě
+Getting back to the example with utility, superadditivity means that the utility of obtaining two sets of goods together is at least as high as the sum of the utilities of obtaining each of the sets separately.
+In other words, a set is at least as valuable as the sum of its parts.
+
+Another very useful and natural property is \emph{supermodularity}.
+
+% supermodularita
+\begin{defi}[Supermodularity]
+	A set function $ f: \pot N \to \R $ is \emph{supermodular} if \[
+		\left( \forall S, T \subseteq N \right)\quad \fce{f}{S \cup T} + \fce{f}{S \cap T} \geq \fce{f}{S} + \fce{f}{T}.
+	\]
+\end{defi}
+
+% proč je supermodularita sexy
+Supermodularity is widely studied in various fields, most notably in cooperative game theory (which we will discuss below) and combinatorial auctions \citep{grabisch2016set,doi:10.1287/ijoc.15.3.284.16077}.
+The supermodularity property is, assuming $ \fce{f}{\emptyset} = 0 $, a stronger condition than superadditivity, as the following proposition shows.
+
+% supermodularita => superadditivita
+\begin{prop}[ ]
+	Let $ f: \pot N \to \R $ be a supermodular set function, where $ \fce{f}{\emptyset} = 0 $.
+	Then $ f $ is superadditive.
+\end{prop}
+
+\begin{proof}
+	Suppose $ S,T \subseteq N $, such that $ S \cap T = \emptyset $.
+	Using the definition of supermodularity, along with the fact that $ \fce{f}{\emptyset} = 0 $, we get \[
+		\fce{f}{S} + \fce{f}{T} \leq \fce{f}{S \cup T} + \fce{f}{S \cap T} = \fce{f}{S \cup T} + \fce{f}{\emptyset} = \fce{f}{S \cup T},
+	\]
+	which is exactly the definition of superadditivity.
+\end{proof}
+
+% třídy funkcí
+When discussing set functions with certain properties, it is often useful to consider \emph{classes} of set functions with those properties.
+We denote as $ \cAdditive, \cSuperadditive $ and $ \cSupermodular $ the classes of all set functions on the set $ N = \left\{ 1, \ldots, n \right\} $ that are additive, superadditive, and supermodular (sometimes also called \emph{convex}), respectively.
+
+\section{Cooperative Game Theory}
+
+% co je to kooperativní teorie her
+Cooperative game theory is a field of mathematics that studies situations in which agents may choose to cooperate.
+It analyzes how agents form cooperating groups, called \emph{coalitions}.
+The formed coalitions receive some \emph{value}.
+The goal of cooperative game theory is to study the \emph{stability} of the formed coalitions, and the \emph{distribution} of the value they receive among the agents who form them.
+
+% definice kooperativní hry
+\begin{defi}[Cooperative game]
+	A \emph{cooperative game} is a pair $ \left( N,v \right) $, where $ N $ is a finite set of \emph{players} and $ v: \pot N \to \R $ is the \emph{characteristic function} of the game.
+	The characteristic function is assumed to be \emph{grounded}, meaning $ \fce{v}{\emptyset} = 0 $.
+\end{defi}
+
+Additionally, the term \emph{grand coalition} is used to refer to the coalition of all players $ N $ and a \emph{singleton} is a coalition containing a single player.
+Further, for a set of coalitions $ \s \subseteq \pot N $, we use the term \emph{coalition structure}.
+From the definition of a cooperative game it is clear that the characteristic function is a set function on the set $ N $ with the additional requirement that the value of the empty coalition is zero.
+
+% payoff vector
+In cooperative game theory, we usually assume that the grand coalition has formed, i.e., all the players choose to cooperate.
+We then discuss how the value of the grand coalition, $ \fce{v}{N} $, shall be split between the players.
+Finally, based on the splitting mechanism, we investigate whether the formed coalition is stable or not.
+The payoff of the players is described by a payoff vector.
+
+\begin{defi}[Payoff vector]
+	Let $ \left( N,v \right) $ be a cooperative game.
+	A \emph{payoff vector} is $ x \in \R^n $.
+	The payoff vector is \emph{efficient} if \[
+		\sum_{i = 1}^{n} x_i = \fce{v}{N}.
+	\]
+\end{defi}
+
+For simplicity, we usually shorten the notation of sum over the values of the payoff vector.
+For a coalition $ S \subseteq N $ and a payoff vector $ x \in \R^n $, we denote \[
+	\fce{x}{S} \deq \sum_{i \in S}^{} x_i.
+\]
+% efficiency
+In this thesis, we only consider efficient payoff vectors, meaning the entire value of the grand coalition is to be distributed.
+Other notions of distribution where the payoff vector need not be efficient are sometimes studied \citep{aumann74coop,bachrach2009cost}, but we do not discuss them here. 
+
+% solution concept
+Payoff vectors are studied based on the properties they possess, such as fairness, stability, etc.
+Solution concepts are hence defined as functions which assign each game the set of payoff vectors with given properties.
+
+\begin{defi}[Solution concept]
+	A \emph{solution concept} is a function $ f: \games n \to \pot{\R^n} $.
+\end{defi}
+
+% masirovat
+There are solution concepts which map each game to exactly one vector.
+These are referred to as \emph{single-point solution concepts}.
+In such cases, for simplicity of notation, we alter their signature to $ f: \games n \to \R^n $.
+This is in contrast with so-called \emph{multi-point solution concepts}, which give results of varying magnitude.
+
+The first important solution concept we mention here is the \emph{core}, originally introduced by \cite{Gillies1959}.
+The core is the set of payoff vectors, which encourage stability of the grand coalition.
+In other words, when distributing $ \fce{v}{N} $ according to a payoff vector from the core, no player has the incentive to leave the grand coalition.
+
+\begin{defi}[Core \citep{Gillies1959}]
+	The \emph{core} is a multi-point solution concept defined as \[
+		\core v \deq \left\{ x \in \R^n \suchthat \fce{x}{N} =\fce{v}{N} \land \left( \forall S \subseteq N \right)\! \left( \fce{x}{S} \geq \fce{v}{S} \right) \right\}.
+	\]
+\end{defi}
+
+If the core of a game is empty, it tells us that the grand coalition is unstable.
+More specifically, no matter how the value of $ \fce{v}{N} $ is distributed, there is a set of players that would be better off leaving the grand coalition.
+Hence, assuming perfect rationality of the players, the grand coalition will not form.
+
+% shapley
+Payoff vectors belonging to the core, while ensuring stability, do not consider the fairness of the distribution.
+The most widely accepted fair solution concept is the Shapley value.
+It divides the value of the grand coalition proportionally to the contributions of each player.
+The contribution of a player is the additional value generated by a coalition after that player joins.
+Formally, for $ i \in N $ and $ S \subseteq N \setminus \left\{ i \right\} $, the contribution of $ i $ to $ S $ is $ \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} $.
+
+\begin{defi}[Shapley value {\citep{Shapley+1953+307+318}}]
+	The \emph{Shapley value} is a single-point solution concept defined as \[
+		\left( \forall i \in N \right)\quad \shapley[i] v \deq \sum_{S \subseteq N \setminus \left\{ i \right\}}^{} \frac{s! \left( n - s - 1 \right)!}{n!} \left( \fce{v}{S \cup \left\{ i \right\}} - \fce{v}{S} \right),
+	\]
+	where $ s \deq \absolute{S} $.
+\end{defi}
+
+So, is the Shapley value fair?
+That depends on your definition of fairness, which can be very subjective.
+However, the Shapley value is generally accepted as fair across the literature because it satisfies many natural qualities that a reasonable fair solution concept should satisfy, as the following shows.
+
+\begin{prop}[Characterization of the Shapley value {\citep{Shapley+1953+307+318}}]
+	The Shapley value $ \Shapley $ is the unique function satisfying the following properties: \begin{enumerate}[ ]
+		\item efficiency, i.e., $ \sum_{i \in N}^{} \shapley[i]{v} = \fce{v}{N} $,
+		\item symmetry, i.e., \[
+				\left( \forall i,j \in N \right)\! \left( \left( \forall S \subseteq N \setminus \left\{ i,j \right\} \right)\! \left( \fce{v}{S \cup i} = \fce{v}{S \cup j} \right) \implies \shapley[i]{v} = \shapley[j]{v} \right),
+			\]
+		\item null player, i.e., $ \left( \forall i \in N \right)\! \left( \left( \forall S \subseteq N \setminus i \right)\! \left( \fce{v}{S} = \fce{v}{S \cup i} \right) \implies \shapley[i]{v} = 0 \right)   $,
+		\item additivity, i.e., $ \left( \forall v,w \in \games n \right)\! \left( \shapley{v + w} = \shapley{v} + \shapley{w} \right) $.
+	\end{enumerate}
+\end{prop}
+
+The field of cooperative game theory is vast.
+For a more extensive introduction, see, e.g., \cite{Peleg2007}.
+
+\section{Reinforcement Learning}
+\label{sec:rl}
+
+% RL je způsob jak udělat agenta
+Reinforcement learning (RL) is a technique for designing \emph{agents} which learn to perform tasks.
+An agent interacts with an environment, and receives feedback in the form of rewards.
+The goal of the agent is to learn how to choose actions in a way that maximizes the expected future reward.
+In \emph{deep} reinforcement learning, the agent is represented by a neural nework.
+
+% my budeme dělat jen trochu RL
+RL is an extensive field, discussed in this thesis only to the extent required for our purposes.
+Similarly, we do not further discuss the details of training deep neural networks.
+The reader is encouraged to look deeper into the literature for more information, for example \cite{sutton2018reinforcement,bengio2017deep}.
+
+% agent+environment
+Let us first formally define the model used when discussing RL.
+The environment is a black box to the agent, which holds some \emph{state}.
+The agent interacts with the environment via two functions: the \emph{transition function} $ \tran $, which informs the agent of the new state of the environment after an action is chosen, and the \emph{reward function} $ \rew $, which tells the agent the reward received for choosing an action.
+The goal of the agent is to maximize the cumulative reward received over time.
+This is formalized as a \emph{Markov decision process} in the following definition.
+Note that the definition of the Markov decision process further establishes a \emph{discount factor} $ \gamma $, which will be discussed later.
+
+% MDP?
+\begin{defi}[Markov decision process]\label{def:mdp}
+	A \emph{Markov decision process} (MPD) is a tuple $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $, where \begin{enumerate}[ ]
+		\item $ \actions $ is a non-empty set of \emph{actions},
+		\item $ \states $ is a non-empty set of \emph{states},
+		\item $ \initial \in \dist \states $ is the \emph{initial state distribution},
+		\item $ \tran: \states \times \actions \to \dist \states $ is the \emph{transition function},
+		\item $ \rew: \states \times \actions \times \states \to \R $ is the \emph{reward function},
+		\item $ \gamma \in \left[ 0,1 \right] $ is the \emph{discount factor}.
+	\end{enumerate}
+\end{defi}
+
+% daviduv oblibeny obrazek
+\begin{figure*}[t!]
+	\centering
+	\begin{tikzpicture}[
+	stff/.style={rectangle, draw=black, very thick, minimum height=40, minimum width=80, rounded corners=3},
+	]
+		%Nodes
+		\node[stff]        (Agent)                            {Agent};
+		\node[stff]        (Environment)   [right=of Agent]   {Environment};
+
+		%Lines
+		\draw[->, very thick] (Agent.north)  .. controls  +(up:9mm) and +(up:9mm) .. node[midway, above] {$ a_t \in \actions $} (Environment.north);
+		\draw[->, very thick] (Environment.south)  .. controls  +(up:-9mm) and +(up:-9mm) .. node[midway, below, align=center] {$ s_{t+1} \sim \fce{\tran}{s_{t}} $\\$ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $} (Agent.south);
+	\end{tikzpicture}
+	\caption{An illustration of the agent-environment interaction in a Markov decision process.}
+\end{figure*}
+
+The agent starts in an initial state $ s_0 \sim \initial $.
+At each step $ t \in \N $, he chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
+Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.
+The behavior of an agent is formalized as a \emph{policy}, which is a function that gives a \emph{distribution on the next actions} to take, depending on the current state.
+
+\begin{defi}[Policy]
+	\label{def:policy}
+	A \emph{policy} of an agent in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ is a function $ \pi: \states \to \dist \actions $.
+\end{defi}
+
+As the agent plays, sampling his actions according to the policy $ \pi $, he receives some reward at every step.
+We are interested in quantifying \emph{how well} a policy performs over time, which translates to \emph{how much reward} the agent receives \emph{overall}.
+This is captured in the \emph{return} of a policy.
+
+% return
+\begin{defi}[Return]
+	Let $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ be a MDP.
+	The agent starts in $ s_0 \sim \initial $, chooses actions $ \left( a_t \right)_{t=0}^\infty $ according to a policy $ \pi $, reaching states $ \left( s_t \right)_{t=1}^\infty $ and receiving rewards $ \left( \rew_t \right)_{t=0}^\infty $.
+	Then the \emph{return} of the policy $ \pi $ from time $ T $ is \[
+		\return_T \deq \sum_{t=T}^{\infty} \gamma^{t-T} \rew_t.
+	\]
+\end{defi}
+
+Since the transition function and the policy are stochastic, the states, actions, rewards, as well as the return are random variables.
+When constructing a policy, our goal is to maximize $ \fceb{\E}{\return_0} $, where the expectation is taken over the initial state, the transition function, and the policy in each step.
+It is sometimes useful to explicitly state the policy used by the agent in the notation.
+For that, we use the notation $ \fceb{\E_\pi}{\return_0} $, which is common in RL literature, signaling that the actions chosen when computing the return are corresponding to the policy $ \pi $.
+
+Formally, this model only captures environments where the agent plays indefinitely.
+To capture environments with a finite horizon of $ T $ steps, we introduce a final state, which is reached after the first $ T $ steps.
+In this final state, the agent stays forever, always receiving zero reward.
+
+The discount factor $ \gamma $ decreases the value of future rewards, which serves two purposes.
+It ensures that the return is finite, assuming the rewards are bounded, since $ \sum_i \gamma^i $ converges for $ \gamma \in \left[ 0,1 \right) $.%
+\footnote{Note that our definition enables the case of $ \gamma = 1 $. Extra caution then must be taken to prove that the return is in fact finite, e.g., when the episodes are always finite, or when the received rewards already decrease exponentially over time.}
+Further, it makes the agent prefer immediate rewards over future rewards, which sometimes helps the training algorithms to be more stable in certain environments, as is discussed below.
+This is similar to human behavior, often preferring smaller immediate rewards over larger rewards far in the future.
+
+\begin{defi}[State value]\label{def:state-value}
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	The \emph{value} of a state $ s \in\states $ is \[
+		\fce {\stval} {s} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s \right].
+	\]
+\end{defi}
+
+The state value captures the performance of a policy when the agent starts in a given state, while following a given policy $\pi$.
+Note that since the process is Markovian, the state value of a state $ s $ is equal to $ \E_\pi \left[ \return_t \suchthat s_t = s \right] $, for any $ t \in \N $.
+Finally, let us define the value of choosing an action in a state.
+
+\begin{defi}[Action-state value]
+	Suppose the agent takes steps in an environment $ \left( \actions, \states, \initial, \tran, \rew, \gamma \right) $ according to a policy $ \pi $.
+	The \emph{action-state value} of a state $ s \in\states$ and an action $ a \in \actions $ is \[
+		\fce{q_\pi}{s, a} \deq \E_\pi \left[ \return_0 \suchthat s_0 = s, a_0 = a \right].
+	\]
+\end{defi}
+
+This quantity is also referred to as the \emph{q-value} of an action in a state.
+Action-state values express the reward we expect when starting in state $ s $, taking an action $ a $, and then following a policy $ \pi $.
+Expressing this is crucial in learning, when deciding how to alter a policy to maximize the expected return.
+
+\subsection{PPO}
+\label{sec:prel-ppo}
+
+% existuje spoustu způsobů, my vybíráme PPO + NN
+There are many reinforcement learning algorithms, each with its strengths and weaknesses.
+In our experiments we use the \emph{Proximal Policy Optimization} (PPO) algorithm \citep{schulman2017proximal}.
+PPO is a state-of-the-art algorithm, which has been empirically shown to perform well in various environments \citep{conf/nips/Ouyang0JAWMZASR22,Berner2019Dota2W,conf/iclr/BakerKMWPMM20}.
+Importantly for our purposes, PPO is able to work with continuous state spaces, which is required in our application.%%
+\footnote{This is not specific to PPO, but rather to the fact that neural networks are used to approximate the critic and the actor.}
+
+% PPO funguje actor-critic
+Let us now delve into the specifics of the PPO algorithm.
+PPO belongs to a family of so-called actor-critic algorithms.
+% PPO uses an actor-critic architecture.
+It uses two deep neural networks, the \emph{actor} and the \emph{critic}.\footnote{Note that, though uncommon, there are also variations of PPO approximating the actor and the critic using other means than neural networks.
+They will not be discussed further in this thesis.}
+% The \emph{actor} and the \emph{critic} are used to approximate the policy and state value functions, respectively.
+The actor tries to learn a policy $ \pi $ which maximizes the expected return,
+while the critic seeks to approximate the value $ \fce \stval s $ of each state $ s $ encountered when following the policy $\pi$.
+The critic's prediction is used to guide the actor when training.
+
+% jak se učí PPO
+The critic is denoted as $ \critic $, where $ \phi $ represents the parameters of the neural network, and the actor as $ \actor $, again with parameters $ \theta $.
+Before defining their respective losses, let us mention how the training process works at a high level.
+The critic and the actor are trained simultaneously.
+The training process is split into \emph{iterations}.
+In each iteration, the agent collects multiple \emph{trajectories} (sequences of state-action-reward triplets, always starting from an initial state $ s_0 \sim \initial $) by interaction with the environment.
+All trajectories use the same current actor's strategy, which allows the gathering process to be parallelized.
+From the gathered trajectories, \emph{advantages} are computed.
+The advantage of the current strategy in each time step in each trajectory is formally defined as $ \hat {A_t} \deq G_t - \fce\critic {s_t} $.
+An approximation of the $ G_t $ term can be easily computed from the observed rewards.
+The advantage quantifies how much more reward the agent received from a given state when he chose action $ a_t $, compared to the prediction of the critic (i.e., approximately the reward he expected under the current strategy $ \actor $).
+If the advantage is positive, it suggests the agent should play $ a_t $ \emph{more often}, as it led him to more reward than expected, and if it is negative, it is probably best to play it \emph{less often}.
+
+From the gathered values, $ K $ training epochs are performed on both the actor and the critic.
+After the training, all the gathered rewards are dropped, and the algorithm moves to the next iteration.
+
+% critic dělá tohle, minimalizuje tohle
+Let us now discuss the details of the actor and the critic.
+The critic is trained to minimize the following mean square error loss \begin{equation}
+	\label{eq:ppoloss}
+	\losscritic \deq \fceb {\EE_{\actor,t}}{\left( \return_t - \fce{\critic}{s_t} \right)^2},
+\end{equation}
+where $ \EE_{\pi,t} $ denotes the empirical expectation over all the timesteps $ t $, and over all trajectories in the current iteration.
+This loss forces the critic to estimate the value of the state $ s_t $ (for the actor's current policy) as close as possible.
+
+% actor dělá tohle, minimalizuje tohle,
+The actor is trying to learn the policy which maximizes the expected return.
+As mentioned above, when $ \hat{A_t} $ is positive, the actor should increase the probability with which the action $ a_t $ is chosen, and decrease it otherwise.
+Observe that one way to express this is as minimizing (over the parameters $ \theta $) the following loss \[
+	-\frac{\fce{\actor}{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t},
+\]
+where $ \theta_{\text{old}} $ denotes the parameters of the actor from the current iteration.
+
+However, if this loss were to be minimized directly, with multiple gradient-descent updates, the policy might change too much, and the critic's approximations of $ G_t $, which were gathered using the old policy, would become too inaccurate.
+To prevent this, the loss is \emph{clipped} so it cannot become too low in one iteration.
+Hence, the objective of the actor is defined as follows \begin{align*}
+	\lossactor &\deq -\fceb {\EE_{\actor[\theta_{\text{old}}],t}}{\fcec\min{\left[ \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \right]^{1+\varepsilon}_{1-\varepsilon} \hat{A_t}, \frac{\fce\actor{a_t \suchthat s_t}}{\fce{\actor[\theta_{\text{old}}]}{a_t \suchthat s_t}} \hat{A_t}}}, \\
+\end{align*}
+where
+\[
+	\left[ x \right]^a_b \deq \begin{cases}
+		a & \text{if $ x > a $,} \\
+		b & \text{if $ x < b $,} \\
+		x & \text{otherwise.}
+	\end{cases}
+\]
+
+The hyperparameter $ \varepsilon $ is used to control the amount of clipping, and thus the maximum rate of change of the policy in each iteration, along with the stability of the learning process.
+Taking the minimum of the clipped and unclipped objective ensures that the loss is clipped from only one direction.
+This is crucial as, if we are unlucky, one policy update might in fact \emph{decrease} the objective, and if it were to be clipped from both sides, the agent would be unable to learn anything for the remainder of the epochs, since the gradient of the loss in the clipped region is zero.
+
+% PPO pseudokod
+\begin{algor}{\label{alg:ppo}PPO, Actor-Critic Style}{Clip range $ \varepsilon \in \left( 0,1 \right) $, number of epochs $ K $, number of iterations $ I $, number of trajectories $ R $, the coefficients of losses of the actor $ \alpha_\theta $, and the critic $ \alpha_\phi $.}
+	{Trained PPO model---the critic $ \critic $ and actor $ \actor $.}
+	\State Initialize $ \critic $ and $ \actor $ randomly.
+	\Indent For $ i \in \left\{ 1,2,\ldots,I \right\} $:
+		\State Gather rewards for $ R $ trajectories using the current policy $ \actor $.
+		\State Compute the advantages $ \hat{A_t} $ for each timestep $ t $ in each trajectory.
+		\State Compute $ K $ epochs gradient descent of both the actor and the critic, minimizing the following loss: \[
+			\fce{L}{\theta, \phi} \deq \alpha_\theta \lossactor + \alpha_\phi \losscritic.
+		\]
+	\EndIndent
+\end{algor}
+
+% PPO vs ostatní AC---problém když mezi iteracema se hodně změní policy -> kritik je kokot -> nestabilní
+\paragraph{PPO and Other RL Algorithms}
+Finally, let us mention some of the differences between PPO and other RL algorithms.
+We have already discussed that we require an algorithm which works well with continuous state spaces.
+However, this is not specific to PPO, but rather to the fact that neural networks are used to represent the actor and the critic \citep{journals/nature/MnihKSRVBGRFOPB15}.
+PPO operates on an \emph{on-policy} basis, meaning that the critic always learns from data generated by the current policy of the actor.
+This is in contrast to \emph{off-policy} algorithms, which can utilize rewards gathered in previous iterations under different policies to train the new policy.
+On-policy algorithms generally maintain better learning stability since the critic isn't influenced by outdated trajectories \citep{hausknecht2016policy}.
+Conversely, off-policy algorithms are more data efficient, as utilizing old trajectories reduces the need to gather as many new ones \citep{LYU2024120371}.
+PPO remedies the inefficiency of throwing away old trajectories by parallelizing the data gathering process, and thus allowing much faster gathering of new trajectories.
+The gathering of trajectories is typically performed on CPUs, which are readily available on modern computation centers.
+
+A popular RL algorithm, which is similar to PPO, is the REINFORCE algorithm with baseline \cite[][Chapter 13]{sutton2018reinforcement}.
+PPO differs from it mainly in the loss of the actor---REINFORCE uses negative log likelihood loss weighted by the advantages, while PPO uses the clipped policy ratio loss described in \Cref{eq:ppoloss}.
+The loss used by REINFORCE tries to adjust the policy such that, in each visited state, the action with the highest q-value is chosen.
+This can result in the distribution of visited states changing too fast.
+The clipped ratio loss used by PPO is designed to limit the degree to which the policy, and thus the state distribution, can change in each iteration.
+This makes PPO generally more stable when learning as it allows the predictions of the critic to get closer to the real q-values.
+These properties make PPO a good choice for various problems, including the one we are interested in in this thesis, as described in \Cref{sec:ppo}.

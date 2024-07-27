@@ -1,0 +1,199 @@
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[noend]{algpseudocode}
+%%% This file contains definitions of various useful macros and environments %%%
+%%% Please add more macros here instead of cluttering other files with them. %%%
+
+\newcommand{\david}[1]{\textcolor{red} {d: #1}}
+\newcommand{\filip}[1]{\textcolor{teal} {f: #1}}
+\newcommand{\martin}[1]{\textcolor{blue} {m: #1}}
+
+%%% Minor tweaks of style
+
+% These macros employ a little dirty trick to convince LaTeX to typeset
+% chapter headings sanely, without lots of empty space above them.
+% Feel free to ignore.
+\usepackage{enumitem}
+\makeatletter
+\def\@makechapterhead#1{
+  {\parindent \z@ \raggedright \normalfont
+   \Huge\bfseries \thechapter. #1
+   \par\nobreak
+   \vskip 20\p@
+}}
+\def\@makeschapterhead#1{
+  {\parindent \z@ \raggedright \normalfont
+   \Huge\bfseries #1
+   \par\nobreak
+   \vskip 20\p@
+}}
+\makeatother
+
+% This macro defines a chapter, which is not numbered, but is included
+% in the table of contents.
+\def\chapwithtoc#1{
+\chapter*{#1}
+\addcontentsline{toc}{chapter}{#1}
+}
+
+% Draw black "slugs" whenever a line overflows, so that we can spot it easily.
+\overfullrule=1mm
+
+%%% Macros for definitions, theorems, claims, examples, ... (requires amsthm package)
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{prop}[thm]{Proposition}
+
+\theoremstyle{plain}
+\newtheorem{defi}{Definition}
+
+\theoremstyle{plain}
+\newtheorem*{cor}{Corollary}
+\newtheorem*{rem}{Remark}
+\newtheorem*{example}{Example}
+
+%%% An environment for typesetting of program code and input/output
+%%% of programs. (Requires the fancyvrb package---fancy verbatim.)
+
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small, frame=single}
+
+%%% The field of all real and natural numbers
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+%%% Useful operators for statistics and probability
+\DeclareMathOperator{\pr}{\textsf{P}}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\EE}{\hat{\mathbb{E}}}
+\DeclareMathOperator{\var}{\textrm{var}}
+\DeclareMathOperator{\sd}{\textrm{sd}}
+
+%%% Transposition of a vector/matrix
+\newcommand{\T}[1]{#1^\top}
+
+%%% Various math goodies
+\newcommand{\goto}{\rightarrow}
+\newcommand{\gotop}{\stackrel{P}{\longrightarrow}}
+\newcommand{\maon}[1]{o(n^{#1})}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\dint}{\int_0^\tau\!\!\int_0^\tau}
+\newcommand{\isqr}[1]{\frac{1}{\sqrt{#1}}}
+\def\O{\mathcal{O}}
+
+%%% Various table goodies
+\newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
+\newcommand{\mc}[1]{\multicolumn{1}{c}{#1}}
+
+\def\suchthat{\,|\,}
+\def\pot#1{\fce{\mathcal{P}}{#1}}
+\def\deq{\mathbin{:=}}
+\def\absolute#1{\left\lvert #1 \right\rvert }
+\def\vec{\boldsymbol}
+
+\def\tprog#1{\texttt{#1}}
+
+% functions with auto parenths
+\def\bfce#1#2{#1\!\bigl(#2\bigr)}
+\def\fce#1#2{#1\!\left(#2\right)}
+\def\fceb#1#2{#1\!\left[ #2 \right]}
+\def\fcec#1#2{#1\!\left\{#2\right\}}
+\def\fces#1#2{#1\!\left< #2 \right>}
+
+\def\games#1{\Gamma^{#1}}
+\def\core{\fce{\mathcal{C}}}
+\def\Shapley{\phi}
+\newcommand\shapley[1][]{\fce{\Shapley_{#1}}}
+\def\dist#1{\Delta^{#1}}
+
+\def\algs{\mathcal{A}}
+\def\alg{\textsf{A}}
+\def\k{\mathcal{K}}
+\def\s{\mathcal{S}}
+\def\C{\mathcal{C}}
+
+% loss
+\def\ls{\ell}
+\def\xl{\hat{\ell}}
+\def\cl{L}
+\def\cxl{\hat{\cl}}
+\def\vls{\vec{\ls}}
+\def\vxl{\hat{\vec\ell}}
+\def\vcl{\vec L}
+\def\vcxl{\hat{\vcl}}
+
+
+% lower and upper functions
+\newcommand{\lf}[2][\k]{\underline{#2}_{#1}}
+\newcommand{\uf}[2][\k]{\overline{#2}_{#1}}
+
+% classes
+\def\funcs{\mathbb{F}^n}
+\def\cAdditive{\mathbb{A}^n}
+\def\cSuperadditive{\mathbb{S}^n}
+\def\cSp{\cSuperadditive_*}
+\def\cSupermodular{\mathbb{C}^n}
+
+% norms
+\def\lp#1{\ell_{#1}}
+\def\lpinf{\lp \infty}
+\def\lpt{\lp 2}
+\def\lpo{\lp 1}
+
+% divergence
+\newcommand{\divg}[2][f]{\fce{\Delta_{#1}^{#2}}}
+\def\gap{\fce{\Delta}}
+\def\divt{T_\Delta}
+
+% policy valuation
+\def\val#1#2#3#4{\fce{V^{#1,#2}_{#3,#4}}}
+\def\oracle#1{\fce{\mathbb O}{#1}}
+
+\def\fdist{\mathcal{F}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% online learning
+\def\actions{\mathcal{A}}
+\def\states{\mathcal{S}}
+\def\tran{\tau}
+\def\initial{h}
+\def\rew{r}
+\def\return{G}
+\newcommand\stval[1][\pi]{v_{#1}}
+\def\critic{\hat{v}_{\phi}}
+\def\losscritic{\fce {L^v}{\phi \suchthat \theta}}
+\newcommand\actor[1][\theta]{\pi_{#1}}
+\def\lossactor{\fce {L^\pi}{\theta \suchthat \phi}}
+
+% algorithms
+% \newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{algo}}
+\newenvironment{algor}[3]{\begin{algo}[#1]\ \\ \begin{minipage}{\textwidth} \AlgIn #2\\\AlgOut #3 \begin{algorithmic}[1]}{\end{algorithmic}\end{minipage}\end{algo}}
+\def\AlgIn{\emph{Input: }}
+\def\AlgOut{\emph{Output: }}
+\theoremstyle{definition}
+\newtheorem{algo}[thm]{Algorithm}
+\algdef{SN}[SUBALG]{Indent}{EndIndent}{}{}%
+\algdef{SN}[SUBALG]{Procedure}{EndProcedure}[2]{\algofont{#1}({#2}):}{}%
+
+\def\algorithm{\textsc}
+
+\def\algFG{\algorithm{Offline Greedy}}
+\def\algFO{\algorithm{Offline Optimal}}
+\def\algNG{\algorithm{Online Greedy}}
+\def\algNO{\algorithm{Online Optimal}}
+\def\algRG{\algorithm{Oracle Greedy}}
+\def\algRO{\algorithm{Oracle Optimal}}
+\def\algRand{\algorithm{Random}}
+\def\algLC{\algorithm{Largest Coalitions}}
+
+\def\distribution{\texttt}
+
+\newcommand\supermodular[1][n]{\fce{\distribution{supermodular}}{#1}}
+\newcommand\factory[1][n]{\fce{\distribution{factory}}{#1}}
+\newcommand\factoryf[1][n]{\fce{\distribution{factory\_fixed}}{#1}}
+
+\def\stdfigwidth{0.83\textwidth}
