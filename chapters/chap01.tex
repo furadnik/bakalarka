@@ -233,11 +233,12 @@ Note that the definition of the Markov decision process further establishes a \e
 
 		%Lines
 		\draw[->, very thick] (Agent.north)  .. controls  +(up:9mm) and +(up:9mm) .. node[midway, above] {$ a_t \in \actions $} (Environment.north);
-		\draw[->, very thick] (Environment.south)  .. controls  +(up:-9mm) and +(up:-9mm) .. node[midway, below, align=center] {$ s_{t+1} \sim \fce{\tran}{s_{t}} $\\$ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $} (Agent.south);
+		\draw[->, very thick] (Environment.south)  .. controls  +(up:-9mm) and +(up:-9mm) .. node[midway, below, align=center] {$ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $\\$ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $} (Agent.south);
 	\end{tikzpicture}
 	\caption{An illustration of the agent-environment interaction in a Markov decision process.}
 \end{figure*}
 
+MDP is often referred to simply as \textquote{environment}.
 The agent starts in an initial state $ s_0 \sim \initial $.
 At each step $ t \in \N $, he chooses an action $ a_t \in \actions $, is informed of the new state $ s_{t+1} \sim \fce{\tran}{s_{t}, a_t} $ of the environment, and receives reward $ \rew_t = \fce{\rew}{s_{t}, a_t, s_{t+1}} $.
 Notice that the reward depends not only on the initial state and the chosen action, but also on the final state.

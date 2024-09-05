@@ -282,7 +282,7 @@ To quantify the performance of a policy, we define a \emph{policy valuation func
 We can see that the policy valuation exactly quantifies the performance we have discussed above.
 It measures the final divergence reached after the budget has been spent, allowing the principal to make moves that might not be optimal in a \textquote{greedy} sense, meaning that they might not lead to the smallest divergence in the next step, but they might lead to a smaller final divergence.
 
-Notice that the policy used here matches the definition of a policy we have given as \Cref{def:policy} in \Cref{sec:rl}, with $ \pot {N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
+Notice that the policy used here matches the definition of a policy we have given as \Cref{def:policy} in \Cref{sec:rl}, with $ \pot {\pot N \times \R} \times \N $ as the state space, and $ \pot N \setminus \k_0 $ as the action space.
 Having $ \tau $ as a part of the state is crucial for the policy, as (intuitively) it gives the information whether there is still budget for the principal to further explore the instance of $ f $, or if she is to instead focus on revealing the values which are most beneficial, given the values she has already seen.
 
 \begin{defi}[Online principal's problem] \label{def:online-pp}
